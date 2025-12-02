@@ -127,13 +127,14 @@
         }
 
         .instruction {
-            font-size: 28px;
+            font-size: 44px;
             font-weight: bold;
             color: var(--color-primary);
-            background-color: rgba(255, 255, 255, 0.8);
-            padding: 20px 30px;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 25px 40px;
             border-radius: 15px;
             max-width: 90%;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.15);
         }
 
         .cars-container {
@@ -149,13 +150,20 @@
             transition: all 0.2s ease;
             padding: 20px;
             border-radius: 15px;
-            background-color: rgba(255, 255, 255, 0.8);
+            background-color: rgba(255, 255, 255, 0.9);
             border: 4px solid transparent;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         .car-item:hover {
             transform: scale(1.1);
             background-color: rgba(255, 255, 255, 1);
+            box-shadow: 0 0 30px rgba(255, 107, 107, 0.6), 0 4px 12px rgba(0, 0, 0, 0.1);
+            filter: brightness(1.1);
+        }
+
+        .car-item:active {
+            animation: bounce-tap 0.4s ease-out;
         }
 
         .car-item.selected {
@@ -173,6 +181,29 @@
             }
             100% {
                 transform: scale(1);
+            }
+        }
+
+        @keyframes bounce-tap {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.3);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(600px) rotate(360deg);
+                opacity: 0;
             }
         }
 
@@ -260,13 +291,20 @@
             cursor: pointer;
             padding: 25px;
             border-radius: 15px;
-            background-color: rgba(255, 255, 255, 0.8);
+            background-color: rgba(255, 255, 255, 0.9);
             border: 4px solid transparent;
             transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         .part-item:hover {
             transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(255, 215, 61, 0.6), 0 4px 12px rgba(0, 0, 0, 0.1);
+            filter: brightness(1.1);
+        }
+
+        .part-item:active {
+            animation: bounce-tap 0.4s ease-out;
         }
 
         .part-item.selected {
@@ -550,13 +588,22 @@
             await trackProgress(isCorrect);
 
             if (isCorrect) {
+                // Multiple celebration emojis
                 setTimeout(() => {
-                    const celebration = document.createElement('div');
-                    celebration.className = 'celebration';
-                    celebration.textContent = '🎉';
-                    element.parentElement.appendChild(celebration);
+                    const celebrations = ['🎉', '🎊', '⭐'];
+                    celebrations.forEach((emoji, index) => {
+                        setTimeout(() => {
+                            const celebration = document.createElement('div');
+                            celebration.className = 'celebration';
+                            celebration.textContent = emoji;
+                            celebration.style.position = 'absolute';
+                            celebration.style.left = (Math.random() * 100 - 50) + 'px';
+                            element.parentElement.appendChild(celebration);
+                        }, index * 100);
+                    });
+                    throwConfetti();
                     playSound('success');
-                }, 300);
+                }, 100);
             }
         }
 
@@ -588,9 +635,9 @@
 
         function playCarSound(carType) {
             const sounds = {
-                'RED': 'beep',
-                'BLUE': 'beep',
-                'YELLOW': 'beep',
+                'RED': 'beep-low',
+                'BLUE': 'beep-mid',
+                'YELLOW': 'beep-high',
                 'POLICE': 'siren',
                 'TRUCK': 'horn',
                 'AMBULANCE': 'siren'
@@ -631,13 +678,22 @@
             await trackProgress(isCorrect);
 
             if (isCorrect) {
+                // Multiple celebration emojis
                 setTimeout(() => {
-                    const celebration = document.createElement('div');
-                    celebration.className = 'celebration';
-                    celebration.textContent = '⭐';
-                    element.parentElement.appendChild(celebration);
+                    const celebrations = ['⭐', '✨', '🌟'];
+                    celebrations.forEach((emoji, index) => {
+                        setTimeout(() => {
+                            const celebration = document.createElement('div');
+                            celebration.className = 'celebration';
+                            celebration.textContent = emoji;
+                            celebration.style.position = 'absolute';
+                            celebration.style.left = (Math.random() * 100 - 50) + 'px';
+                            element.parentElement.appendChild(celebration);
+                        }, index * 100);
+                    });
+                    throwConfetti();
                     playSound('success');
-                }, 300);
+                }, 100);
             }
         }
 
@@ -653,7 +709,7 @@
         function showCompletionMessage() {
             const messageHTML = `
                 <div class="celebration">🎊🎉🏆</div>
-                <div class="celebration-text">Great job!</div>
+                <div class="celebration-text">⭐ Great job! ⭐</div>
                 <div style="margin-top: 30px;">
                     <button class="menu-btn" onclick="backToMenu()" style="background-color: var(--color-primary);">Back to Menu</button>
                 </div>
@@ -671,6 +727,7 @@
 
             document.querySelector('.container').appendChild(tempDiv);
             showScreen('completionScreen');
+            throwConfetti();
             playSound('celebration');
         }
 
@@ -679,6 +736,9 @@
 
             const sounds = {
                 'beep': { freq: 800, time: 0.1 },
+                'beep-low': { freq: 500, time: 0.15 },
+                'beep-mid': { freq: 800, time: 0.15 },
+                'beep-high': { freq: 1100, time: 0.15 },
                 'siren': { freq: 1200, time: 0.2 },
                 'horn': { freq: 600, time: 0.15 },
                 'success': { freq: 1000, time: 0.3 },
@@ -698,6 +758,23 @@
 
             osc.start(audioContext.currentTime);
             osc.stop(audioContext.currentTime + config.time);
+        }
+
+        function throwConfetti() {
+            const confettiPieces = ['🎉', '🎊', '⭐', '✨', '🌟'];
+            for (let i = 0; i < 20; i++) {
+                const confetti = document.createElement('div');
+                confetti.innerHTML = confettiPieces[Math.floor(Math.random() * confettiPieces.length)];
+                confetti.style.position = 'fixed';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.top = '-50px';
+                confetti.style.fontSize = Math.random() * 20 + 30 + 'px';
+                confetti.style.pointerEvents = 'none';
+                confetti.style.zIndex = '9999';
+                confetti.style.animation = 'confetti-fall ' + (Math.random() * 1 + 2) + 's linear forwards';
+                document.body.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 3000);
+            }
         }
     </script>
 </body>
