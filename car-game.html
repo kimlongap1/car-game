@@ -116,6 +116,153 @@
             background-color: #ffc916;
         }
 
+        .btn-vocab {
+            background-color: #9B59B6;
+        }
+
+        .btn-vocab:hover {
+            background-color: #8E44AD;
+        }
+
+        .btn-vocabulary {
+            background-color: #9B59B6;
+        }
+
+        .btn-vocabulary:hover {
+            background-color: #8E44AD;
+        }
+
+        .vocab-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+        }
+
+        .vocab-display {
+            font-size: 120px;
+            margin: 20px 0;
+        }
+
+        .vocab-word {
+            font-size: 52px;
+            font-weight: bold;
+            color: var(--color-primary);
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 25px 40px;
+            border-radius: 15px;
+            min-width: 300px;
+        }
+
+        .btn-pronounce {
+            background-color: var(--color-success);
+            padding: 25px 40px;
+            font-size: 28px;
+            font-weight: bold;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            color: white;
+            transition: all 0.3s ease;
+            font-family: 'Comic Sans MS', cursive;
+        }
+
+        .btn-pronounce:hover {
+            background-color: #25a050;
+            transform: scale(1.05);
+        }
+
+        .btn-pronounce:active {
+            transform: scale(0.95);
+        }
+
+        .btn-pronounce.recording {
+            background-color: #ff4444;
+            animation: pulse-recording 0.8s ease-in-out infinite;
+            box-shadow: 0 0 20px rgba(255, 68, 68, 0.8);
+            transform: scale(1.05);
+        }
+
+        @keyframes pulse-recording {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 68, 68, 0.9);
+                transform: scale(1.05);
+            }
+            50% {
+                box-shadow: 0 0 0 20px rgba(255, 68, 68, 0.3);
+                transform: scale(1.08);
+            }
+            100% {
+                box-shadow: 0 0 0 30px rgba(255, 68, 68, 0);
+                transform: scale(1.05);
+            }
+        }
+
+        /* Recording indicator dot */
+        .recording-indicator {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 68, 68, 0.95);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+            z-index: 10000;
+            box-shadow: 0 0 30px rgba(255, 68, 68, 0.8);
+            animation: recording-pulse 1s ease-in-out infinite;
+        }
+
+        @keyframes recording-pulse {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.1);
+                opacity: 0.8;
+            }
+        }
+
+        .recording-indicator.blinking {
+            animation: recording-pulse 0.6s ease-in-out infinite;
+        }
+
+        .recording-indicator .dot {
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            animation: dot-blink 1s ease-in-out infinite;
+            margin-right: 15px;
+        }
+
+        @keyframes dot-blink {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.3;
+            }
+        }
+
+        .recording-text {
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .vocab-reward {
+            font-size: 80px;
+            animation: bounce 0.8s ease-out;
+        }
+
         .game-area {
             display: flex;
             flex-direction: column;
@@ -445,6 +592,12 @@
 </head>
 <body>
     <div class="container">
+        <!-- Recording Indicator -->
+        <div class="recording-indicator" id="recordingIndicator" style="display: none;">
+            <div class="dot"></div>
+            <div class="recording-text">RECORDING</div>
+        </div>
+
         <!-- Score Display Badge -->
         <div class="score-display" id="scoreDisplay" style="display: none;">
             Correct: <span id="scoreCorrect">0</span>/<span id="scoreTotal">0</span>
@@ -539,6 +692,16 @@
         // REPLACE THIS WITH YOUR N8N WEBHOOK URL
         const N8N_WEBHOOK_URL = 'https://n8n-new.vibookers.com/webhook/car-game';
 
+        // Google Sheets configuration for vocabulary loading
+        // Set to your Google Sheet ID and sheet name to load vocabulary dynamically
+        // Format: https://docs.google.com/spreadsheets/d/{SHEET_ID}/edit
+        const GOOGLE_SHEETS_CONFIG = {
+            ENABLED: false,  // Set to true to enable Google Sheets loading
+            SHEET_ID: '', // Replace with your Google Sheet ID
+            SHEET_NAME: 'Vocabulary', // Name of the sheet containing vocabulary
+            // The sheet should have columns: word, emoji, meaning
+        };
+
         // Car emoji display
         const carEmojis = {
             // Colored cars
@@ -595,6 +758,18 @@
         let currentVocabIndex = 0;
         let vocabPronounced = false;
 
+        // Voice recording variables
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let recordingStartTime = 0;
+        let isRecording = false;
+        let audioContext = null;
+        let analyser = null;
+        let silenceStart = null;
+        let silenceThreshold = 30; // dB threshold for silence
+        let silenceDuration = 3000; // milliseconds of silence to trigger auto-stop
+        let minRecordingDuration = 500; // minimum recording time (ms)
+
         function showScreen(screenId) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(screenId).classList.add('active');
@@ -639,6 +814,8 @@
                 playCarSounds();
             } else if (gameType === 'fix-car') {
                 playFixCar();
+            } else if (gameType === 'vocabulary') {
+                playVocab();
             }
         }
 
@@ -1122,6 +1299,244 @@
                 document.body.appendChild(confetti);
                 setTimeout(() => confetti.remove(), 3000);
             }
+        }
+
+        // ===== VOCABULARY LOADING FROM GOOGLE SHEETS =====
+        async function loadVocabularyFromGoogleSheets() {
+            if (!GOOGLE_SHEETS_CONFIG.ENABLED || !GOOGLE_SHEETS_CONFIG.SHEET_ID) {
+                console.log('Google Sheets loading disabled or not configured. Using local vocabulary list.');
+                return false;
+            }
+
+            try {
+                // Google Sheets CSV export URL format
+                const csvUrl = `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEETS_CONFIG.SHEET_ID}/export?format=csv&gid=0`;
+
+                const response = await fetch(csvUrl);
+                if (!response.ok) throw new Error('Failed to fetch Google Sheets');
+
+                const csvText = await response.text();
+                const lines = csvText.trim().split('\n');
+
+                // Parse CSV (simple parsing - assumes: word,emoji,meaning format)
+                const loadedVocab = [];
+                for (let i = 1; i < lines.length; i++) {  // Skip header row
+                    const [word, emoji, meaning] = lines[i].split(',').map(s => s.trim());
+                    if (word && emoji && meaning) {
+                        loadedVocab.push({ word, emoji, meaning });
+                    }
+                }
+
+                if (loadedVocab.length > 0) {
+                    // Replace default vocabulary with loaded vocabulary
+                    vocabularyList.length = 0;  // Clear array
+                    vocabularyList.push(...loadedVocab);
+                    console.log(`Loaded ${loadedVocab.length} vocabulary items from Google Sheets`);
+                    return true;
+                }
+            } catch (error) {
+                console.warn('Failed to load vocabulary from Google Sheets:', error);
+                console.log('Falling back to local vocabulary list');
+            }
+
+            return false;
+        }
+
+        // ===== VOCABULARY LEARNING GAME =====
+        async function playVocab() {
+            currentVocabIndex = 0;
+            vocabPronounced = false;
+
+            // Try to load vocabulary from Google Sheets if enabled
+            await loadVocabularyFromGoogleSheets();
+
+            displayVocabularyWord();
+        }
+
+        function displayVocabularyWord() {
+            if (currentVocabIndex >= vocabularyList.length) {
+                // Game completed
+                showCompletionMessage();
+                return;
+            }
+
+            const vocab = vocabularyList[currentVocabIndex];
+            document.getElementById('vocabDisplay').textContent = vocab.emoji;
+            document.getElementById('vocabWord').textContent = vocab.word;
+            document.getElementById('nextVocabBtn').style.display = 'none';
+            document.getElementById('pronounceBtn').style.display = 'inline-block';
+            vocabPronounced = false;
+
+            // Update score display
+            const progress = currentVocabIndex + 1;
+            document.getElementById('scoreDisplay').textContent = `Learning: ${progress}/${vocabularyList.length}`;
+
+            showScreen('vocabularyScreen');
+        }
+
+        async function handlePronunciation() {
+            const pronounceBtn = document.getElementById('pronounceBtn');
+            const recordingIndicator = document.getElementById('recordingIndicator');
+
+            if (isRecording) {
+                // Manual stop recording
+                stopRecording();
+            } else {
+                // Start recording
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    audioChunks = [];
+                    mediaRecorder = new MediaRecorder(stream);
+
+                    mediaRecorder.ondataavailable = (event) => {
+                        audioChunks.push(event.data);
+                    };
+
+                    mediaRecorder.onstop = () => {
+                        // Create audio blob and play it back
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                        const audioUrl = URL.createObjectURL(audioBlob);
+                        const audioElement = new Audio(audioUrl);
+
+                        // Play recording immediately
+                        playTapSound();
+                        setTimeout(() => {
+                            audioElement.play().catch(err => console.log('Auto-play prevented:', err));
+                        }, 100);
+
+                        // Stop microphone stream
+                        stream.getTracks().forEach(track => track.stop());
+
+                        // Show reward and confetti
+                        showVocabReward();
+
+                        // Show next button after reward animation
+                        setTimeout(() => {
+                            document.getElementById('nextVocabBtn').style.display = 'inline-block';
+                        }, 1000);
+                    };
+
+                    mediaRecorder.start();
+                    isRecording = true;
+                    recordingStartTime = Date.now();
+                    silenceStart = null;
+                    pronounceBtn.textContent = '⏹️ Done Speaking!';
+                    pronounceBtn.classList.add('recording');
+                    pronounceBtn.style.opacity = '1';
+
+                    // Show recording indicator overlay
+                    recordingIndicator.style.display = 'flex';
+
+                    // Start silence detection
+                    startSilenceDetection(stream);
+
+                } catch (error) {
+                    console.error('Microphone access denied:', error);
+                    alert('Please allow microphone access to record pronunciation');
+                }
+            }
+        }
+
+        function startSilenceDetection(stream) {
+            try {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                analyser = audioContext.createAnalyser();
+                const source = audioContext.createMediaStreamSource(stream);
+                source.connect(analyser);
+                analyser.fftSize = 2048;
+
+                const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+                function detectSilence() {
+                    if (!isRecording) return;
+
+                    analyser.getByteFrequencyData(dataArray);
+
+                    // Calculate average frequency to detect sound
+                    let sum = 0;
+                    for (let i = 0; i < dataArray.length; i++) {
+                        sum += dataArray[i];
+                    }
+                    const average = sum / dataArray.length;
+
+                    // If sound is detected, reset silence timer
+                    if (average > silenceThreshold) {
+                        silenceStart = null;
+                    } else {
+                        // If silence detected
+                        if (silenceStart === null) {
+                            silenceStart = Date.now();
+                        } else {
+                            const silenceTime = Date.now() - silenceStart;
+                            const recordingTime = Date.now() - recordingStartTime;
+
+                            // Auto-stop after silence + minimum recording duration
+                            if (silenceTime > silenceDuration && recordingTime > minRecordingDuration) {
+                                stopRecording();
+                                return;
+                            }
+                        }
+                    }
+
+                    // Check for max recording time (5 seconds)
+                    if (Date.now() - recordingStartTime > 5000) {
+                        stopRecording();
+                        return;
+                    }
+
+                    requestAnimationFrame(detectSilence);
+                }
+
+                detectSilence();
+            } catch (error) {
+                console.warn('Silence detection not available:', error);
+            }
+        }
+
+        function stopRecording() {
+            if (!isRecording) return;
+
+            isRecording = false;
+            const pronounceBtn = document.getElementById('pronounceBtn');
+            const recordingIndicator = document.getElementById('recordingIndicator');
+
+            mediaRecorder.stop();
+            pronounceBtn.textContent = '🎤 Say the Word!';
+            pronounceBtn.classList.remove('recording');
+            pronounceBtn.style.opacity = '1';
+            recordingIndicator.style.display = 'none';
+
+            if (audioContext) {
+                audioContext.close();
+                audioContext = null;
+            }
+        }
+
+        function showVocabReward() {
+            // Show random car reward emoji on the right side
+            setTimeout(() => {
+                // Array of random car emojis
+                const carEmojisArray = ['🚗', '🚙', '🚕', '🚌', '🚎', '🏎️', '🚓', '🚑', '🚒', '🚐'];
+                const randomCar = carEmojisArray[Math.floor(Math.random() * carEmojisArray.length)];
+
+                const reward = document.createElement('div');
+                reward.className = 'vocab-reward';
+                reward.textContent = randomCar;
+                reward.style.position = 'fixed';
+                reward.style.right = '50px';  // Position on the right side
+                reward.style.top = '50%';
+                reward.style.transform = 'translateY(-50%)';
+                reward.style.zIndex = '9999';
+                document.body.appendChild(reward);
+                throwConfetti();
+                playSound('success');
+                setTimeout(() => reward.remove(), 1000);
+            }, 100);
+        }
+
+        function nextVocab() {
+            currentVocabIndex++;
+            displayVocabularyWord();
         }
     </script>
 </body>
