@@ -483,19 +483,7 @@
         // REPLACE THIS WITH YOUR N8N WEBHOOK URL
         const N8N_WEBHOOK_URL = 'https://n8n-new.vibookers.com/webhook/car-game';
 
-        // Real car images from Pexels (free, no attribution required)
-        // High-quality, verified car photos with correct colors
-        const carImages = {
-            'RED': 'https://images.pexels.com/photos/116675/pexels-photo-116675.jpeg',
-            'BLUE': 'https://images.pexels.com/photos/2398220/pexels-photo-2398220.jpeg',
-            'YELLOW': 'https://images.pexels.com/photos/1149137/pexels-photo-1149137.jpeg',
-            'GREEN': 'https://images.pexels.com/photos/3597319/pexels-photo-3597319.jpeg',
-            'POLICE': 'https://images.pexels.com/photos/355904/pexels-photo-355904.jpeg',
-            'TRUCK': 'https://images.pexels.com/photos/112460/pexels-photo-112460.jpeg',
-            'AMBULANCE': 'https://images.pexels.com/photos/279810/pexels-photo-279810.jpeg'
-        };
-
-        // Fallback emoji if images fail to load
+        // Car emoji display
         const carEmojis = {
             'RED': '🔴🚗',
             'BLUE': '🔵🚗',
@@ -533,12 +521,10 @@
             document.getElementById(screenId).classList.add('active');
         }
 
-        // Create car display with image fallback to emoji
+        // Create car display
         function getCarDisplay(carType) {
-            const imageUrl = carImages[carType];
             const emoji = carEmojis[carType];
-
-            return `<img src="${imageUrl}" alt="${carType} car" style="width: 150px; height: 150px; border-radius: 10px; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'"><span style="font-size: 80px; display: none;">${emoji}</span>`;
+            return `<span style="font-size: 80px;">${emoji}</span>`;
         }
 
         // Helper: Should show bonus car this round?
