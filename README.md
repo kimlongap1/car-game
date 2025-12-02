@@ -110,18 +110,24 @@ car-game/
 
 ## Documentation
 
-### Getting Started
-- [5-Minute Quick Start](./docs/QUICK_START.md)
-- [Full Docs Index](./docs/README.md)
+### 📋 Specifications (What & Why)
+Project definition following [GitHub Spec-Kit](https://github.com/github/spec-kit)
 
-### Setup Guides
+- [SPECIFICATION.md](./specifications/SPECIFICATION.md) - Product requirements
+- [CONSTITUTION.md](./specifications/CONSTITUTION.md) - Mission & values
+- [PLAN.md](./specifications/PLAN.md) - Implementation roadmap
+
+### 📘 Implementation Guides (How)
+
+- [Full Docs Index](./docs/README.md)
+- [5-Minute Quick Start](./docs/QUICK_START.md)
 - [Deploy to Production](./docs/DEPLOYMENT.md)
 - [N8N Webhook Setup](./docs/N8N_SETUP.md)
 - [Database Progress Tracking](./docs/DATABASE_SETUP.md)
+- [Troubleshooting](./docs/TROUBLESHOOTING.md)
 
-### Reference
-- [Troubleshooting Guide](./docs/TROUBLESHOOTING.md)
-- [Full Documentation](./docs/)
+### 🗂️ Repository Structure
+- [View structure guide](./.github/README.md)
 
 ## License
 

@@ -30,48 +30,51 @@
 
 ## Spec-Kit Documents
 
-Official project documentation following [GitHub Spec-Kit](https://github.com/github/spec-kit) standards:
+Official project documentation following [GitHub Spec-Kit](https://github.com/github/spec-kit) standards.
 
-### 📋 SPECIFICATION
-[Read Specification](./SPECIFICATION.md)
+Located in: [`/specifications/`](../specifications/)
 
-Define what the product does and how users interact with it.
+### 📋 SPECIFICATION.md
+[Read Specification](../specifications/SPECIFICATION.md)
+
+Defines what the product does and how users interact with it.
 
 **Contains:**
-- Product scenarios
+- Product scenarios (3 detailed stories)
 - Functional & non-functional requirements
-- Data structures
-- API endpoints
+- Data structures & database schema
+- API endpoints (N8N webhook)
 - Architecture diagrams
-- Technology stack
+- Technology stack with purposes
 - Success metrics
 
-### 📜 CONSTITUTION
-[Read Constitution](./CONSTITUTION.md)
+### 📜 CONSTITUTION.md
+[Read Constitution](../specifications/CONSTITUTION.md)
 
 Guiding principles and values for the project.
 
 **Contains:**
 - Mission statement
-- Core values
+- Core values (4 principles)
 - Design principles
-- Decision making process
+- Decision making framework
+- Product standards
 - Success definition
-- Non-goals & commitments
+- Non-goals & commitment
 
-### 🗺️ PLAN
-[Read Plan](./PLAN.md)
+### 🗺️ PLAN.md
+[Read Plan](../specifications/PLAN.md)
 
 Implementation roadmap and technical strategy.
 
 **Contains:**
-- Current status
+- Current status (phase tracking)
 - 5 development phases
 - Technical implementation details
 - Testing procedures
 - Timeline & milestones
-- Resource requirements
 - Risk mitigation
+- Resource requirements
 
 ---
 
