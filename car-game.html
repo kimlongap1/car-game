@@ -554,8 +554,9 @@
             const scoreDisplay = document.getElementById('scoreDisplay');
             if (scoreDisplay) scoreDisplay.style.display = 'block';
 
-            // Fetch cards from n8n
-            await fetchCardsFromN8n(gameType);
+            // N8N integration disabled - using fallback only
+            // await fetchCardsFromN8n(gameType);
+            cardDeck = generateFallbackCards(gameType);
 
             if (gameType === 'which-car') {
                 playWhichCar();
@@ -645,23 +646,23 @@
                 currentDifficulty = Math.max(1, currentDifficulty - 1);
             }
 
-            // Send to n8n for tracking
-            try {
-                await fetch(N8N_WEBHOOK_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'track_progress',
-                        is_correct: isCorrect,
-                        session_score: sessionScore,
-                        difficulty: currentDifficulty,
-                        combo: comboCount,
-                        timestamp: new Date().toISOString()
-                    })
-                });
-            } catch (error) {
-                console.warn('Could not track progress to n8n:', error);
-            }
+            // N8N tracking disabled - game works without it
+            // try {
+            //     await fetch(N8N_WEBHOOK_URL, {
+            //         method: 'POST',
+            //         headers: { 'Content-Type': 'application/json' },
+            //         body: JSON.stringify({
+            //             action: 'track_progress',
+            //             is_correct: isCorrect,
+            //             session_score: sessionScore,
+            //             difficulty: currentDifficulty,
+            //             combo: comboCount,
+            //             timestamp: new Date().toISOString()
+            //         })
+            //     });
+            // } catch (error) {
+            //     console.warn('Could not track progress to n8n:', error);
+            // }
         }
 
         function backToMenu() {
