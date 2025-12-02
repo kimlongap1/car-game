@@ -19,7 +19,19 @@ Desired improvement: ❓ More engagement, more reasons to keep playing
 
 ## The Solution 💡
 
-**4 simple enhancements** that dramatically increase engagement:
+**5 simple enhancements** that dramatically increase engagement:
+
+### 0️⃣ Real Car Images (🚗) ⭐ NEW
+**What**: Replace emoji cars with actual car photos
+**Why**: Kids recognize real cars, feel more "real world" connection
+**Source**: Free images from Pexels (no attribution needed)
+**Visual**: Clear, high-quality car photos in game colors
+**Example**:
+- Before: 🔴🚗 (emoji)
+- After: Photo of actual RED car
+**Impact**: Major visual upgrade, stronger learning connection
+
+---
 
 ### 1️⃣ Combo Streaks (🔥)
 **What**: Track consecutive correct answers
@@ -60,7 +72,15 @@ Total: ⭐⭐⭐⭐
 
 ---
 
-### 4️⃣ Enhanced Celebrations (🎉)
+### 4️⃣ Real Car Images (🚗)
+**What**: Replace emoji cars with actual car photos from Pexels
+**Why**: Increased visual appeal, real-world connection
+**Implementation**: 30 minutes (find images, update code)
+**Benefit**: "That's a REAL car like daddy's!"
+
+---
+
+### 5️⃣ Enhanced Celebrations (🎉)
 **What**: Better audio/visual feedback at key moments
 **Why**: Immediate rewards trigger dopamine, encourage replay
 **Improvements**:
@@ -110,12 +130,13 @@ Total: ⭐⭐⭐⭐
 
 | Phase | Tasks | Time | Notes |
 |-------|-------|------|-------|
+| Task 0 | Real car images | 30 min | ⭐ Foundation - new! |
 | Task 1 | Combo system | 30 min | Core mechanic |
 | Task 2 | Bonus cars | 20 min | Random rewards |
 | Task 3 | Score display | 20 min | Visibility |
 | Task 4 | Sound effects | 15 min | Polish |
 | Task 5 | Testing | 30 min | Verify everything |
-| **Total** | **5 tasks** | **2 hours** | **~2.5 hours with buffer** |
+| **Total** | **6 tasks** | **2.5 hours** | **~3 hours with buffer** |
 
 ---
 
@@ -166,6 +187,7 @@ Total: ⭐⭐⭐⭐
 Before implementation, please confirm:
 
 **Feature Scope**
+- [ ] Like the real car images (Pexels photos)
 - [ ] Like the combo streak mechanic
 - [ ] Like the random bonus car mechanic
 - [ ] Like the real-time score display

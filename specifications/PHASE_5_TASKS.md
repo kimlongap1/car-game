@@ -1,27 +1,87 @@
 # Phase 5: Engagement Enhancements - Implementation Tasks
 
 **Status**: 🔄 Proposed (Awaiting Approval)
-**Estimated Duration**: 2 hours implementation + 30 min testing
+**Estimated Duration**: 2.5-3 hours implementation + 30 min testing
 **Target**: Make the game MUCH MORE EXCITING for 4-year-olds
 
 ---
 
 ## Quick Summary
 
-We want to add 4 engagement mechanics to keep kids playing longer:
+We want to add 5 engagement mechanics to keep kids playing longer:
 
-1. **Combo Streaks** (🔥) - Kids love consecutive wins!
-2. **Random Bonus Cars** (🎁) - Surprise moments create joy
-3. **Real-time Score** (📊) - Visual progress is motivating
-4. **Better Celebrations** (🎉) - More confetti, sounds, excitement
+1. **Real Car Images** (🚗) - Replace emoji with actual car photos
+2. **Combo Streaks** (🔥) - Kids love consecutive wins!
+3. **Random Bonus Cars** (🎁) - Surprise moments create joy
+4. **Real-time Score** (📊) - Visual progress is motivating
+5. **Better Celebrations** (🎉) - More confetti, sounds, excitement
 
-**Total effort**: ~2 hours to add all features
-**File size impact**: +3-5KB only
+**Total effort**: ~2.5-3 hours to add all features
+**File size impact**: +5-8KB (images are external URLs)
 **Breaking changes**: None - 100% backward compatible
+**New feature**: Real car images from Pexels (free, no attribution required)
 
 ---
 
 ## Task Breakdown
+
+### 🚗 Task 0: Real Car Images (30 minutes) 🆕 CRITICAL
+
+**Goal**: Replace emoji cars with real car photos from Pexels (free source)
+
+#### Subtasks
+- [ ] **0.1** Find 7 high-quality car images on Pexels.com:
+  - RED car (sedan/sports car)
+  - BLUE car (sedan/sports car)
+  - YELLOW car (taxi style)
+  - GREEN car (sedan)
+  - POLICE car (police cruiser)
+  - TRUCK (pickup or delivery truck)
+  - AMBULANCE (white ambulance)
+- [ ] **0.2** Copy direct image URLs from Pexels
+- [ ] **0.3** Create `carImages` object in JavaScript with URLs
+- [ ] **0.4** Replace emoji display with `<img>` tags in game code
+- [ ] **0.5** Add CSS for image sizing (150x150px, rounded corners)
+- [ ] **0.6** Add image fallback to emoji if URLs fail
+- [ ] **0.7** Test images load correctly on all devices
+
+#### Files to Modify
+- `car-game.html` (JavaScript object, HTML generation, CSS styling)
+
+#### Success Criteria
+- [ ] All 7 car types display real car images
+- [ ] Images are clear, high-quality, and recognizable
+- [ ] Images load within 2 seconds
+- [ ] Game still works if images fail (fallback to emoji)
+- [ ] No console errors
+- [ ] Images display correctly on mobile and desktop
+
+#### Code Example
+```javascript
+// OLD: Emoji approach
+const carEmojis = {
+    'RED': '🔴🚗',
+    'BLUE': '🔵🚗',
+    // ...
+};
+
+// NEW: Real car images approach
+const carImages = {
+    'RED': 'https://images.pexels.com/photos/[id]/pexels-photo-[id].jpeg',
+    'BLUE': 'https://images.pexels.com/photos/[id]/pexels-photo-[id].jpeg',
+    // ...
+};
+
+// In car item generation:
+div.innerHTML = `<img src="${carImages[color]}" alt="${color} car" style="width: 150px; height: 150px; border-radius: 10px; object-fit: cover;">`;
+```
+
+#### Why This Task First?
+- Impacts UI of all 3 game modes
+- Good to do before other cosmetic changes
+- Simple but high-impact
+
+---
 
 ### 🎯 Task 1: Combo System (30 minutes)
 
@@ -196,13 +256,18 @@ We want to add 4 engagement mechanics to keep kids playing longer:
 ## Implementation Order
 
 **Why this order?**
-1. Start with combo (core mechanic)
-2. Add bonus cars (variety)
-3. Add score display (visibility)
-4. Add sounds (polish)
-5. Test everything together
+1. **Task 0: Real car images** (foundation - impacts all game modes)
+2. **Task 1: Combo system** (core mechanic)
+3. **Task 2: Bonus cars** (variety + rewards)
+4. **Task 3: Score display** (visibility + progress)
+5. **Task 4: Sound effects** (polish + audio feedback)
+6. **Task 5: Testing** (verify everything works together)
 
-This order ensures dependencies are handled correctly and you can test incrementally.
+This order ensures:
+- Foundation is set first (images) before adding game mechanics
+- Dependencies are handled correctly
+- Incremental testing at each stage
+- Major visual changes first, then audio
 
 ---
 
@@ -313,11 +378,18 @@ If something breaks:
 
 Before we start implementation, please confirm:
 
-- [ ] **Combo mechanic**: Like the streak idea? Good at 20% for bonus?
-- [ ] **Bonus cars**: 20% frequency feels right? x3 combo milestone good?
-- [ ] **Score display**: Want real-time score visible? Too much info?
-- [ ] **Sound effects**: Want tap feedback? Combo sound needed?
-- [ ] **Overall scope**: 2 hours is reasonable? Want to add/remove anything?
+**Features**
+- [ ] **Real car images**: Want to use actual car photos from Pexels?
+- [ ] **Combo mechanic**: Like the streak idea? Good at x3 milestone?
+- [ ] **Bonus cars**: 20% frequency feels right? Want the surprise bonus?
+- [ ] **Score display**: Want real-time score visible during game?
+- [ ] **Sound effects**: Want tap feedback and combo sounds?
+
+**Timeline**
+- [ ] **Overall scope**: 2.5-3 hours is reasonable?
+- [ ] **Want to add more**: Any other features you'd like?
+- [ ] **Want to remove**: Any features you'd rather skip?
+- [ ] **Ready to start**: Approve all 5 features?
 
 ---
 
