@@ -279,6 +279,60 @@
             margin-top: 20px;
         }
 
+        .combo-display {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-size: 32px;
+            font-weight: bold;
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 15px 25px;
+            border-radius: 50px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            animation: combo-pop 0.3s ease-out;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes combo-pop {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .combo-fire {
+            animation: combo-bounce 0.4s ease-out infinite;
+        }
+
+        @keyframes combo-bounce {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.15);
+            }
+        }
+
+        .score-display {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 12px 20px;
+            border-radius: 50px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+        }
+
         .car-parts {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -361,6 +415,16 @@
 </head>
 <body>
     <div class="container">
+        <!-- Score Display Badge -->
+        <div class="score-display" id="scoreDisplay" style="display: none;">
+            Correct: <span id="scoreCorrect">0</span>/<span id="scoreTotal">0</span>
+        </div>
+
+        <!-- Combo Display Badge -->
+        <div class="combo-display" id="comboDisplay" style="display: none; align-items: center; justify-content: center;">
+            🔥 COMBO x<span id="comboNumber">0</span>
+        </div>
+
         <!-- Menu Screen -->
         <div class="screen active" id="menuScreen">
             <div class="title">🚗 Car Game 🚗</div>
@@ -419,8 +483,18 @@
         // REPLACE THIS WITH YOUR N8N WEBHOOK URL
         const N8N_WEBHOOK_URL = 'https://n8n-new.vibookers.com/webhook-test/car-game';
 
-        // Fallback static data if n8n is offline
-        const carColors = ['RED', 'BLUE', 'YELLOW', 'GREEN'];
+        // Real car images from Pexels (free, no attribution required)
+        const carImages = {
+            'RED': 'https://images.pexels.com/photos/707046/pexels-photo-707046.jpeg',
+            'BLUE': 'https://images.pexels.com/photos/3803517/pexels-photo-3803517.jpeg',
+            'YELLOW': 'https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg',
+            'GREEN': 'https://images.pexels.com/photos/3597319/pexels-photo-3597319.jpeg',
+            'POLICE': 'https://images.pexels.com/photos/3945683/pexels-photo-3945683.jpeg',
+            'TRUCK': 'https://images.pexels.com/photos/2348192/pexels-photo-2348192.jpeg',
+            'AMBULANCE': 'https://images.pexels.com/photos/279810/pexels-photo-279810.jpeg'
+        };
+
+        // Fallback emoji if images fail to load
         const carEmojis = {
             'RED': '🔴🚗',
             'BLUE': '🔵🚗',
@@ -430,6 +504,9 @@
             'TRUCK': '🚚',
             'AMBULANCE': '🚑'
         };
+
+        // Fallback static data if n8n is offline
+        const carColors = ['RED', 'BLUE', 'YELLOW', 'GREEN'];
 
         const carParts = [
             { name: 'WHEEL', emoji: '⚫' },
@@ -445,10 +522,28 @@
         let cardDeck = [];
         let sessionScore = { correct: 0, total: 0 };
         let currentDifficulty = 1;
+        let comboCount = 0;
+        let maxCombo = 0;
+        let bonusCount = 0;
+        let lastWasBonus = false;
 
         function showScreen(screenId) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(screenId).classList.add('active');
+        }
+
+        // Create car display with image fallback to emoji
+        function getCarDisplay(carType) {
+            const imageUrl = carImages[carType];
+            const emoji = carEmojis[carType];
+
+            return `<img src="${imageUrl}" alt="${carType} car" style="width: 150px; height: 150px; border-radius: 10px; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'"><span style="font-size: 80px; display: none;">${emoji}</span>`;
+        }
+
+        // Helper: Should show bonus car this round?
+        function shouldShowBonusCar() {
+            if (lastWasBonus) return false; // Never two bonuses in a row
+            return Math.random() < 0.2; // 20% chance
         }
 
         async function startGame(gameType) {
@@ -456,6 +551,14 @@
             currentRound = 0;
             selectedAnswer = '';
             sessionScore = { correct: 0, total: 0 };
+            comboCount = 0;
+            maxCombo = 0;
+            bonusCount = 0;
+            lastWasBonus = false;
+
+            // Show score display
+            const scoreDisplay = document.getElementById('scoreDisplay');
+            if (scoreDisplay) scoreDisplay.style.display = 'block';
 
             // Fetch cards from n8n
             await fetchCardsFromN8n(gameType);
@@ -520,7 +623,25 @@
 
         async function trackProgress(isCorrect) {
             sessionScore.total += 1;
-            if (isCorrect) sessionScore.correct += 1;
+            if (isCorrect) {
+                sessionScore.correct += 1;
+                comboCount++;
+                if (comboCount > maxCombo) maxCombo = comboCount;
+                updateComboDisplay();
+                // Check for combo x3 milestone
+                if (comboCount === 3) {
+                    playComboMilestoneSound();
+                }
+            } else {
+                comboCount = 0; // Reset combo on wrong answer
+                updateComboDisplay();
+            }
+
+            // Update score display
+            const scoreDisplay = document.getElementById('scoreDisplay');
+            if (scoreDisplay) {
+                scoreDisplay.textContent = `Correct: ${sessionScore.correct}/${sessionScore.total}`;
+            }
 
             // Update difficulty if needed
             const accuracy = sessionScore.correct / sessionScore.total;
@@ -540,6 +661,7 @@
                         is_correct: isCorrect,
                         session_score: sessionScore,
                         difficulty: currentDifficulty,
+                        combo: comboCount,
                         timestamp: new Date().toISOString()
                     })
                 });
@@ -552,7 +674,47 @@
             currentGame = '';
             currentRound = 0;
             selectedAnswer = '';
+            const scoreDisplay = document.getElementById('scoreDisplay');
+            if (scoreDisplay) scoreDisplay.style.display = 'none';
+            const comboDisplay = document.getElementById('comboDisplay');
+            if (comboDisplay) comboDisplay.style.display = 'none';
             showScreen('menuScreen');
+        }
+
+        // Update combo display badge
+        function updateComboDisplay() {
+            const comboDisplay = document.getElementById('comboDisplay');
+            if (!comboDisplay) return;
+
+            if (comboCount > 0) {
+                comboDisplay.style.display = 'flex';
+                comboDisplay.innerHTML = `🔥 COMBO x<span id="comboNumber">${comboCount}</span>`;
+                if (comboCount >= 3) {
+                    comboDisplay.classList.add('combo-fire');
+                } else {
+                    comboDisplay.classList.remove('combo-fire');
+                }
+            } else {
+                comboDisplay.style.display = 'none';
+            }
+        }
+
+        // Combo x3 milestone celebration
+        function triggerComboMilestone() {
+            // Extra confetti for x3 combo
+            for (let i = 0; i < 10; i++) {
+                const confetti = document.createElement('div');
+                confetti.innerHTML = '🔥';
+                confetti.style.position = 'fixed';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.top = '-50px';
+                confetti.style.fontSize = '40px';
+                confetti.style.pointerEvents = 'none';
+                confetti.style.zIndex = '9999';
+                confetti.style.animation = 'confetti-fall ' + (Math.random() * 1 + 2) + 's linear forwards';
+                document.body.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 3000);
+            }
         }
 
         // Which Car Game
@@ -567,11 +729,12 @@
             const container = document.getElementById('whichCarContainer');
             container.innerHTML = '';
             document.getElementById('nextWhichCarBtn').style.display = 'none';
+            document.getElementById('scoreDisplay').textContent = `Correct: ${sessionScore.correct}/${sessionScore.total}`;
 
             shuffled.forEach(color => {
                 const div = document.createElement('div');
                 div.className = 'car-item';
-                div.innerHTML = `<span class="car-emoji">${carEmojis[color]}</span><span class="car-label">${color}</span>`;
+                div.innerHTML = `<div style="display: flex; flex-direction: column; align-items: center;">${getCarDisplay(color)}<span class="car-label" style="margin-top: 10px;">${color}</span></div>`;
                 div.onclick = () => selectWhichCar(color, div);
                 container.appendChild(div);
             });
@@ -583,6 +746,7 @@
             selectedAnswer = color;
             element.classList.add('selected');
             document.getElementById('nextWhichCarBtn').style.display = 'inline-block';
+            playTapSound();
 
             const isCorrect = color === correctAnswer;
             await trackProgress(isCorrect);
@@ -602,7 +766,12 @@
                         }, index * 100);
                     });
                     throwConfetti();
-                    playSound('success');
+                    if (comboCount === 3) {
+                        triggerComboMilestone();
+                        playComboMilestoneSound();
+                    } else {
+                        playSound('success');
+                    }
                 }, 100);
             }
         }
@@ -621,11 +790,12 @@
             const cars = ['RED', 'BLUE', 'YELLOW', 'POLICE', 'TRUCK', 'AMBULANCE'];
             const container = document.getElementById('carSoundsContainer');
             container.innerHTML = '';
+            document.getElementById('scoreDisplay').textContent = `Taps: ${sessionScore.total}`;
 
             cars.forEach(car => {
                 const div = document.createElement('div');
                 div.className = 'car-item';
-                div.innerHTML = `<span class="car-emoji">${carEmojis[car]}</span><span class="car-label">${car}</span>`;
+                div.innerHTML = `<div style="display: flex; flex-direction: column; align-items: center;">${getCarDisplay(car)}<span class="car-label" style="margin-top: 10px;">${car}</span></div>`;
                 div.onclick = () => playCarSound(car);
                 container.appendChild(div);
             });
@@ -673,6 +843,7 @@
             selectedAnswer = partName;
             element.classList.add('selected');
             document.getElementById('nextFixCarBtn').style.display = 'inline-block';
+            playTapSound();
 
             const isCorrect = partName === correctAnswer;
             await trackProgress(isCorrect);
@@ -692,7 +863,12 @@
                         }, index * 100);
                     });
                     throwConfetti();
-                    playSound('success');
+                    if (comboCount === 3) {
+                        triggerComboMilestone();
+                        playComboMilestoneSound();
+                    } else {
+                        playSound('success');
+                    }
                 }, 100);
             }
         }
@@ -707,9 +883,18 @@
         }
 
         function showCompletionMessage() {
+            // Calculate stars earned
+            const starsEarned = sessionScore.correct + (maxCombo >= 3 ? 1 : 0) + (bonusCount > 0 ? 1 : 0);
+
             const messageHTML = `
                 <div class="celebration">🎊🎉🏆</div>
                 <div class="celebration-text">⭐ Great job! ⭐</div>
+                <div style="margin-top: 20px; font-size: 20px; line-height: 2; color: var(--color-text);">
+                    <div>Correct: ${sessionScore.correct}/${sessionScore.total} 🎯</div>
+                    ${maxCombo >= 1 ? `<div>Combo: 🔥 x${maxCombo}</div>` : ''}
+                    ${bonusCount > 0 ? `<div>Bonus: 🎁 x${bonusCount}</div>` : ''}
+                    <div style="margin-top: 10px; font-size: 24px;">Stars: ${'⭐'.repeat(Math.min(starsEarned, 5))}</div>
+                </div>
                 <div style="margin-top: 30px;">
                     <button class="menu-btn" onclick="backToMenu()" style="background-color: var(--color-primary);">Back to Menu</button>
                 </div>
@@ -727,14 +912,33 @@
 
             document.querySelector('.container').appendChild(tempDiv);
             showScreen('completionScreen');
-            throwConfetti();
+            // Triple confetti burst for completion
+            for (let i = 0; i < 3; i++) {
+                setTimeout(() => throwConfetti(), i * 200);
+            }
             playSound('celebration');
+        }
+
+        // Play tap/click sound for immediate feedback
+        function playTapSound() {
+            playSound('tap');
+        }
+
+        // Play special combo x3 milestone sound
+        function playComboMilestoneSound() {
+            playSound('combo-ding');
+        }
+
+        // Play bonus car sound
+        function playBonusSound() {
+            playSound('bonus-chime');
         }
 
         function playSound(type) {
             const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
             const sounds = {
+                'tap': { freq: 300, time: 0.05 },
                 'beep': { freq: 800, time: 0.1 },
                 'beep-low': { freq: 500, time: 0.15 },
                 'beep-mid': { freq: 800, time: 0.15 },
@@ -742,6 +946,8 @@
                 'siren': { freq: 1200, time: 0.2 },
                 'horn': { freq: 600, time: 0.15 },
                 'success': { freq: 1000, time: 0.3 },
+                'combo-ding': { freq: 1000, time: 0.5 },
+                'bonus-chime': { freq: 1200, time: 0.4 },
                 'celebration': { freq: 1400, time: 0.5 }
             };
 
