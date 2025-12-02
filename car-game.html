@@ -485,17 +485,24 @@
 
         // Car emoji display
         const carEmojis = {
+            // Colored cars
             'RED': '🔴🚗',
             'BLUE': '🔵🚗',
             'YELLOW': '🟡🚗',
             'GREEN': '🟢🚗',
+            // Special vehicles
             'POLICE': '🚓',
+            'FIRE': '🚒',
+            'AMBULANCE': '🚑',
+            'TAXI': '🚕',
+            'BUS': '🚌',
             'TRUCK': '🚚',
-            'AMBULANCE': '🚑'
+            'CONTAINER': '🚛',
+            'TRACTOR': '🚜'
         };
 
         // Fallback static data if n8n is offline
-        const carColors = ['RED', 'BLUE', 'YELLOW', 'GREEN'];
+        const carColors = ['RED', 'BLUE', 'YELLOW', 'GREEN', 'POLICE', 'FIRE', 'AMBULANCE', 'TAXI', 'BUS', 'TRUCK', 'CONTAINER', 'TRACTOR'];
 
         const carParts = [
             { name: 'WHEEL', emoji: '⚫' },
@@ -774,7 +781,7 @@
 
         // Car Sounds Game
         function playCarSounds() {
-            const cars = ['RED', 'BLUE', 'YELLOW', 'POLICE', 'TRUCK', 'AMBULANCE'];
+            const cars = ['RED', 'BLUE', 'YELLOW', 'GREEN', 'POLICE', 'FIRE', 'AMBULANCE', 'TAXI', 'BUS', 'TRUCK', 'CONTAINER', 'TRACTOR'];
             const container = document.getElementById('carSoundsContainer');
             container.innerHTML = '';
             document.getElementById('scoreDisplay').textContent = `Taps: ${sessionScore.total}`;
@@ -795,11 +802,17 @@
                 'RED': 'beep-low',
                 'BLUE': 'beep-mid',
                 'YELLOW': 'beep-high',
+                'GREEN': 'beep',
                 'POLICE': 'siren',
+                'FIRE': 'siren',
+                'AMBULANCE': 'siren',
+                'TAXI': 'beep-high',
+                'BUS': 'horn',
                 'TRUCK': 'horn',
-                'AMBULANCE': 'siren'
+                'CONTAINER': 'horn',
+                'TRACTOR': 'beep'
             };
-            playSound(sounds[carType]);
+            playSound(sounds[carType] || 'beep');
         }
 
         // Fix the Car Game
