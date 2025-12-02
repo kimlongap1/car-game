@@ -713,7 +713,14 @@
 
         // Which Car Game
         function playWhichCar() {
-            const colors = carColors.slice(0, 3);
+            // Pick 3 random cars from all available vehicles
+            const allCars = carColors.slice();
+            const colors = [];
+            for (let i = 0; i < 3; i++) {
+                const randomIndex = Math.floor(Math.random() * allCars.length);
+                colors.push(allCars[randomIndex]);
+                allCars.splice(randomIndex, 1);
+            }
             correctAnswer = colors[Math.floor(Math.random() * colors.length)];
             const shuffled = colors.sort(() => Math.random() - 0.5);
 
