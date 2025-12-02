@@ -1,0 +1,119 @@
+{
+  "name": "car-game-backend",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "car-game",
+        "httpMethod": "POST"
+      },
+      "id": "webhook-node",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.anthropic.com/v1/messages",
+        "authentication": "genericCredentialType",
+        "genericCredentialType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyType": "json",
+        "jsonBody": "{\n  \"model\": \"claude-3-5-sonnet-20241022\",\n  \"max_tokens\": 1024,\n  \"system\": \"You are generating simple flashcards for a 4-year-old with speech delay who loves cars. Output ONLY valid JSON.\",\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"Game Type: {{$json.game_type}}\\nDifficulty: {{$json.difficulty}}\\nScore: {{$json.session_score.correct}}/{{$json.session_score.total}}\\n\\nGenerate 5 flashcards as JSON array with format: {\\\"word\\\": \\\"...\\\", \\\"emoji\\\": \\\"...\\\", \\\"category\\\": \\\"...\\\"}\"\n    }\n  ]\n}",
+        "options": {}
+      },
+      "id": "claude-node",
+      "name": "Claude LLM",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        500,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cards",
+              "name": "cards",
+              "type": "simple",
+              "value": "=[\n  {\"word\": \"RED\", \"emoji\": \"🔴🚗\", \"category\": \"color\", \"difficulty\": 1},\n  {\"word\": \"BLUE\", \"emoji\": \"🔵🚗\", \"category\": \"color\", \"difficulty\": 1},\n  {\"word\": \"YELLOW\", \"emoji\": \"🟡🚗\", \"category\": \"color\", \"difficulty\": 1}\n]"
+            },
+            {
+              "id": "difficulty",
+              "name": "difficulty",
+              "type": "simple",
+              "value": "={{$json.difficulty || 1}}"
+            },
+            {
+              "id": "status",
+              "name": "status",
+              "type": "simple",
+              "value": "=success"
+            }
+          ]
+        }
+      },
+      "id": "set-node",
+      "name": "Format Response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        750,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "firstEntryJson"
+      },
+      "id": "respond-webhook",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1000,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "webhook-node": {
+      "main": [
+        [
+          {
+            "node": "set-node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set-node": {
+      "main": [
+        [
+          {
+            "node": "respond-webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

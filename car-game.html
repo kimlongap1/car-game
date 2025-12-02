@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Game for Kids</title>
+    <style>
+        :root {
+            --color-primary: #2180C6;
+            --color-primary-hover: #1a66a3;
+            --color-secondary: #32B8C6;
+            --color-success: #2DB858;
+            --color-warning: #E69C4D;
+            --color-bg: #FFF9F0;
+            --color-text: #1F2121;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', cursive, sans-serif;
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .screen {
+            display: none;
+            width: 100%;
+            height: 100%;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        .title {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 40px;
+            color: var(--color-primary);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .menu-btn {
+            padding: 30px 40px;
+            font-size: 32px;
+            font-weight: bold;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            font-family: 'Comic Sans MS', cursive;
+        }
+
+        .menu-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .menu-btn:active {
+            transform: scale(0.95);
+        }
+
+        .btn-which-car {
+            background-color: #FF6B6B;
+        }
+
+        .btn-which-car:hover {
+            background-color: #ff5252;
+        }
+
+        .btn-car-sounds {
+            background-color: #4ECDC4;
+        }
+
+        .btn-car-sounds:hover {
+            background-color: #45b8a8;
+        }
+
+        .btn-fix-car {
+            background-color: #FFD93D;
+            color: #1F2121;
+        }
+
+        .btn-fix-car:hover {
+            background-color: #ffc916;
+        }
+
+        .game-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            gap: 30px;
+        }
+
+        .instruction {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--color-primary);
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px 30px;
+            border-radius: 15px;
+            max-width: 90%;
+        }
+
+        .cars-container {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .car-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+            padding: 20px;
+            border-radius: 15px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 4px solid transparent;
+        }
+
+        .car-item:hover {
+            transform: scale(1.1);
+            background-color: rgba(255, 255, 255, 1);
+        }
+
+        .car-item.selected {
+            border-color: var(--color-success);
+            background-color: rgba(45, 184, 88, 0.2);
+            animation: pulse 0.6s ease-out;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.15);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .car-emoji {
+            font-size: 80px;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .car-label {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--color-text);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 20px 30px;
+            font-size: 24px;
+            font-weight: bold;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Comic Sans MS', cursive;
+            color: white;
+        }
+
+        .btn-back {
+            background-color: #999;
+        }
+
+        .btn-back:hover {
+            background-color: #777;
+        }
+
+        .btn-next {
+            background-color: var(--color-success);
+        }
+
+        .btn-next:hover {
+            background-color: #25a050;
+        }
+
+        .celebration {
+            font-size: 100px;
+            animation: bounce 0.8s ease-out;
+        }
+
+        @keyframes bounce {
+            0% {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .celebration-text {
+            font-size: 36px;
+            font-weight: bold;
+            color: var(--color-success);
+            margin-top: 20px;
+        }
+
+        .car-parts {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .part-item {
+            cursor: pointer;
+            padding: 25px;
+            border-radius: 15px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 4px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .part-item:hover {
+            transform: scale(1.1);
+        }
+
+        .part-item.selected {
+            border-color: var(--color-success);
+            background-color: rgba(45, 184, 88, 0.2);
+            animation: pulse 0.6s ease-out;
+        }
+
+        .part-emoji {
+            font-size: 60px;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .part-label {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .title {
+                font-size: 36px;
+                margin-bottom: 30px;
+            }
+
+            .menu-btn {
+                padding: 20px 30px;
+                font-size: 24px;
+            }
+
+            .instruction {
+                font-size: 22px;
+                padding: 15px 20px;
+            }
+
+            .car-emoji {
+                font-size: 60px;
+            }
+
+            .cars-container {
+                gap: 20px;
+            }
+
+            .car-item {
+                padding: 15px;
+            }
+
+            .btn {
+                padding: 15px 25px;
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Menu Screen -->
+        <div class="screen active" id="menuScreen">
+            <div class="title">🚗 Car Game 🚗</div>
+            <div class="menu-buttons">
+                <button class="menu-btn btn-which-car" onclick="startGame('which-car')">
+                    Which Car?
+                </button>
+                <button class="menu-btn btn-car-sounds" onclick="startGame('car-sounds')">
+                    Car Sounds
+                </button>
+                <button class="menu-btn btn-fix-car" onclick="startGame('fix-car')">
+                    Fix the Car
+                </button>
+            </div>
+        </div>
+
+        <!-- Which Car Game -->
+        <div class="screen" id="whichCarScreen">
+            <div class="game-area">
+                <div class="instruction" id="whichCarInstruction">Where is the RED CAR?</div>
+                <div class="cars-container" id="whichCarContainer"></div>
+                <div class="button-group">
+                    <button class="btn btn-back" onclick="backToMenu()">Back</button>
+                    <button class="btn btn-next" onclick="nextWhichCar()" style="display:none;" id="nextWhichCarBtn">Next</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Car Sounds Game -->
+        <div class="screen" id="carSoundsScreen">
+            <div class="game-area">
+                <div class="instruction">Tap a car and make the sound!</div>
+                <div class="cars-container" id="carSoundsContainer"></div>
+                <div class="button-group">
+                    <button class="btn btn-back" onclick="backToMenu()">Back</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fix the Car Game -->
+        <div class="screen" id="fixCarScreen">
+            <div class="game-area">
+                <div class="instruction" id="fixCarInstruction">Tap the WHEEL!</div>
+                <div id="fixCarDisplay" style="font-size: 80px; margin: 20px 0;">🚗</div>
+                <div class="car-parts" id="fixCarParts"></div>
+                <div class="button-group">
+                    <button class="btn btn-back" onclick="backToMenu()">Back</button>
+                    <button class="btn btn-next" onclick="nextFixCar()" style="display:none;" id="nextFixCarBtn">Next</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== CONFIGURATION =====
+        // REPLACE THIS WITH YOUR N8N WEBHOOK URL
+        const N8N_WEBHOOK_URL = 'https://n8n-new.vibookers.com/webhook-test/car-game';
+
+        // Fallback static data if n8n is offline
+        const carColors = ['RED', 'BLUE', 'YELLOW', 'GREEN'];
+        const carEmojis = {
+            'RED': '🔴🚗',
+            'BLUE': '🔵🚗',
+            'YELLOW': '🟡🚗',
+            'GREEN': '🟢🚗',
+            'POLICE': '🚓',
+            'TRUCK': '🚚',
+            'AMBULANCE': '🚑'
+        };
+
+        const carParts = [
+            { name: 'WHEEL', emoji: '⚫' },
+            { name: 'WINDOW', emoji: '🪟' },
+            { name: 'DOOR', emoji: '🚪' },
+            { name: 'LIGHT', emoji: '💡' }
+        ];
+
+        let currentGame = '';
+        let currentRound = 0;
+        let correctAnswer = '';
+        let selectedAnswer = '';
+        let cardDeck = [];
+        let sessionScore = { correct: 0, total: 0 };
+        let currentDifficulty = 1;
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        async function startGame(gameType) {
+            currentGame = gameType;
+            currentRound = 0;
+            selectedAnswer = '';
+            sessionScore = { correct: 0, total: 0 };
+
+            // Fetch cards from n8n
+            await fetchCardsFromN8n(gameType);
+
+            if (gameType === 'which-car') {
+                playWhichCar();
+            } else if (gameType === 'car-sounds') {
+                playCarSounds();
+            } else if (gameType === 'fix-car') {
+                playFixCar();
+            }
+        }
+
+        async function fetchCardsFromN8n(gameType) {
+            try {
+                const response = await fetch(N8N_WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'get_cards',
+                        game_type: gameType,
+                        difficulty: currentDifficulty,
+                        session_score: sessionScore
+                    })
+                });
+
+                if (!response.ok) throw new Error('n8n request failed');
+
+                const data = await response.json();
+                cardDeck = data.cards || [];
+                console.log('Fetched from n8n:', cardDeck);
+            } catch (error) {
+                console.warn('n8n fetch failed, using fallback cards:', error);
+                // Fallback to static cards if n8n is down
+                cardDeck = generateFallbackCards(gameType);
+            }
+        }
+
+        function generateFallbackCards(gameType) {
+            // Fallback static cards
+            if (gameType === 'which-car') {
+                return [
+                    { word: 'RED', emoji: '🔴🚗', category: 'color' },
+                    { word: 'BLUE', emoji: '🔵🚗', category: 'color' },
+                    { word: 'YELLOW', emoji: '🟡🚗', category: 'color' }
+                ];
+            } else if (gameType === 'car-sounds') {
+                return [
+                    { word: 'RED CAR', emoji: '🚗', sound: 'beep', category: 'car' },
+                    { word: 'POLICE', emoji: '🚓', sound: 'siren', category: 'car' },
+                    { word: 'TRUCK', emoji: '🚚', sound: 'horn', category: 'car' }
+                ];
+            } else if (gameType === 'fix-car') {
+                return [
+                    { word: 'WHEEL', emoji: '⚫', category: 'part' },
+                    { word: 'WINDOW', emoji: '🪟', category: 'part' },
+                    { word: 'DOOR', emoji: '🚪', category: 'part' }
+                ];
+            }
+            return [];
+        }
+
+        async function trackProgress(isCorrect) {
+            sessionScore.total += 1;
+            if (isCorrect) sessionScore.correct += 1;
+
+            // Update difficulty if needed
+            const accuracy = sessionScore.correct / sessionScore.total;
+            if (accuracy > 0.8 && sessionScore.total > 3) {
+                currentDifficulty = Math.min(3, currentDifficulty + 1);
+            } else if (accuracy < 0.5 && sessionScore.total > 3) {
+                currentDifficulty = Math.max(1, currentDifficulty - 1);
+            }
+
+            // Send to n8n for tracking
+            try {
+                await fetch(N8N_WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'track_progress',
+                        is_correct: isCorrect,
+                        session_score: sessionScore,
+                        difficulty: currentDifficulty,
+                        timestamp: new Date().toISOString()
+                    })
+                });
+            } catch (error) {
+                console.warn('Could not track progress to n8n:', error);
+            }
+        }
+
+        function backToMenu() {
+            currentGame = '';
+            currentRound = 0;
+            selectedAnswer = '';
+            showScreen('menuScreen');
+        }
+
+        // Which Car Game
+        function playWhichCar() {
+            const colors = carColors.slice(0, 3);
+            correctAnswer = colors[Math.floor(Math.random() * colors.length)];
+            const shuffled = colors.sort(() => Math.random() - 0.5);
+
+            const instruction = document.getElementById('whichCarInstruction');
+            instruction.textContent = `Where is the ${correctAnswer} CAR?`;
+
+            const container = document.getElementById('whichCarContainer');
+            container.innerHTML = '';
+            document.getElementById('nextWhichCarBtn').style.display = 'none';
+
+            shuffled.forEach(color => {
+                const div = document.createElement('div');
+                div.className = 'car-item';
+                div.innerHTML = `<span class="car-emoji">${carEmojis[color]}</span><span class="car-label">${color}</span>`;
+                div.onclick = () => selectWhichCar(color, div);
+                container.appendChild(div);
+            });
+
+            showScreen('whichCarScreen');
+        }
+
+        async function selectWhichCar(color, element) {
+            selectedAnswer = color;
+            element.classList.add('selected');
+            document.getElementById('nextWhichCarBtn').style.display = 'inline-block';
+
+            const isCorrect = color === correctAnswer;
+            await trackProgress(isCorrect);
+
+            if (isCorrect) {
+                setTimeout(() => {
+                    const celebration = document.createElement('div');
+                    celebration.className = 'celebration';
+                    celebration.textContent = '🎉';
+                    element.parentElement.appendChild(celebration);
+                    playSound('success');
+                }, 300);
+            }
+        }
+
+        function nextWhichCar() {
+            currentRound++;
+            if (currentRound < 3) {
+                playWhichCar();
+            } else {
+                showCompletionMessage();
+            }
+        }
+
+        // Car Sounds Game
+        function playCarSounds() {
+            const cars = ['RED', 'BLUE', 'YELLOW', 'POLICE', 'TRUCK', 'AMBULANCE'];
+            const container = document.getElementById('carSoundsContainer');
+            container.innerHTML = '';
+
+            cars.forEach(car => {
+                const div = document.createElement('div');
+                div.className = 'car-item';
+                div.innerHTML = `<span class="car-emoji">${carEmojis[car]}</span><span class="car-label">${car}</span>`;
+                div.onclick = () => playCarSound(car);
+                container.appendChild(div);
+            });
+
+            showScreen('carSoundsScreen');
+        }
+
+        function playCarSound(carType) {
+            const sounds = {
+                'RED': 'beep',
+                'BLUE': 'beep',
+                'YELLOW': 'beep',
+                'POLICE': 'siren',
+                'TRUCK': 'horn',
+                'AMBULANCE': 'siren'
+            };
+            playSound(sounds[carType]);
+        }
+
+        // Fix the Car Game
+        function playFixCar() {
+            const part = carParts[Math.floor(Math.random() * carParts.length)];
+            correctAnswer = part.name;
+
+            const instruction = document.getElementById('fixCarInstruction');
+            instruction.textContent = `Tap the ${correctAnswer}!`;
+
+            const container = document.getElementById('fixCarParts');
+            container.innerHTML = '';
+            document.getElementById('nextFixCarBtn').style.display = 'none';
+
+            const shuffled = carParts.sort(() => Math.random() - 0.5);
+            shuffled.forEach(p => {
+                const div = document.createElement('div');
+                div.className = 'part-item';
+                div.innerHTML = `<span class="part-emoji">${p.emoji}</span><span class="part-label">${p.name}</span>`;
+                div.onclick = () => selectFixCar(p.name, div);
+                container.appendChild(div);
+            });
+
+            showScreen('fixCarScreen');
+        }
+
+        async function selectFixCar(partName, element) {
+            selectedAnswer = partName;
+            element.classList.add('selected');
+            document.getElementById('nextFixCarBtn').style.display = 'inline-block';
+
+            const isCorrect = partName === correctAnswer;
+            await trackProgress(isCorrect);
+
+            if (isCorrect) {
+                setTimeout(() => {
+                    const celebration = document.createElement('div');
+                    celebration.className = 'celebration';
+                    celebration.textContent = '⭐';
+                    element.parentElement.appendChild(celebration);
+                    playSound('success');
+                }, 300);
+            }
+        }
+
+        function nextFixCar() {
+            currentRound++;
+            if (currentRound < 3) {
+                playFixCar();
+            } else {
+                showCompletionMessage();
+            }
+        }
+
+        function showCompletionMessage() {
+            const messageHTML = `
+                <div class="celebration">🎊🎉🏆</div>
+                <div class="celebration-text">Great job!</div>
+                <div style="margin-top: 30px;">
+                    <button class="menu-btn" onclick="backToMenu()" style="background-color: var(--color-primary);">Back to Menu</button>
+                </div>
+            `;
+
+            const tempDiv = document.createElement('div');
+            tempDiv.className = 'screen active';
+            tempDiv.id = 'completionScreen';
+            tempDiv.style.position = 'fixed';
+            tempDiv.style.top = '0';
+            tempDiv.style.left = '0';
+            tempDiv.style.width = '100%';
+            tempDiv.style.height = '100%';
+            tempDiv.innerHTML = `<div class="game-area">${messageHTML}</div>`;
+
+            document.querySelector('.container').appendChild(tempDiv);
+            showScreen('completionScreen');
+            playSound('celebration');
+        }
+
+        function playSound(type) {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+            const sounds = {
+                'beep': { freq: 800, time: 0.1 },
+                'siren': { freq: 1200, time: 0.2 },
+                'horn': { freq: 600, time: 0.15 },
+                'success': { freq: 1000, time: 0.3 },
+                'celebration': { freq: 1400, time: 0.5 }
+            };
+
+            const config = sounds[type] || sounds['beep'];
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+
+            osc.connect(gain);
+            gain.connect(audioContext.destination);
+
+            osc.frequency.value = config.freq;
+            gain.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + config.time);
+
+            osc.start(audioContext.currentTime);
+            osc.stop(audioContext.currentTime + config.time);
+        }
+    </script>
+</body>
+</html>
