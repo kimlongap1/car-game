@@ -2,10 +2,11 @@
 
 > Complete guide for the educational car game with N8N integration and database progress tracking.
 
+> 📋 Follows [GitHub Spec-Kit](https://github.com/github/spec-kit) standards
+
 **Table of Contents:**
-- [Getting Started](#getting-started)
-- [Project Structure](#project-structure)
-- [Features](#features)
+- [Quick Start](#quick-start)
+- [Spec-Kit Documents](#spec-kit-documents)
 - [Setup Guides](#setup-guides)
 - [Database Tracking](#database-tracking)
 - [Troubleshooting](#troubleshooting)
@@ -13,18 +14,80 @@
 
 ---
 
-## Getting Started
+## Quick Start
 
 ### Quick Links
 
-| Need | Read |
-|------|------|
-| **First time?** | [Quick Start](./QUICK_START.md) |
-| **Deploy to production?** | [Deployment Guide](./DEPLOYMENT.md) |
-| **Track progress data?** | [Database Setup](./DATABASE_SETUP.md) |
-| **Stuck?** | [Troubleshooting](#troubleshooting) |
+| Need | Read | Time |
+|------|------|------|
+| **First time?** | [Quick Start](./QUICK_START.md) | 5 min |
+| **Deploy to production?** | [Deployment Guide](./DEPLOYMENT.md) | 10 min |
+| **Track progress data?** | [Database Setup](./DATABASE_SETUP.md) | 15 min |
+| **Configure N8N?** | [N8N Setup](./N8N_SETUP.md) | 10 min |
+| **Stuck?** | [Troubleshooting](./TROUBLESHOOTING.md) | varies |
 
-### What You Have
+---
+
+## Spec-Kit Documents
+
+Official project documentation following [GitHub Spec-Kit](https://github.com/github/spec-kit) standards:
+
+### 📋 SPECIFICATION
+[Read Specification](./SPECIFICATION.md)
+
+Define what the product does and how users interact with it.
+
+**Contains:**
+- Product scenarios
+- Functional & non-functional requirements
+- Data structures
+- API endpoints
+- Architecture diagrams
+- Technology stack
+- Success metrics
+
+### 📜 CONSTITUTION
+[Read Constitution](./CONSTITUTION.md)
+
+Guiding principles and values for the project.
+
+**Contains:**
+- Mission statement
+- Core values
+- Design principles
+- Decision making process
+- Success definition
+- Non-goals & commitments
+
+### 🗺️ PLAN
+[Read Plan](./PLAN.md)
+
+Implementation roadmap and technical strategy.
+
+**Contains:**
+- Current status
+- 5 development phases
+- Technical implementation details
+- Testing procedures
+- Timeline & milestones
+- Resource requirements
+- Risk mitigation
+
+---
+
+## Setup Guides
+
+| Guide | Purpose | Time |
+|-------|---------|------|
+| [QUICK_START.md](./QUICK_START.md) | Play the game | 5 min |
+| [N8N_SETUP.md](./N8N_SETUP.md) | Configure webhooks | 10 min |
+| [DATABASE_SETUP.md](./DATABASE_SETUP.md) | Add progress tracking | 15 min |
+| [DEPLOYMENT.md](./DEPLOYMENT.md) | Deploy to production | 10 min |
+| [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) | Fix problems | varies |
+
+---
+
+## What You Have
 
 ✅ **Game**: 3 interactive games (Which Car, Car Sounds, Fix Car)
 ✅ **Backend**: N8N workflow for dynamic card generation
