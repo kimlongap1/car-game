@@ -1229,7 +1229,73 @@
             playSound('celebration');
         }
 
-        // Play tap/click sound for immediate feedback
+        // Play recorded audio with iOS/Safari compatibility
+        function playRecordedAudio(audioUrl) {
+            playTapSound();
+
+            setTimeout(() => {
+                try {
+                    // Create or reuse audio element
+                    let audioElement = document.getElementById('recordingPlayback');
+                    if (!audioElement) {
+                        audioElement = document.createElement('audio');
+                        audioElement.id = 'recordingPlayback';
+                        audioElement.style.display = 'none';
+                        audioElement.setAttribute('playsinline', '');  // iOS Safari fix
+                        audioElement.setAttribute('webkit-playsinline', '');  // Older iOS
+                        document.body.appendChild(audioElement);
+                    }
+
+                    // Set audio source
+                    audioElement.src = audioUrl;
+                    audioElement.volume = 1.0;
+
+                    // Try to play with full error handling
+                    const playPromise = audioElement.play();
+
+                    if (playPromise !== undefined) {
+                        playPromise
+                            .then(() => {
+                                console.log('Audio playing successfully');
+                            })
+                            .catch(error => {
+                                console.warn('Audio playback failed:', error);
+                                // On iOS Safari, sometimes we need to use a different approach
+                                // Try using Web Audio API to play the Blob directly
+                                tryWebAudioPlayback(audioUrl);
+                            });
+                    }
+                } catch (error) {
+                    console.error('Error creating audio element:', error);
+                    tryWebAudioPlayback(audioUrl);
+                }
+            }, 300);
+        }
+
+        // Fallback: Try to play audio using Web Audio API
+        function tryWebAudioPlayback(audioUrl) {
+            try {
+                fetch(audioUrl)
+                    .then(response => response.arrayBuffer())
+                    .then(arrayBuffer => {
+                        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                        audioContext.decodeAudioData(arrayBuffer, (audioBuffer) => {
+                            const source = audioContext.createBufferSource();
+                            source.buffer = audioBuffer;
+                            source.connect(audioContext.destination);
+                            source.start(0);
+                        }, (error) => {
+                            console.warn('Web Audio API decoding failed:', error);
+                        });
+                    })
+                    .catch(error => {
+                        console.warn('Could not fetch audio for Web Audio playback:', error);
+                    });
+            } catch (error) {
+                console.error('Web Audio playback setup failed:', error);
+            }
+        }
+
         function playTapSound() {
             playSound('tap');
         }
@@ -1413,16 +1479,9 @@
                         // Create audio blob and play it back
                         const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
                         const audioUrl = URL.createObjectURL(audioBlob);
-                        const audioElement = new Audio(audioUrl);
 
-                        // Set volume to maximum
-                        audioElement.volume = 1.0;
-
-                        // Play recording immediately
-                        playTapSound();
-                        setTimeout(() => {
-                            audioElement.play().catch(err => console.log('Auto-play prevented:', err));
-                        }, 300);
+                        // Try multiple playback methods for maximum iOS/Safari compatibility
+                        playRecordedAudio(audioUrl);
 
                         // Stop microphone stream
                         stream.getTracks().forEach(track => track.stop());
