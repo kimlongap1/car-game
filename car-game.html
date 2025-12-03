@@ -1047,6 +1047,7 @@
 
             if (isCorrect) {
                 // Multiple celebration emojis
+                element.style.backgroundColor = '#90EE90';
                 setTimeout(() => {
                     const celebrations = ['🎉', '🎊', '⭐'];
                     celebrations.forEach((emoji, index) => {
@@ -1067,6 +1068,10 @@
                         playSound('success');
                     }
                 }, 100);
+            } else {
+                // Wrong answer - show red
+                element.style.backgroundColor = '#FF6B6B';
+                playSound('error');
             }
         }
 
@@ -1150,6 +1155,7 @@
 
             if (isCorrect) {
                 // Multiple celebration emojis
+                element.style.backgroundColor = '#90EE90';
                 setTimeout(() => {
                     const celebrations = ['⭐', '✨', '🌟'];
                     celebrations.forEach((emoji, index) => {
@@ -1170,6 +1176,10 @@
                         playSound('success');
                     }
                 }, 100);
+            } else {
+                // Wrong answer - show red
+                element.style.backgroundColor = '#FF6B6B';
+                playSound('error');
             }
         }
 
@@ -1246,6 +1256,7 @@
                 'siren': { freq: 1200, time: 0.2 },
                 'horn': { freq: 600, time: 0.15 },
                 'success': { freq: 1000, time: 0.3 },
+                'error': { freq: 300, time: 0.3 },
                 'combo-ding': { freq: 1000, time: 0.5 },
                 'bonus-chime': { freq: 1200, time: 0.4 },
                 'celebration': { freq: 1400, time: 0.5 },
@@ -1404,11 +1415,14 @@
                         const audioUrl = URL.createObjectURL(audioBlob);
                         const audioElement = new Audio(audioUrl);
 
+                        // Set volume to maximum
+                        audioElement.volume = 1.0;
+
                         // Play recording immediately
                         playTapSound();
                         setTimeout(() => {
                             audioElement.play().catch(err => console.log('Auto-play prevented:', err));
-                        }, 100);
+                        }, 300);
 
                         // Stop microphone stream
                         stream.getTracks().forEach(track => track.stop());
