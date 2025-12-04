@@ -800,7 +800,7 @@
 
         <!-- Voice Settings Modal -->
         <div class="voice-settings-modal" id="voiceSettingsModal" style="display: none; pointer-events: none;" onclick="hideVoiceSettings()">
-            <div class="voice-settings-content" onclick="event.stopPropagation();">
+            <div class="voice-settings-content">
                 <div class="voice-settings-title">🎤 Voice Settings</div>
 
                 <!-- Vietnamese Accent Selection -->
@@ -1352,6 +1352,16 @@
 
         // Initialize speech on page load
         initSpeechSynthesis();
+
+        // Prevent modal content clicks from closing modal
+        document.addEventListener('DOMContentLoaded', function() {
+            const modalContent = document.querySelector('.voice-settings-content');
+            if (modalContent) {
+                modalContent.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+            }
+        });
 
         // Create car display
         function getCarDisplay(carType) {
