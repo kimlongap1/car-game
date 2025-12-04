@@ -1586,12 +1586,33 @@
             const shuffled = colors.sort(() => Math.random() - 0.5);
 
             const instruction = document.getElementById('whichCarInstruction');
-            // Translate the color
-            const translatedColor = t(correctAnswer.toUpperCase());
-            // Construct question based on language
-            const questionText = currentLanguage === 'vi'
-                ? `${t('whereIsThe')} ${translatedColor} ${t('car')}?`
-                : `${t('whereIsThe')} ${translatedColor} ${t('car')}?`;
+            // Translate the color/car type
+            const translatedItem = t(correctAnswer.toUpperCase());
+
+            // Detect if this is a color or a car type
+            const colors = ['RED', 'BLUE', 'YELLOW', 'GREEN', 'ORANGE', 'PURPLE', 'PINK', 'BROWN', 'BLACK', 'WHITE'];
+            const isColor = colors.includes(correctAnswer.toUpperCase());
+
+            // Construct question based on language and type
+            let questionText;
+            if (currentLanguage === 'vi') {
+                if (isColor) {
+                    // For colors: "Xe màu đỏ ở đâu?"
+                    questionText = `${t('whereIsThe')} ${translatedItem} ${t('car')}?`;
+                } else {
+                    // For car types: "Xe taxi ở đâu?" (translatedItem already contains "xe")
+                    questionText = `${translatedItem} ở đâu?`;
+                }
+            } else {
+                // English
+                if (isColor) {
+                    // For colors: "Where is the red car?"
+                    questionText = `${t('whereIsThe')} ${translatedItem} ${t('car')}?`;
+                } else {
+                    // For car types: "Where is the taxi?"
+                    questionText = `${t('whereIsThe')} ${translatedItem}?`;
+                }
+            }
             instruction.textContent = questionText.toUpperCase();
 
             // Speak the question
