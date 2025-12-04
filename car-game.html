@@ -168,6 +168,7 @@
             z-index: 10000;
             justify-content: center;
             align-items: center;
+            pointer-events: none; /* Don't block clicks when hidden */
         }
 
         .voice-settings-content {
@@ -177,6 +178,7 @@
             max-width: 500px;
             width: 90%;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            pointer-events: auto; /* Allow clicks on modal content */
         }
 
         .voice-settings-title {
@@ -797,8 +799,8 @@
         </div>
 
         <!-- Voice Settings Modal -->
-        <div class="voice-settings-modal" id="voiceSettingsModal">
-            <div class="voice-settings-content">
+        <div class="voice-settings-modal" id="voiceSettingsModal" onclick="hideVoiceSettings()">
+            <div class="voice-settings-content" onclick="event.stopPropagation()">
                 <div class="voice-settings-title">🎤 Voice Settings</div>
 
                 <!-- Vietnamese Accent Selection -->
@@ -1335,6 +1337,7 @@
             const modal = document.getElementById('voiceSettingsModal');
             if (modal) {
                 modal.style.display = 'flex';
+                modal.style.pointerEvents = 'auto'; // Enable clicks when shown
             }
         }
 
@@ -1343,6 +1346,7 @@
             const modal = document.getElementById('voiceSettingsModal');
             if (modal) {
                 modal.style.display = 'none';
+                modal.style.pointerEvents = 'none'; // Disable clicks when hidden
             }
         }
 
