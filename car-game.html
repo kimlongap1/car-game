@@ -1374,6 +1374,18 @@
                     e.stopPropagation();
                 });
             }
+
+            // Initialize button texts based on current state
+            const speechBtn = document.getElementById('speechToggleBtn');
+            if (speechBtn) {
+                speechBtn.textContent = speechEnabled ? t('voiceOn') : t('voiceOff');
+                speechBtn.style.backgroundColor = speechEnabled ? '#2DB858' : '#999';
+            }
+
+            const langBtn = document.getElementById('languageToggleBtn');
+            if (langBtn) {
+                langBtn.textContent = t('language');
+            }
         });
 
         // Create car display
