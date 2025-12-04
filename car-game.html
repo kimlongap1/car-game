@@ -1904,13 +1904,20 @@
 
         // Play recorded audio with iOS/Safari compatibility
         function playRecordedAudio(audioUrl) {
+            // Cancel any ongoing text-to-speech to prevent interference
+            if ('speechSynthesis' in window) {
+                speechSynthesis.cancel();
+            }
+
             playTapSound();
 
             setTimeout(() => {
                 try {
+                    console.log('Attempting to play recorded audio...');
                     // Create or reuse audio element
                     let audioElement = document.getElementById('recordingPlayback');
                     if (!audioElement) {
+                        console.log('Creating new audio element');
                         audioElement = document.createElement('audio');
                         audioElement.id = 'recordingPlayback';
                         audioElement.style.display = 'none';
@@ -1922,6 +1929,7 @@
                     // Set audio source
                     audioElement.src = audioUrl;
                     audioElement.volume = 1.0;
+                    console.log('Audio source set:', audioUrl);
 
                     // Try to play with full error handling
                     const playPromise = audioElement.play();
@@ -1929,17 +1937,17 @@
                     if (playPromise !== undefined) {
                         playPromise
                             .then(() => {
-                                console.log('Audio playing successfully');
+                                console.log('✓ Recorded audio playing successfully!');
                             })
                             .catch(error => {
-                                console.warn('Audio playback failed:', error);
+                                console.warn('❌ Audio playback failed:', error);
                                 // On iOS Safari, sometimes we need to use a different approach
                                 // Try using Web Audio API to play the Blob directly
                                 tryWebAudioPlayback(audioUrl);
                             });
                     }
                 } catch (error) {
-                    console.error('Error creating audio element:', error);
+                    console.error('❌ Error creating audio element:', error);
                     tryWebAudioPlayback(audioUrl);
                 }
             }, 300);
@@ -2141,22 +2149,27 @@
 
             if (isRecording) {
                 // Manual stop recording
+                console.log('Stopping recording (manual)...');
                 stopRecording();
             } else {
                 // Start recording
                 try {
+                    console.log('Starting recording...');
                     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                     audioChunks = [];
                     mediaRecorder = new MediaRecorder(stream);
 
                     mediaRecorder.ondataavailable = (event) => {
                         audioChunks.push(event.data);
+                        console.log('Audio data chunk received, size:', event.data.size);
                     };
 
                     mediaRecorder.onstop = () => {
+                        console.log('Recording stopped. Audio chunks:', audioChunks.length);
                         // Create audio blob and play it back
                         const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
                         const audioUrl = URL.createObjectURL(audioBlob);
+                        console.log('Audio blob created, size:', audioBlob.size, 'bytes');
 
                         // Try multiple playback methods for maximum iOS/Safari compatibility
                         playRecordedAudio(audioUrl);
