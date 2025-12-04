@@ -431,6 +431,19 @@
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.15);
         }
 
+        .question-text-small {
+            font-size: 0.55em;
+            font-weight: 600;
+            color: #666;
+        }
+
+        .car-name-emphasis {
+            font-size: 1.1em;
+            font-weight: 900;
+            color: #FF6B35;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
+        }
+
         .cars-container {
             display: flex;
             gap: 30px;
@@ -1607,27 +1620,32 @@
             const colorNames = ['RED', 'BLUE', 'YELLOW', 'GREEN', 'ORANGE', 'PURPLE', 'PINK', 'BROWN', 'BLACK', 'WHITE'];
             const isColor = colorNames.includes(correctAnswer.toUpperCase());
 
-            // Construct question based on language and type
+            // Construct question based on language and type with emphasized styling
             let questionText;
+            let questionHTML;
             if (currentLanguage === 'vi') {
                 if (isColor) {
                     // For colors: "Xe màu đỏ ở đâu?"
                     questionText = `${t('whereIsThe')} ${translatedItem} ${t('car')}?`;
+                    questionHTML = `<span class="question-text-small">${t('whereIsThe').toUpperCase()}</span> <span class="car-name-emphasis">${translatedItem.toUpperCase()}</span> <span class="question-text-small">${t('car').toUpperCase()}?</span>`;
                 } else {
                     // For car types: "Xe taxi ở đâu?" (translatedItem already contains "xe")
                     questionText = `${translatedItem} ở đâu?`;
+                    questionHTML = `<span class="car-name-emphasis">${translatedItem.toUpperCase()}</span> <span class="question-text-small">Ở ĐÂU?</span>`;
                 }
             } else {
                 // English
                 if (isColor) {
                     // For colors: "Where is the red car?"
                     questionText = `${t('whereIsThe')} ${translatedItem} ${t('car')}?`;
+                    questionHTML = `<span class="question-text-small">${t('whereIsThe').toUpperCase()}</span> <span class="car-name-emphasis">${translatedItem.toUpperCase()}</span> <span class="question-text-small">${t('car').toUpperCase()}?</span>`;
                 } else {
                     // For car types: "Where is the taxi?"
                     questionText = `${t('whereIsThe')} ${translatedItem}?`;
+                    questionHTML = `<span class="question-text-small">${t('whereIsThe').toUpperCase()}</span> <span class="car-name-emphasis">${translatedItem.toUpperCase()}</span><span class="question-text-small">?</span>`;
                 }
             }
-            instruction.textContent = questionText.toUpperCase();
+            instruction.innerHTML = questionHTML;
 
             // Speak the question
             speak(questionText);
