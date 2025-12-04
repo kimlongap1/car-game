@@ -661,10 +661,15 @@
                 </button>
             </div>
 
-            <!-- Voice Control Toggle -->
-            <button class="speech-toggle-btn" id="speechToggleBtn" onclick="toggleSpeech()">
-                🔊 Voice ON
-            </button>
+            <!-- Language and Voice Controls -->
+            <div style="display: flex; gap: 15px; margin-top: 20px; flex-wrap: wrap; justify-content: center;">
+                <button class="speech-toggle-btn" id="languageToggleBtn" onclick="toggleLanguage()">
+                    🇻🇳 Tiếng Việt
+                </button>
+                <button class="speech-toggle-btn" id="speechToggleBtn" onclick="toggleSpeech()">
+                    🔊 Bật tiếng
+                </button>
+            </div>
         </div>
 
         <!-- Which Car Game -->
@@ -809,6 +814,146 @@
         let speechEnabled = true;
         let speechRate = 0.9; // Slightly slower for kids
         let speechVoice = null;
+        let currentLanguage = 'vi'; // Default to Vietnamese ('en' or 'vi')
+
+        // Vietnamese translations
+        const translations = {
+            en: {
+                // Game questions
+                whereIsThe: "Where is the",
+                car: "car",
+                tapThe: "Tap the",
+                tapCarSound: "Tap a car to hear its sound!",
+                learnWord: "Let's learn the word:",
+
+                // Colors
+                RED: "red",
+                BLUE: "blue",
+                YELLOW: "yellow",
+                GREEN: "green",
+                ORANGE: "orange",
+                PURPLE: "purple",
+                PINK: "pink",
+                BROWN: "brown",
+                BLACK: "black",
+                WHITE: "white",
+
+                // Car types
+                POLICE: "police car",
+                FIRE: "fire truck",
+                AMBULANCE: "ambulance",
+                TAXI: "taxi",
+                BUS: "bus",
+                TRUCK: "truck",
+                CONTAINER: "container truck",
+                TRACTOR: "tractor",
+
+                // Car parts
+                WHEEL: "wheel",
+                WINDOW: "window",
+                DOOR: "door",
+                LIGHT: "light",
+                MIRROR: "mirror",
+
+                // Feedback - Correct
+                praises: [
+                    'Great job!',
+                    'Excellent!',
+                    'Well done!',
+                    'Perfect!',
+                    'Amazing!',
+                    'Wonderful!',
+                    'Fantastic!',
+                    'You got it!'
+                ],
+
+                // Feedback - Incorrect
+                encouragements: [
+                    'Try again!',
+                    'Keep trying!',
+                    'You can do it!',
+                    'Almost there!',
+                    'Give it another try!'
+                ],
+
+                // UI
+                voiceOn: '🔊 Voice ON',
+                voiceOff: '🔇 Voice OFF',
+                voiceEnabled: 'Voice enabled',
+                language: '🇬🇧 English',
+                languageChanged: 'Language changed to English'
+            },
+            vi: {
+                // Game questions
+                whereIsThe: "Xe màu",
+                car: "ở đâu",
+                tapThe: "Chạm vào",
+                tapCarSound: "Chạm vào xe để nghe âm thanh!",
+                learnWord: "Hãy học từ:",
+
+                // Colors
+                RED: "đỏ",
+                BLUE: "xanh dương",
+                YELLOW: "vàng",
+                GREEN: "xanh lá",
+                ORANGE: "cam",
+                PURPLE: "tím",
+                PINK: "hồng",
+                BROWN: "nâu",
+                BLACK: "đen",
+                WHITE: "trắng",
+
+                // Car types
+                POLICE: "xe cảnh sát",
+                FIRE: "xe cứu hỏa",
+                AMBULANCE: "xe cấp cứu",
+                TAXI: "xe taxi",
+                BUS: "xe buýt",
+                TRUCK: "xe tải",
+                CONTAINER: "xe container",
+                TRACTOR: "máy kéo",
+
+                // Car parts
+                WHEEL: "bánh xe",
+                WINDOW: "cửa sổ",
+                DOOR: "cửa xe",
+                LIGHT: "đèn",
+                MIRROR: "gương",
+
+                // Feedback - Correct
+                praises: [
+                    'Giỏi lắm!',
+                    'Xuất sắc!',
+                    'Làm tốt lắm!',
+                    'Hoàn hảo!',
+                    'Tuyệt vời!',
+                    'Hay quá!',
+                    'Đúng rồi!',
+                    'Giỏi quá!'
+                ],
+
+                // Feedback - Incorrect
+                encouragements: [
+                    'Thử lại nha!',
+                    'Cố gắng lên!',
+                    'Con làm được mà!',
+                    'Gần đúng rồi!',
+                    'Làm lại một lần nữa nha!'
+                ],
+
+                // UI
+                voiceOn: '🔊 Bật tiếng',
+                voiceOff: '🔇 Tắt tiếng',
+                voiceEnabled: 'Đã bật tiếng',
+                language: '🇻🇳 Tiếng Việt',
+                languageChanged: 'Đã chuyển sang tiếng Việt'
+            }
+        };
+
+        // Get translated text
+        function t(key) {
+            return translations[currentLanguage][key] || key;
+        }
 
         function showScreen(screenId) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -818,23 +963,41 @@
         // Initialize speech synthesis voices
         function initSpeechSynthesis() {
             if ('speechSynthesis' in window) {
-                // Load voices
-                const voices = speechSynthesis.getVoices();
-                if (voices.length > 0) {
-                    // Prefer child-friendly voices
-                    speechVoice = voices.find(v => v.name.includes('Female') || v.name.includes('Google UK')) || voices[0];
-                }
+                updateVoiceForLanguage();
 
                 // Some browsers load voices asynchronously
                 if (speechSynthesis.onvoiceschanged !== undefined) {
-                    speechSynthesis.onvoiceschanged = () => {
-                        const voices = speechSynthesis.getVoices();
-                        if (voices.length > 0 && !speechVoice) {
-                            speechVoice = voices.find(v => v.name.includes('Female') || v.name.includes('Google UK')) || voices[0];
-                        }
-                    };
+                    speechSynthesis.onvoiceschanged = updateVoiceForLanguage;
                 }
             }
+        }
+
+        // Select appropriate voice for current language
+        function updateVoiceForLanguage() {
+            const voices = speechSynthesis.getVoices();
+            if (voices.length === 0) return;
+
+            if (currentLanguage === 'vi') {
+                // Vietnamese voices
+                speechVoice = voices.find(v =>
+                    v.lang.startsWith('vi') ||
+                    v.name.includes('Vietnamese') ||
+                    v.name.includes('Linh')
+                );
+                // Fallback to any available voice if no Vietnamese found
+                if (!speechVoice) {
+                    console.warn('No Vietnamese voice found, using default');
+                    speechVoice = voices[0];
+                }
+            } else {
+                // English voices - prefer female, child-friendly
+                speechVoice = voices.find(v =>
+                    v.lang.startsWith('en') &&
+                    (v.name.includes('Female') || v.name.includes('Google UK'))
+                ) || voices.find(v => v.lang.startsWith('en')) || voices[0];
+            }
+
+            console.log('Selected voice:', speechVoice?.name, 'for language:', currentLanguage);
         }
 
         // Speak text using Web Speech API
@@ -850,6 +1013,7 @@
             utterance.rate = speechRate;
             utterance.pitch = 1.1; // Slightly higher pitch for kids
             utterance.volume = 1.0;
+            utterance.lang = currentLanguage === 'vi' ? 'vi-VN' : 'en-US';
 
             if (speechVoice) {
                 utterance.voice = speechVoice;
@@ -857,7 +1021,7 @@
 
             // Add visual feedback
             utterance.onstart = () => {
-                console.log('Speaking:', text);
+                console.log('Speaking:', text, 'in', currentLanguage);
             };
 
             utterance.onend = () => {
@@ -876,13 +1040,35 @@
             speechEnabled = !speechEnabled;
             const btn = document.getElementById('speechToggleBtn');
             if (btn) {
-                btn.textContent = speechEnabled ? '🔊 Voice ON' : '🔇 Voice OFF';
+                btn.textContent = speechEnabled ? t('voiceOn') : t('voiceOff');
                 btn.style.backgroundColor = speechEnabled ? '#2DB858' : '#999';
             }
 
             // Announce the change
             if (speechEnabled) {
-                setTimeout(() => speak('Voice enabled'), 100);
+                setTimeout(() => speak(t('voiceEnabled')), 100);
+            }
+        }
+
+        // Toggle language between English and Vietnamese
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'en' ? 'vi' : 'en';
+            updateVoiceForLanguage();
+
+            // Update UI buttons
+            const langBtn = document.getElementById('languageToggleBtn');
+            if (langBtn) {
+                langBtn.textContent = t('language');
+            }
+
+            const speechBtn = document.getElementById('speechToggleBtn');
+            if (speechBtn) {
+                speechBtn.textContent = speechEnabled ? t('voiceOn') : t('voiceOff');
+            }
+
+            // Announce the change
+            if (speechEnabled) {
+                setTimeout(() => speak(t('languageChanged')), 100);
             }
         }
 
@@ -1126,7 +1312,12 @@
             const shuffled = colors.sort(() => Math.random() - 0.5);
 
             const instruction = document.getElementById('whichCarInstruction');
-            const questionText = `Where is the ${correctAnswer} car?`;
+            // Translate the color
+            const translatedColor = t(correctAnswer.toUpperCase());
+            // Construct question based on language
+            const questionText = currentLanguage === 'vi'
+                ? `${t('whereIsThe')} ${translatedColor} ${t('car')}?`
+                : `${t('whereIsThe')} ${translatedColor} ${t('car')}?`;
             instruction.textContent = questionText.toUpperCase();
 
             // Speak the question
@@ -1162,7 +1353,7 @@
                 element.style.backgroundColor = '#90EE90';
 
                 // Speak positive reinforcement
-                const praises = ['Great job!', 'Excellent!', 'Well done!', 'Perfect!', 'Amazing!'];
+                const praises = t('praises');
                 const praise = praises[Math.floor(Math.random() * praises.length)];
                 speak(praise);
 
@@ -1192,7 +1383,7 @@
                 playSound('error');
 
                 // Speak encouragement
-                const encouragements = ['Try again!', 'Keep trying!', 'You can do it!'];
+                const encouragements = t('encouragements');
                 const encouragement = encouragements[Math.floor(Math.random() * encouragements.length)];
                 speak(encouragement);
             }
@@ -1215,7 +1406,7 @@
             document.getElementById('scoreDisplay').textContent = `Taps: ${sessionScore.total}`;
 
             // Speak instruction
-            speak('Tap a car to hear its sound!');
+            speak(t('tapCarSound'));
 
             cars.forEach(car => {
                 const div = document.createElement('div');
@@ -1252,7 +1443,9 @@
             correctAnswer = part.name;
 
             const instruction = document.getElementById('fixCarInstruction');
-            const questionText = `Tap the ${correctAnswer}`;
+            // Translate the car part
+            const translatedPart = t(correctAnswer.toUpperCase());
+            const questionText = `${t('tapThe')} ${translatedPart}`;
             instruction.textContent = questionText + '!';
 
             // Speak the question
@@ -1288,7 +1481,7 @@
                 element.style.backgroundColor = '#90EE90';
 
                 // Speak positive reinforcement
-                const praises = ['Great job!', 'Excellent!', 'Well done!', 'Perfect!', 'Amazing!'];
+                const praises = t('praises');
                 const praise = praises[Math.floor(Math.random() * praises.length)];
                 speak(praise);
 
@@ -1318,7 +1511,7 @@
                 playSound('error');
 
                 // Speak encouragement
-                const encouragements = ['Try again!', 'Keep trying!', 'You can do it!'];
+                const encouragements = t('encouragements');
                 const encouragement = encouragements[Math.floor(Math.random() * encouragements.length)];
                 speak(encouragement);
             }
@@ -1593,7 +1786,7 @@
 
             // Speak the vocabulary word
             setTimeout(() => {
-                speak(`Let's learn the word: ${vocab.word}`);
+                speak(`${t('learnWord')} ${vocab.word}`);
             }, 500);
 
             // Update score display
