@@ -156,6 +156,127 @@
             transform: scale(0.95);
         }
 
+        /* Voice Settings Modal */
+        .voice-settings-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .voice-settings-content {
+            background-color: var(--color-bg);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .voice-settings-title {
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--color-primary);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .voice-setting-group {
+            margin-bottom: 25px;
+        }
+
+        .voice-setting-label {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--color-text);
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .accent-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .accent-btn {
+            padding: 12px 24px;
+            font-size: 18px;
+            font-weight: bold;
+            border: 2px solid var(--color-primary);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--color-primary);
+            background-color: white;
+            font-family: 'Comic Sans MS', cursive;
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .accent-btn.active {
+            background-color: var(--color-primary);
+            color: white;
+        }
+
+        .accent-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .accent-btn:active {
+            transform: scale(0.95);
+        }
+
+        .close-settings-btn {
+            padding: 15px 40px;
+            font-size: 20px;
+            font-weight: bold;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+            background-color: var(--color-success);
+            font-family: 'Comic Sans MS', cursive;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .close-settings-btn:hover {
+            transform: scale(1.05);
+            background-color: #25a050;
+        }
+
+        .close-settings-btn:active {
+            transform: scale(0.95);
+        }
+
+        .settings-icon-btn {
+            padding: 12px 20px;
+            font-size: 24px;
+            border: 2px solid #666;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: white;
+            font-family: 'Comic Sans MS', cursive;
+        }
+
+        .settings-icon-btn:hover {
+            transform: scale(1.05);
+            background-color: #f0f0f0;
+        }
+
+        .settings-icon-btn:active {
+            transform: scale(0.95);
+        }
+
         .vocab-screen {
             display: flex;
             flex-direction: column;
@@ -669,6 +790,47 @@
                 <button class="speech-toggle-btn" id="speechToggleBtn" onclick="toggleSpeech()">
                     🔊 Bật tiếng
                 </button>
+                <button class="settings-icon-btn" onclick="showVoiceSettings()" title="Voice Settings">
+                    ⚙️
+                </button>
+            </div>
+        </div>
+
+        <!-- Voice Settings Modal -->
+        <div class="voice-settings-modal" id="voiceSettingsModal">
+            <div class="voice-settings-content">
+                <div class="voice-settings-title">🎤 Voice Settings</div>
+
+                <!-- Vietnamese Accent Selection -->
+                <div class="voice-setting-group">
+                    <label class="voice-setting-label">🇻🇳 Vietnamese Accent (Giọng):</label>
+                    <div class="accent-buttons">
+                        <button class="accent-btn" id="viAccentBtn" onclick="toggleViAccent()">
+                            🇻🇳 Miền Nam
+                        </button>
+                    </div>
+                    <div style="margin-top: 8px; font-size: 14px; color: #666;">
+                        Click to switch: Miền Nam ↔ Miền Bắc
+                    </div>
+                </div>
+
+                <!-- English Accent Selection -->
+                <div class="voice-setting-group">
+                    <label class="voice-setting-label">🇬🇧 English Accent:</label>
+                    <div class="accent-buttons">
+                        <button class="accent-btn" id="enAccentBtn" onclick="toggleEnAccent()">
+                            🇺🇸 US
+                        </button>
+                    </div>
+                    <div style="margin-top: 8px; font-size: 14px; color: #666;">
+                        Click to switch: US ↔ UK
+                    </div>
+                </div>
+
+                <!-- Close Button -->
+                <button class="close-settings-btn" onclick="hideVoiceSettings()">
+                    ✓ Done
+                </button>
             </div>
         </div>
 
@@ -815,6 +977,8 @@
         let speechRate = 0.9; // Slightly slower for kids
         let speechVoice = null;
         let currentLanguage = 'vi'; // Default to Vietnamese ('en' or 'vi')
+        let viAccent = 'south'; // 'north' or 'south' for Vietnamese
+        let enAccent = 'us'; // 'us' or 'uk' for English
 
         // Vietnamese translations
         const translations = {
@@ -972,32 +1136,86 @@
             }
         }
 
-        // Select appropriate voice for current language
+        // Select appropriate voice for current language and accent
         function updateVoiceForLanguage() {
             const voices = speechSynthesis.getVoices();
             if (voices.length === 0) return;
 
             if (currentLanguage === 'vi') {
-                // Vietnamese voices
-                speechVoice = voices.find(v =>
-                    v.lang.startsWith('vi') ||
-                    v.name.includes('Vietnamese') ||
-                    v.name.includes('Linh')
-                );
-                // Fallback to any available voice if no Vietnamese found
+                // Vietnamese voices with accent preference
+                if (viAccent === 'south') {
+                    // Southern Vietnamese accent (Miền Nam)
+                    // Prefer voices with "South", "Saigon", "Ho Chi Minh", or certain names
+                    speechVoice = voices.find(v =>
+                        (v.lang.startsWith('vi') || v.name.includes('Vietnamese')) &&
+                        (v.name.includes('South') ||
+                         v.name.includes('Saigon') ||
+                         v.name.includes('Ho Chi Minh') ||
+                         v.name.includes('Miền Nam') ||
+                         v.name.includes('An Nhiên') || // Common Southern voice
+                         v.name.includes('Khánh Ly'))
+                    );
+                } else {
+                    // Northern Vietnamese accent (Miền Bắc)
+                    // Prefer voices with "North", "Hanoi", or certain names
+                    speechVoice = voices.find(v =>
+                        (v.lang.startsWith('vi') || v.name.includes('Vietnamese')) &&
+                        (v.name.includes('North') ||
+                         v.name.includes('Hanoi') ||
+                         v.name.includes('Hà Nội') ||
+                         v.name.includes('Miền Bắc') ||
+                         v.name.includes('Linh') || // Common Northern voice
+                         v.name.includes('Mai'))
+                    );
+                }
+
+                // Fallback to any Vietnamese voice if specific accent not found
+                if (!speechVoice) {
+                    speechVoice = voices.find(v =>
+                        v.lang.startsWith('vi') ||
+                        v.name.includes('Vietnamese')
+                    );
+                }
+
+                // Final fallback to default
                 if (!speechVoice) {
                     console.warn('No Vietnamese voice found, using default');
                     speechVoice = voices[0];
                 }
             } else {
-                // English voices - prefer female, child-friendly
-                speechVoice = voices.find(v =>
-                    v.lang.startsWith('en') &&
-                    (v.name.includes('Female') || v.name.includes('Google UK'))
-                ) || voices.find(v => v.lang.startsWith('en')) || voices[0];
+                // English voices with accent preference
+                if (enAccent === 'us') {
+                    // US English accent
+                    speechVoice = voices.find(v =>
+                        v.lang.startsWith('en-US') ||
+                        (v.lang.startsWith('en') &&
+                         (v.name.includes('US') ||
+                          v.name.includes('United States') ||
+                          v.name.includes('American')))
+                    );
+                } else {
+                    // UK English accent
+                    speechVoice = voices.find(v =>
+                        v.lang.startsWith('en-GB') ||
+                        (v.lang.startsWith('en') &&
+                         (v.name.includes('UK') ||
+                          v.name.includes('British') ||
+                          v.name.includes('United Kingdom')))
+                    );
+                }
+
+                // Fallback to any English voice
+                if (!speechVoice) {
+                    speechVoice = voices.find(v => v.lang.startsWith('en'));
+                }
+
+                // Final fallback to default
+                if (!speechVoice) {
+                    speechVoice = voices[0];
+                }
             }
 
-            console.log('Selected voice:', speechVoice?.name, 'for language:', currentLanguage);
+            console.log('Selected voice:', speechVoice?.name, 'Lang:', speechVoice?.lang, 'for', currentLanguage, 'accent:', currentLanguage === 'vi' ? viAccent : enAccent);
         }
 
         // Speak text using Web Speech API
@@ -1069,6 +1287,62 @@
             // Announce the change
             if (speechEnabled) {
                 setTimeout(() => speak(t('languageChanged')), 100);
+            }
+        }
+
+        // Toggle Vietnamese accent (North/South)
+        function toggleViAccent() {
+            viAccent = viAccent === 'north' ? 'south' : 'north';
+            updateVoiceForLanguage();
+
+            // Update UI button
+            const btn = document.getElementById('viAccentBtn');
+            if (btn) {
+                btn.textContent = viAccent === 'south' ? '🇻🇳 Miền Nam' : '🇻🇳 Miền Bắc';
+            }
+
+            // Announce the change
+            if (speechEnabled && currentLanguage === 'vi') {
+                const message = viAccent === 'south'
+                    ? 'Đã chuyển sang giọng miền Nam'
+                    : 'Đã chuyển sang giọng miền Bắc';
+                setTimeout(() => speak(message), 100);
+            }
+        }
+
+        // Toggle English accent (US/UK)
+        function toggleEnAccent() {
+            enAccent = enAccent === 'us' ? 'uk' : 'us';
+            updateVoiceForLanguage();
+
+            // Update UI button
+            const btn = document.getElementById('enAccentBtn');
+            if (btn) {
+                btn.textContent = enAccent === 'us' ? '🇺🇸 US' : '🇬🇧 UK';
+            }
+
+            // Announce the change
+            if (speechEnabled && currentLanguage === 'en') {
+                const message = enAccent === 'us'
+                    ? 'Switched to US English'
+                    : 'Switched to British English';
+                setTimeout(() => speak(message), 100);
+            }
+        }
+
+        // Show voice settings modal
+        function showVoiceSettings() {
+            const modal = document.getElementById('voiceSettingsModal');
+            if (modal) {
+                modal.style.display = 'flex';
+            }
+        }
+
+        // Hide voice settings modal
+        function hideVoiceSettings() {
+            const modal = document.getElementById('voiceSettingsModal');
+            if (modal) {
+                modal.style.display = 'none';
             }
         }
 
