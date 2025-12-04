@@ -132,6 +132,30 @@
             background-color: #8E44AD;
         }
 
+        .speech-toggle-btn {
+            padding: 15px 30px;
+            font-size: 20px;
+            font-weight: bold;
+            border: 2px solid #2DB858;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+            background-color: #2DB858;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            font-family: 'Comic Sans MS', cursive;
+            margin-top: 20px;
+        }
+
+        .speech-toggle-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .speech-toggle-btn:active {
+            transform: scale(0.95);
+        }
+
         .vocab-screen {
             display: flex;
             flex-direction: column;
@@ -636,6 +660,11 @@
                     Learn Words 📚
                 </button>
             </div>
+
+            <!-- Voice Control Toggle -->
+            <button class="speech-toggle-btn" id="speechToggleBtn" onclick="toggleSpeech()">
+                🔊 Voice ON
+            </button>
         </div>
 
         <!-- Which Car Game -->
@@ -776,10 +805,89 @@
         let silenceDuration = 3000; // milliseconds of silence to trigger auto-stop
         let minRecordingDuration = 500; // minimum recording time (ms)
 
+        // Text-to-Speech settings
+        let speechEnabled = true;
+        let speechRate = 0.9; // Slightly slower for kids
+        let speechVoice = null;
+
         function showScreen(screenId) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(screenId).classList.add('active');
         }
+
+        // Initialize speech synthesis voices
+        function initSpeechSynthesis() {
+            if ('speechSynthesis' in window) {
+                // Load voices
+                const voices = speechSynthesis.getVoices();
+                if (voices.length > 0) {
+                    // Prefer child-friendly voices
+                    speechVoice = voices.find(v => v.name.includes('Female') || v.name.includes('Google UK')) || voices[0];
+                }
+
+                // Some browsers load voices asynchronously
+                if (speechSynthesis.onvoiceschanged !== undefined) {
+                    speechSynthesis.onvoiceschanged = () => {
+                        const voices = speechSynthesis.getVoices();
+                        if (voices.length > 0 && !speechVoice) {
+                            speechVoice = voices.find(v => v.name.includes('Female') || v.name.includes('Google UK')) || voices[0];
+                        }
+                    };
+                }
+            }
+        }
+
+        // Speak text using Web Speech API
+        function speak(text) {
+            if (!speechEnabled || !('speechSynthesis' in window)) {
+                return;
+            }
+
+            // Cancel any ongoing speech
+            speechSynthesis.cancel();
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = speechRate;
+            utterance.pitch = 1.1; // Slightly higher pitch for kids
+            utterance.volume = 1.0;
+
+            if (speechVoice) {
+                utterance.voice = speechVoice;
+            }
+
+            // Add visual feedback
+            utterance.onstart = () => {
+                console.log('Speaking:', text);
+            };
+
+            utterance.onend = () => {
+                console.log('Speech finished');
+            };
+
+            utterance.onerror = (event) => {
+                console.error('Speech error:', event.error);
+            };
+
+            speechSynthesis.speak(utterance);
+        }
+
+        // Toggle speech on/off
+        function toggleSpeech() {
+            speechEnabled = !speechEnabled;
+            const btn = document.getElementById('speechToggleBtn');
+            if (btn) {
+                btn.textContent = speechEnabled ? '🔊 Voice ON' : '🔇 Voice OFF';
+                btn.style.backgroundColor = speechEnabled ? '#2DB858' : '#999';
+            }
+
+            // Announce the change
+            if (speechEnabled) {
+                setTimeout(() => speak('Voice enabled'), 100);
+            }
+        }
+
+        // Initialize speech on page load
+        initSpeechSynthesis();
 
         // Create car display
         function getCarDisplay(carType) {
@@ -1018,7 +1126,11 @@
             const shuffled = colors.sort(() => Math.random() - 0.5);
 
             const instruction = document.getElementById('whichCarInstruction');
-            instruction.textContent = `Where is the ${correctAnswer} CAR?`;
+            const questionText = `Where is the ${correctAnswer} car?`;
+            instruction.textContent = questionText.toUpperCase();
+
+            // Speak the question
+            speak(questionText);
 
             const container = document.getElementById('whichCarContainer');
             container.innerHTML = '';
@@ -1048,6 +1160,12 @@
             if (isCorrect) {
                 // Multiple celebration emojis
                 element.style.backgroundColor = '#90EE90';
+
+                // Speak positive reinforcement
+                const praises = ['Great job!', 'Excellent!', 'Well done!', 'Perfect!', 'Amazing!'];
+                const praise = praises[Math.floor(Math.random() * praises.length)];
+                speak(praise);
+
                 setTimeout(() => {
                     const celebrations = ['🎉', '🎊', '⭐'];
                     celebrations.forEach((emoji, index) => {
@@ -1072,6 +1190,11 @@
                 // Wrong answer - show red
                 element.style.backgroundColor = '#FF6B6B';
                 playSound('error');
+
+                // Speak encouragement
+                const encouragements = ['Try again!', 'Keep trying!', 'You can do it!'];
+                const encouragement = encouragements[Math.floor(Math.random() * encouragements.length)];
+                speak(encouragement);
             }
         }
 
@@ -1090,6 +1213,9 @@
             const container = document.getElementById('carSoundsContainer');
             container.innerHTML = '';
             document.getElementById('scoreDisplay').textContent = `Taps: ${sessionScore.total}`;
+
+            // Speak instruction
+            speak('Tap a car to hear its sound!');
 
             cars.forEach(car => {
                 const div = document.createElement('div');
@@ -1126,7 +1252,11 @@
             correctAnswer = part.name;
 
             const instruction = document.getElementById('fixCarInstruction');
-            instruction.textContent = `Tap the ${correctAnswer}!`;
+            const questionText = `Tap the ${correctAnswer}`;
+            instruction.textContent = questionText + '!';
+
+            // Speak the question
+            speak(questionText);
 
             const container = document.getElementById('fixCarParts');
             container.innerHTML = '';
@@ -1156,6 +1286,12 @@
             if (isCorrect) {
                 // Multiple celebration emojis
                 element.style.backgroundColor = '#90EE90';
+
+                // Speak positive reinforcement
+                const praises = ['Great job!', 'Excellent!', 'Well done!', 'Perfect!', 'Amazing!'];
+                const praise = praises[Math.floor(Math.random() * praises.length)];
+                speak(praise);
+
                 setTimeout(() => {
                     const celebrations = ['⭐', '✨', '🌟'];
                     celebrations.forEach((emoji, index) => {
@@ -1180,6 +1316,11 @@
                 // Wrong answer - show red
                 element.style.backgroundColor = '#FF6B6B';
                 playSound('error');
+
+                // Speak encouragement
+                const encouragements = ['Try again!', 'Keep trying!', 'You can do it!'];
+                const encouragement = encouragements[Math.floor(Math.random() * encouragements.length)];
+                speak(encouragement);
             }
         }
 
@@ -1449,6 +1590,11 @@
             document.getElementById('nextVocabBtn').style.display = 'none';
             document.getElementById('pronounceBtn').style.display = 'inline-block';
             vocabPronounced = false;
+
+            // Speak the vocabulary word
+            setTimeout(() => {
+                speak(`Let's learn the word: ${vocab.word}`);
+            }, 500);
 
             // Update score display
             const progress = currentVocabIndex + 1;
