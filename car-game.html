@@ -962,26 +962,86 @@
         <!-- My Cars Photo Management Screen -->
         <div class="screen" id="myCarsScreen">
             <div class="game-area">
-                <div class="instruction">📸 My Toy Cars</div>
-                <div style="font-size: 18px; color: #666; margin: 10px 0 20px; text-align: center; max-width: 500px;">
-                    Take photos of your real toy cars to use in the game!
+                <div class="instruction">📸 Setup My Cars</div>
+                <div style="font-size: 18px; color: #666; margin: 10px 0 20px; text-align: center; max-width: 600px;">
+                    Load your custom toy car photos from Google Sheets!
                 </div>
 
-                <!-- Photo Upload Section -->
-                <div style="margin: 20px 0;">
-                    <input type="file" id="carPhotoInput" accept="image/*" capture="environment" style="display: none;" onchange="handleCarPhotoUpload(event)">
-                    <button class="menu-btn" onclick="document.getElementById('carPhotoInput').click()" style="background-color: #4CAF50; font-size: 20px; padding: 20px 40px;">
-                        📷 Take/Upload Photo
+                <!-- Google Sheets Setup -->
+                <div style="background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); max-width: 550px; margin: 20px 0;">
+                    <div style="font-size: 20px; font-weight: bold; margin-bottom: 15px; color: #333;">📊 Google Sheets Configuration</div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #666;">Sheet ID:</label>
+                        <input type="text" id="sheetIdInput" placeholder="Paste your Google Sheet ID here"
+                            style="width: 100%; padding: 12px; font-size: 16px; border: 2px solid #ddd; border-radius: 8px; box-sizing: border-box;">
+                        <div style="font-size: 13px; color: #999; margin-top: 5px;">
+                            Example: 1ABcD...XYZ from the URL
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #666;">Sheet Name:</label>
+                        <input type="text" id="sheetNameInput" placeholder="e.g., Cars" value="Cars"
+                            style="width: 100%; padding: 12px; font-size: 16px; border: 2px solid #ddd; border-radius: 8px; box-sizing: border-box;">
+                    </div>
+
+                    <button class="menu-btn" onclick="loadMyCarsFromSheet()" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); width: 100%; font-size: 18px; padding: 15px;">
+                        📥 Load My Cars
                     </button>
+
+                    <div id="loadStatus" style="margin-top: 15px; padding: 10px; border-radius: 8px; display: none;"></div>
                 </div>
 
-                <!-- Car Photos Grid -->
-                <div id="carPhotosGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; width: 100%; max-width: 600px; margin: 20px 0;">
-                    <!-- Car photo cards will be inserted here -->
+                <!-- Instructions -->
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 12px; max-width: 550px; margin: 20px 0; text-align: left;">
+                    <div style="font-weight: bold; margin-bottom: 10px; color: #333;">📋 How to setup:</div>
+                    <ol style="margin: 0; padding-left: 20px; color: #666; line-height: 1.8;">
+                        <li>Create a Google Sheet with columns: <code>car_name_en</code>, <code>car_name_vi</code>, <code>photo_url</code>, <code>color</code></li>
+                        <li>Upload toy car photos to OneDrive, get public share links</li>
+                        <li>Paste links into the <code>photo_url</code> column</li>
+                        <li>Make sheet publicly viewable (Share → Anyone with link can view)</li>
+                        <li>Copy Sheet ID from URL and paste above</li>
+                    </ol>
                 </div>
 
                 <div class="button-group" style="margin-top: 30px;">
                     <button class="btn btn-back" onclick="backToMenu()">Back</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- My Cars Learning Menu -->
+        <div class="screen" id="myCarsLearningMenu">
+            <div class="game-area">
+                <div class="title">🚗 My Cars Learning 🚗</div>
+                <div style="font-size: 20px; font-weight: bold; color: var(--color-primary); margin-bottom: 10px; text-align: center;">
+                    Learn with YOUR toy cars! 🎉
+                </div>
+                <div id="myCarsCount" style="font-size: 16px; color: #666; margin-bottom: 30px; text-align: center;">
+                    <!-- Will show number of loaded cars -->
+                </div>
+
+                <div class="menu-buttons">
+                    <button class="menu-btn" onclick="startMyCarGame('identify')" style="background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);">
+                        🎯 What Is It?
+                    </button>
+                    <button class="menu-btn" onclick="startMyCarGame('spell')" style="background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%);">
+                        🔤 Spell It!
+                    </button>
+                    <button class="menu-btn" onclick="startMyCarGame('memory')" style="background: linear-gradient(135deg, #F7971E 0%, #FFD200 100%);">
+                        🧠 Match Pairs
+                    </button>
+                    <button class="menu-btn" onclick="startMyCarGame('count')" style="background: linear-gradient(135deg, #9D50BB 0%, #6E48AA 100%);">
+                        🔢 Count Cars
+                    </button>
+                    <button class="menu-btn" onclick="startMyCarGame('color-sort')" style="background: linear-gradient(135deg, #FA8BFF 0%, #2BD2FF 100%);">
+                        🎨 Color Sorting
+                    </button>
+                </div>
+
+                <div class="button-group" style="margin-top: 30px;">
+                    <button class="btn btn-back" onclick="backToMenu()">Back to Main Menu</button>
                 </div>
             </div>
         </div>
@@ -1001,6 +1061,11 @@
             SHEET_NAME: 'Vocabulary', // Name of the sheet containing vocabulary
             // The sheet should have columns: word, emoji, meaning
         };
+
+        // My Cars (Custom Photos) Configuration
+        // User's custom toy car photos loaded from Google Sheets
+        let myCarsData = []; // Will be populated from Google Sheets
+        let myCarsLoaded = false;
 
         // Car emoji display
         const carEmojis = {
@@ -2392,6 +2457,897 @@
         function nextVocab() {
             currentVocabIndex++;
             displayVocabularyWord();
+        }
+
+        // ===== MY CARS (CUSTOM PHOTOS) SYSTEM =====
+
+        // Show My Cars setup screen
+        function showMyCarsScreen() {
+            // Load saved Sheet ID if exists
+            const savedSheetId = localStorage.getItem('myCarsSheetId');
+            const savedSheetName = localStorage.getItem('myCarsSheetName');
+
+            if (savedSheetId) {
+                document.getElementById('sheetIdInput').value = savedSheetId;
+            }
+            if (savedSheetName) {
+                document.getElementById('sheetNameInput').value = savedSheetName;
+            }
+
+            showScreen('myCarsScreen');
+        }
+
+        // Load custom car data from Google Sheets
+        async function loadMyCarsFromSheet() {
+            const sheetId = document.getElementById('sheetIdInput').value.trim();
+            const sheetName = document.getElementById('sheetNameInput').value.trim() || 'Cars';
+            const statusDiv = document.getElementById('loadStatus');
+
+            if (!sheetId) {
+                statusDiv.style.display = 'block';
+                statusDiv.style.background = '#ffe5e5';
+                statusDiv.style.color = '#d32f2f';
+                statusDiv.textContent = '❌ Please enter a Sheet ID';
+                return;
+            }
+
+            // Save configuration
+            localStorage.setItem('myCarsSheetId', sheetId);
+            localStorage.setItem('myCarsSheetName', sheetName);
+
+            statusDiv.style.display = 'block';
+            statusDiv.style.background = '#e3f2fd';
+            statusDiv.style.color = '#1976d2';
+            statusDiv.textContent = '⏳ Loading cars from Google Sheets...';
+
+            try {
+                const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
+                const response = await fetch(url);
+                const text = await response.text();
+
+                // Parse Google Sheets JSON response (remove prefix)
+                const jsonText = text.substring(47, text.length - 2);
+                const data = JSON.parse(jsonText);
+
+                // Extract rows
+                const rows = data.table.rows;
+                const cars = [];
+
+                for (let i = 0; i < rows.length; i++) {
+                    const row = rows[i].c;
+                    if (!row) continue;
+
+                    const car = {
+                        name_en: row[0]?.v || '',
+                        name_vi: row[1]?.v || '',
+                        photo_url: row[2]?.v || '',
+                        color: row[3]?.v || '',
+                        category: row[4]?.v || '',
+                        difficulty: parseInt(row[5]?.v) || 1
+                    };
+
+                    // Only add cars with valid data
+                    if (car.name_en && car.photo_url) {
+                        cars.push(car);
+                    }
+                }
+
+                if (cars.length === 0) {
+                    throw new Error('No valid cars found in sheet');
+                }
+
+                // Save to memory and localStorage
+                myCarsData = cars;
+                myCarsLoaded = true;
+                localStorage.setItem('myCarsData', JSON.stringify(cars));
+
+                statusDiv.style.background = '#e8f5e9';
+                statusDiv.style.color = '#2e7d32';
+                statusDiv.textContent = `✅ Loaded ${cars.length} cars successfully!`;
+
+                // Auto-navigate to My Cars Learning menu after 1 second
+                setTimeout(() => {
+                    showMyCarsLearningMenu();
+                }, 1000);
+
+            } catch (error) {
+                console.error('Error loading My Cars:', error);
+                statusDiv.style.background = '#ffe5e5';
+                statusDiv.style.color = '#d32f2f';
+                statusDiv.textContent = `❌ Error: ${error.message}. Make sure the sheet is publicly viewable!`;
+            }
+        }
+
+        // Show My Cars Learning menu
+        function showMyCarsLearningMenu() {
+            // Try to load from localStorage if not in memory
+            if (!myCarsLoaded || myCarsData.length === 0) {
+                const saved = localStorage.getItem('myCarsData');
+                if (saved) {
+                    myCarsData = JSON.parse(saved);
+                    myCarsLoaded = true;
+                } else {
+                    // No data, go to setup
+                    showMyCarsScreen();
+                    return;
+                }
+            }
+
+            const countDiv = document.getElementById('myCarsCount');
+            countDiv.textContent = `${myCarsData.length} cars loaded`;
+
+            showScreen('myCarsLearningMenu');
+            speak(currentLanguage === 'vi' ? 'Học với xe của bạn!' : 'Learn with your cars!');
+        }
+
+        // Start a My Cars learning game
+        function startMyCarGame(gameType) {
+            if (!myCarsLoaded || myCarsData.length === 0) {
+                alert('Please load your cars first!');
+                showMyCarsScreen();
+                return;
+            }
+
+            currentGame = 'my-cars-' + gameType;
+            currentRound = 0;
+            sessionScore = { correct: 0, total: 0 };
+
+            switch (gameType) {
+                case 'identify':
+                    playIdentifyGame();
+                    break;
+                case 'spell':
+                    playSpellGame();
+                    break;
+                case 'memory':
+                    playMemoryGame();
+                    break;
+                case 'count':
+                    playCountGame();
+                    break;
+                case 'color-sort':
+                    playColorSortGame();
+                    break;
+            }
+        }
+
+        // ===== IDENTIFY GAME (What Is It?) =====
+        let identifyScreen = null;
+
+        function playIdentifyGame() {
+            if (!identifyScreen) createIdentifyScreen();
+
+            // Pick random car as correct answer
+            const correctCar = myCarsData[Math.floor(Math.random() * myCarsData.length)];
+            correctAnswer = correctCar.name_en;
+
+            // Pick 2-3 other random cars
+            const numChoices = Math.min(4, myCarsData.length);
+            const choices = [correctCar];
+
+            while (choices.length < numChoices) {
+                const randomCar = myCarsData[Math.floor(Math.random() * myCarsData.length)];
+                if (!choices.find(c => c.name_en === randomCar.name_en)) {
+                    choices.push(randomCar);
+                }
+            }
+
+            // Shuffle choices
+            choices.sort(() => Math.random() - 0.5);
+
+            // Update question
+            const questionText = currentLanguage === 'vi'
+                ? `${correctCar.name_vi} ở đâu?`
+                : `Where is the ${correctCar.name_en}?`;
+
+            document.getElementById('identifyQuestion').innerHTML =
+                `<span class="question-text-small">${currentLanguage === 'vi' ? '' : 'WHERE IS THE'}</span> <span class="car-name-emphasis">${currentLanguage === 'vi' ? correctCar.name_vi.toUpperCase() : correctCar.name_en.toUpperCase()}</span> <span class="question-text-small">${currentLanguage === 'vi' ? 'Ở ĐÂU?' : '?'}</span>`;
+
+            speak(questionText);
+
+            // Display choices
+            const container = document.getElementById('identifyChoices');
+            container.innerHTML = '';
+
+            choices.forEach(car => {
+                const div = document.createElement('div');
+                div.className = 'car-item';
+                div.innerHTML = `
+                    <div style="display: flex; flex-direction: column; align-items: center;">
+                        <img src="${car.photo_url}" style="width: 150px; height: 150px; object-fit: cover; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                        <span class="car-label" style="margin-top: 10px;">${currentLanguage === 'vi' ? car.name_vi : car.name_en}</span>
+                    </div>
+                `;
+                div.onclick = () => checkIdentifyAnswer(car.name_en, div);
+                container.appendChild(div);
+            });
+
+            showScreen('identifyGameScreen');
+        }
+
+        function checkIdentifyAnswer(selected, div) {
+            sessionScore.total++;
+
+            if (selected === correctAnswer) {
+                sessionScore.correct++;
+                div.style.background = 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)';
+                playSound('success');
+                throwConfetti();
+
+                const praise = currentLanguage === 'vi'
+                    ? ['Giỏi lắm!', 'Tuyệt vời!', 'Chính xác!'][Math.floor(Math.random() * 3)]
+                    : ['Great job!', 'Excellent!', 'Perfect!'][Math.floor(Math.random() * 3)];
+                speak(praise);
+
+                setTimeout(playIdentifyGame, 1500);
+            } else {
+                div.style.background = '#ffe5e5';
+                playSound('error');
+
+                const encouragement = currentLanguage === 'vi'
+                    ? 'Thử lại nha!'
+                    : 'Try again!';
+                speak(encouragement);
+
+                setTimeout(() => {
+                    div.style.background = '';
+                }, 1000);
+            }
+
+            document.getElementById('identifyScore').textContent =
+                `Score: ${sessionScore.correct}/${sessionScore.total}`;
+        }
+
+        function createIdentifyScreen() {
+            const screen = document.createElement('div');
+            screen.className = 'screen';
+            screen.id = 'identifyGameScreen';
+            screen.innerHTML = `
+                <div class="game-area">
+                    <div class="instruction" id="identifyQuestion">What Is It?</div>
+                    <div id="identifyScore" style="font-size: 20px; margin: 10px 0; color: #666;">Score: 0/0</div>
+                    <div id="identifyChoices" style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; margin: 20px 0;"></div>
+                    <button class="btn btn-back" onclick="showMyCarsLearningMenu()">Back</button>
+                </div>
+            `;
+            document.querySelector('.container').appendChild(screen);
+            identifyScreen = screen;
+        }
+
+        // ===== SPELL GAME (Tập đánh vần) =====
+        let spellScreen = null;
+        let currentSpellCar = null;
+        let spellLetters = [];
+
+        function playSpellGame() {
+            if (!spellScreen) createSpellScreen();
+
+            // Pick random car
+            currentSpellCar = myCarsData[Math.floor(Math.random() * myCarsData.length)];
+            const targetWord = currentSpellCar.name_en.toUpperCase().replace(/\s+/g, ''); // Remove spaces
+
+            // Create scrambled letters
+            spellLetters = targetWord.split('');
+            const scrambled = [...spellLetters].sort(() => Math.random() - 0.5);
+
+            // Update UI
+            document.getElementById('spellCarPhoto').src = currentSpellCar.photo_url;
+            document.getElementById('spellCarName').textContent = currentLanguage === 'vi' ? currentSpellCar.name_vi : currentSpellCar.name_en;
+
+            const questionText = currentLanguage === 'vi'
+                ? `Đánh vần: ${currentSpellCar.name_vi}`
+                : `Spell: ${currentSpellCar.name_en}`;
+            speak(questionText);
+
+            // Display letter bank
+            const bankDiv = document.getElementById('spellLetterBank');
+            bankDiv.innerHTML = '';
+            scrambled.forEach((letter, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'spell-letter-btn';
+                btn.textContent = letter;
+                btn.dataset.letter = letter;
+                btn.dataset.idx = idx;
+                btn.onclick = () => pickLetter(btn);
+                bankDiv.appendChild(btn);
+            });
+
+            // Clear answer slots
+            const slotsDiv = document.getElementById('spellAnswerSlots');
+            slotsDiv.innerHTML = '';
+            for (let i = 0; i < spellLetters.length; i++) {
+                const slot = document.createElement('div');
+                slot.className = 'spell-slot';
+                slot.dataset.position = i;
+                slotsDiv.appendChild(slot);
+            }
+
+            showScreen('spellGameScreen');
+        }
+
+        function pickLetter(btn) {
+            const letter = btn.dataset.letter;
+
+            // Find empty slot
+            const slots = document.querySelectorAll('.spell-slot');
+            for (let slot of slots) {
+                if (!slot.dataset.filled) {
+                    slot.textContent = letter;
+                    slot.dataset.filled = 'true';
+                    slot.dataset.letter = letter;
+                    btn.disabled = true;
+                    btn.style.opacity = '0.3';
+                    playTapSound();
+
+                    // Check if complete
+                    checkSpellComplete();
+                    break;
+                }
+            }
+        }
+
+        function checkSpellComplete() {
+            const slots = document.querySelectorAll('.spell-slot');
+            const allFilled = Array.from(slots).every(s => s.dataset.filled);
+
+            if (allFilled) {
+                const answer = Array.from(slots).map(s => s.dataset.letter).join('');
+                const correct = spellLetters.join('');
+
+                sessionScore.total++;
+
+                if (answer === correct) {
+                    sessionScore.correct++;
+                    playSound('success');
+                    throwConfetti();
+                    speak(currentLanguage === 'vi' ? 'Đúng rồi!' : 'Correct!');
+
+                    setTimeout(playSpellGame, 2000);
+                } else {
+                    playSound('error');
+                    speak(currentLanguage === 'vi' ? 'Thử lại!' : 'Try again!');
+
+                    setTimeout(() => {
+                        // Reset
+                        const bankBtns = document.querySelectorAll('.spell-letter-btn');
+                        bankBtns.forEach(btn => {
+                            btn.disabled = false;
+                            btn.style.opacity = '1';
+                        });
+
+                        slots.forEach(slot => {
+                            slot.textContent = '';
+                            delete slot.dataset.filled;
+                            delete slot.dataset.letter;
+                        });
+                    }, 1500);
+                }
+
+                document.getElementById('spellScore').textContent =
+                    `Score: ${sessionScore.correct}/${sessionScore.total}`;
+            }
+        }
+
+        function createSpellScreen() {
+            const screen = document.createElement('div');
+            screen.className = 'screen';
+            screen.id = 'spellGameScreen';
+            screen.innerHTML = `
+                <div class="game-area">
+                    <div class="instruction">🔤 Spell It!</div>
+                    <div id="spellScore" style="font-size: 20px; margin: 10px 0; color: #666;">Score: 0/0</div>
+
+                    <img id="spellCarPhoto" src="" style="width: 200px; height: 200px; object-fit: cover; border-radius: 15px; margin: 20px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                    <div id="spellCarName" style="font-size: 24px; font-weight: bold; margin: 10px 0; color: #333;"></div>
+
+                    <div id="spellAnswerSlots" style="display: flex; gap: 10px; margin: 30px 0; justify-content: center; flex-wrap: wrap;"></div>
+                    <div id="spellLetterBank" style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin: 20px 0; max-width: 400px;"></div>
+
+                    <button class="btn btn-back" onclick="showMyCarsLearningMenu()">Back</button>
+                </div>
+            `;
+
+            // Add styles
+            const style = document.createElement('style');
+            style.textContent = `
+                .spell-letter-btn {
+                    width: 50px;
+                    height: 50px;
+                    font-size: 24px;
+                    font-weight: bold;
+                    border: 2px solid #4CAF50;
+                    border-radius: 10px;
+                    background: white;
+                    cursor: pointer;
+                    transition: all 0.2s;
+                }
+                .spell-letter-btn:hover:not(:disabled) {
+                    background: #4CAF50;
+                    color: white;
+                    transform: scale(1.1);
+                }
+                .spell-slot {
+                    width: 50px;
+                    height: 50px;
+                    font-size: 24px;
+                    font-weight: bold;
+                    border: 3px dashed #999;
+                    border-radius: 10px;
+                    background: #f5f5f5;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+                .spell-slot[data-filled] {
+                    background: #e8f5e9;
+                    border-color: #4CAF50;
+                    border-style: solid;
+                }
+            `;
+            document.head.appendChild(style);
+
+            document.querySelector('.container').appendChild(screen);
+            spellScreen = screen;
+        }
+
+        // ===== MEMORY GAME (Match Pairs) =====
+        let memoryScreen = null;
+        let memoryCards = [];
+        let flippedCards = [];
+        let matchedPairs = 0;
+
+        function playMemoryGame() {
+            if (!memoryScreen) createMemoryScreen();
+
+            // Select 6 random cars (will create 12 cards)
+            const numPairs = Math.min(6, Math.floor(myCarsData.length / 2));
+            const selectedCars = [];
+            const carsCopy = [...myCarsData];
+
+            for (let i = 0; i < numPairs; i++) {
+                const idx = Math.floor(Math.random() * carsCopy.length);
+                selectedCars.push(carsCopy[idx]);
+                carsCopy.splice(idx, 1);
+            }
+
+            // Create pairs
+            memoryCards = [];
+            selectedCars.forEach((car, idx) => {
+                memoryCards.push({ id: idx * 2, car, pairId: idx });
+                memoryCards.push({ id: idx * 2 + 1, car, pairId: idx });
+            });
+
+            // Shuffle
+            memoryCards.sort(() => Math.random() - 0.5);
+
+            flippedCards = [];
+            matchedPairs = 0;
+
+            // Display cards
+            const grid = document.getElementById('memoryGrid');
+            grid.innerHTML = '';
+
+            memoryCards.forEach(card => {
+                const cardDiv = document.createElement('div');
+                cardDiv.className = 'memory-card';
+                cardDiv.dataset.id = card.id;
+                cardDiv.dataset.pairId = card.pairId;
+                cardDiv.innerHTML = `
+                    <div class="memory-card-inner">
+                        <div class="memory-card-front">?</div>
+                        <div class="memory-card-back">
+                            <img src="${card.car.photo_url}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
+                        </div>
+                    </div>
+                `;
+                cardDiv.onclick = () => flipMemoryCard(cardDiv, card);
+                grid.appendChild(cardDiv);
+            });
+
+            speak(currentLanguage === 'vi' ? 'Tìm các cặp giống nhau!' : 'Find the matching pairs!');
+            showScreen('memoryGameScreen');
+        }
+
+        function flipMemoryCard(cardDiv, card) {
+            if (flippedCards.length >= 2) return;
+            if (cardDiv.classList.contains('flipped')) return;
+            if (cardDiv.classList.contains('matched')) return;
+
+            cardDiv.classList.add('flipped');
+            flippedCards.push({ div: cardDiv, card });
+            playTapSound();
+
+            if (flippedCards.length === 2) {
+                setTimeout(checkMemoryMatch, 800);
+            }
+        }
+
+        function checkMemoryMatch() {
+            const [first, second] = flippedCards;
+
+            if (first.card.pairId === second.card.pairId) {
+                // Match!
+                first.div.classList.add('matched');
+                second.div.classList.add('matched');
+                playSound('success');
+                matchedPairs++;
+
+                if (matchedPairs === memoryCards.length / 2) {
+                    setTimeout(() => {
+                        throwConfetti();
+                        speak(currentLanguage === 'vi' ? 'Hoàn thành!' : 'Complete!');
+                        sessionScore.correct++;
+                        sessionScore.total++;
+
+                        setTimeout(playMemoryGame, 2000);
+                    }, 500);
+                }
+            } else {
+                // No match
+                playSound('error');
+                setTimeout(() => {
+                    first.div.classList.remove('flipped');
+                    second.div.classList.remove('flipped');
+                }, 1000);
+            }
+
+            flippedCards = [];
+        }
+
+        function createMemoryScreen() {
+            const screen = document.createElement('div');
+            screen.className = 'screen';
+            screen.id = 'memoryGameScreen';
+            screen.innerHTML = `
+                <div class="game-area">
+                    <div class="instruction">🧠 Match Pairs</div>
+                    <div id="memoryGrid" style="display: grid; grid-template-columns: repeat(4, 100px); gap: 15px; margin: 30px 0;"></div>
+                    <button class="btn btn-back" onclick="showMyCarsLearningMenu()">Back</button>
+                </div>
+            `;
+
+            const style = document.createElement('style');
+            style.textContent = `
+                .memory-card {
+                    width: 100px;
+                    height: 100px;
+                    cursor: pointer;
+                    perspective: 1000px;
+                }
+                .memory-card-inner {
+                    width: 100%;
+                    height: 100%;
+                    position: relative;
+                    transition: transform 0.6s;
+                    transform-style: preserve-3d;
+                }
+                .memory-card.flipped .memory-card-inner {
+                    transform: rotateY(180deg);
+                }
+                .memory-card-front, .memory-card-back {
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    backface-visibility: hidden;
+                    border-radius: 10px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 48px;
+                    font-weight: bold;
+                }
+                .memory-card-front {
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    color: white;
+                }
+                .memory-card-back {
+                    background: white;
+                    transform: rotateY(180deg);
+                    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+                }
+                .memory-card.matched {
+                    opacity: 0.6;
+                    pointer-events: none;
+                }
+            `;
+            document.head.appendChild(style);
+
+            document.querySelector('.container').appendChild(screen);
+            memoryScreen = screen;
+        }
+
+        // ===== COUNT GAME (Đếm xe) =====
+        let countScreen = null;
+
+        function playCountGame() {
+            if (!countScreen) createCountScreen();
+
+            // Pick a random car type to count
+            const targetCar = myCarsData[Math.floor(Math.random() * myCarsData.length)];
+            const numTarget = Math.floor(Math.random() * 4) + 2; // 2-5 cars
+            const numOthers = Math.floor(Math.random() * 3) + 2; // 2-4 other cars
+
+            correctAnswer = numTarget.toString();
+
+            // Create display
+            const cars = [];
+            for (let i = 0; i < numTarget; i++) {
+                cars.push(targetCar);
+            }
+
+            // Add other random cars
+            for (let i = 0; i < numOthers; i++) {
+                let otherCar;
+                do {
+                    otherCar = myCarsData[Math.floor(Math.random() * myCarsData.length)];
+                } while (otherCar.name_en === targetCar.name_en);
+                cars.push(otherCar);
+            }
+
+            // Shuffle
+            cars.sort(() => Math.random() - 0.5);
+
+            // Update question
+            const questionText = currentLanguage === 'vi'
+                ? `Có bao nhiêu ${targetCar.name_vi}?`
+                : `How many ${targetCar.name_en}s?`;
+
+            document.getElementById('countQuestion').textContent = questionText;
+            speak(questionText);
+
+            // Display cars
+            const container = document.getElementById('countCarsDisplay');
+            container.innerHTML = '';
+            cars.forEach(car => {
+                const img = document.createElement('img');
+                img.src = car.photo_url;
+                img.style.cssText = 'width: 80px; height: 80px; object-fit: cover; border-radius: 10px; margin: 5px; box-shadow: 0 2px 6px rgba(0,0,0,0.2);';
+                container.appendChild(img);
+            });
+
+            // Create number buttons (0-9)
+            const buttons = document.getElementById('countButtons');
+            buttons.innerHTML = '';
+            for (let i = 0; i <= 9; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'count-number-btn';
+                btn.textContent = i;
+                btn.onclick = () => checkCountAnswer(i.toString(), btn);
+                buttons.appendChild(btn);
+            }
+
+            showScreen('countGameScreen');
+        }
+
+        function checkCountAnswer(answer, btn) {
+            sessionScore.total++;
+
+            if (answer === correctAnswer) {
+                sessionScore.correct++;
+                btn.style.background = '#4CAF50';
+                btn.style.color = 'white';
+                playSound('success');
+                throwConfetti();
+                speak(currentLanguage === 'vi' ? 'Đúng rồi!' : 'Correct!');
+
+                setTimeout(playCountGame, 1500);
+            } else {
+                btn.style.background = '#f44336';
+                btn.style.color = 'white';
+                playSound('error');
+                speak(currentLanguage === 'vi' ? 'Thử lại!' : 'Try again!');
+
+                setTimeout(() => {
+                    btn.style.background = '';
+                    btn.style.color = '';
+                }, 1000);
+            }
+
+            document.getElementById('countScore').textContent =
+                `Score: ${sessionScore.correct}/${sessionScore.total}`;
+        }
+
+        function createCountScreen() {
+            const screen = document.createElement('div');
+            screen.className = 'screen';
+            screen.id = 'countGameScreen';
+            screen.innerHTML = `
+                <div class="game-area">
+                    <div class="instruction" id="countQuestion">Count the Cars</div>
+                    <div id="countScore" style="font-size: 20px; margin: 10px 0; color: #666;">Score: 0/0</div>
+
+                    <div id="countCarsDisplay" style="display: flex; flex-wrap: wrap; justify-content: center; max-width: 500px; margin: 30px 0; padding: 20px; background: #f5f5f5; border-radius: 15px;"></div>
+
+                    <div id="countButtons" style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; max-width: 400px;"></div>
+
+                    <button class="btn btn-back" onclick="showMyCarsLearningMenu()" style="margin-top: 30px;">Back</button>
+                </div>
+            `;
+
+            const style = document.createElement('style');
+            style.textContent = `
+                .count-number-btn {
+                    width: 60px;
+                    height: 60px;
+                    font-size: 28px;
+                    font-weight: bold;
+                    border: 3px solid #9D50BB;
+                    border-radius: 12px;
+                    background: white;
+                    cursor: pointer;
+                    transition: all 0.2s;
+                }
+                .count-number-btn:hover {
+                    transform: scale(1.1);
+                    background: #9D50BB;
+                    color: white;
+                }
+            `;
+            document.head.appendChild(style);
+
+            document.querySelector('.container').appendChild(screen);
+            countScreen = screen;
+        }
+
+        // ===== COLOR SORTING GAME =====
+        let colorSortScreen = null;
+        let draggedCar = null;
+
+        function playColorSortGame() {
+            if (!colorSortScreen) createColorSortScreen();
+
+            // Get unique colors from cars
+            const colors = [...new Set(myCarsData.map(c => c.color))].filter(c => c);
+            if (colors.length < 2) {
+                alert('Need at least 2 different colors in your cars!');
+                showMyCarsLearningMenu();
+                return;
+            }
+
+            // Select up to 3 colors
+            const selectedColors = colors.slice(0, Math.min(3, colors.length));
+
+            // Select 3-4 cars per color
+            const carsToSort = [];
+            selectedColors.forEach(color => {
+                const colorCars = myCarsData.filter(c => c.color === color);
+                const numCars = Math.min(4, colorCars.length);
+                for (let i = 0; i < numCars; i++) {
+                    if (colorCars[i]) carsToSort.push(colorCars[i]);
+                }
+            });
+
+            // Shuffle
+            carsToSort.sort(() => Math.random() - 0.5);
+
+            // Create color baskets
+            const basketsDiv = document.getElementById('colorBaskets');
+            basketsDiv.innerHTML = '';
+            selectedColors.forEach(color => {
+                const basket = document.createElement('div');
+                basket.className = 'color-basket';
+                basket.dataset.color = color;
+                basket.innerHTML = `
+                    <div style="font-weight: bold; margin-bottom: 10px; font-size: 18px;">${color}</div>
+                    <div class="color-basket-drop" data-color="${color}"></div>
+                `;
+                basket.querySelector('.color-basket-drop').ondragover = allowDrop;
+                basket.querySelector('.color-basket-drop').ondrop = (e) => dropCar(e, color);
+                basketsDiv.appendChild(basket);
+            });
+
+            // Display cars to sort
+            const carsDiv = document.getElementById('carsToSort');
+            carsDiv.innerHTML = '';
+            carsToSort.forEach((car, idx) => {
+                const carDiv = document.createElement('div');
+                carDiv.className = 'sortable-car';
+                carDiv.draggable = true;
+                carDiv.dataset.color = car.color;
+                carDiv.dataset.carId = idx;
+                carDiv.innerHTML = `<img src="${car.photo_url}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 10px;">`;
+                carDiv.ondragstart = (e) => dragStart(e, car);
+                carsDiv.appendChild(carDiv);
+            });
+
+            speak(currentLanguage === 'vi' ? 'Sắp xếp xe theo màu!' : 'Sort cars by color!');
+            showScreen('colorSortGameScreen');
+        }
+
+        function dragStart(e, car) {
+            draggedCar = car;
+            e.dataTransfer.effectAllowed = 'move';
+        }
+
+        function allowDrop(e) {
+            e.preventDefault();
+        }
+
+        function dropCar(e, targetColor) {
+            e.preventDefault();
+
+            if (!draggedCar) return;
+
+            if (draggedCar.color === targetColor) {
+                // Correct!
+                playSound('success');
+                const draggedElement = document.querySelector(`.sortable-car[data-color="${draggedCar.color}"][draggable="true"]`);
+                if (draggedElement) {
+                    e.target.appendChild(draggedElement);
+                    draggedElement.draggable = false;
+                    draggedElement.style.opacity = '0.7';
+                }
+
+                // Check if all sorted
+                const remainingCars = document.querySelectorAll('.sortable-car[draggable="true"]');
+                if (remainingCars.length === 0) {
+                    setTimeout(() => {
+                        throwConfetti();
+                        speak(currentLanguage === 'vi' ? 'Hoàn thành!' : 'Complete!');
+                        sessionScore.correct++;
+                        sessionScore.total++;
+                        document.getElementById('colorSortScore').textContent =
+                            `Score: ${sessionScore.correct}/${sessionScore.total}`;
+
+                        setTimeout(playColorSortGame, 2000);
+                    }, 500);
+                }
+            } else {
+                // Wrong
+                playSound('error');
+                speak(currentLanguage === 'vi' ? 'Thử lại!' : 'Try again!');
+            }
+
+            draggedCar = null;
+        }
+
+        function createColorSortScreen() {
+            const screen = document.createElement('div');
+            screen.className = 'screen';
+            screen.id = 'colorSortGameScreen';
+            screen.innerHTML = `
+                <div class="game-area">
+                    <div class="instruction">🎨 Color Sorting</div>
+                    <div id="colorSortScore" style="font-size: 20px; margin: 10px 0; color: #666;">Score: 0/0</div>
+
+                    <div id="carsToSort" style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; margin: 30px 0; padding: 20px; background: #f5f5f5; border-radius: 15px; min-height: 120px;"></div>
+
+                    <div style="font-size: 18px; font-weight: bold; margin: 20px 0;">Drag to correct basket:</div>
+                    <div id="colorBaskets" style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;"></div>
+
+                    <button class="btn btn-back" onclick="showMyCarsLearningMenu()" style="margin-top: 30px;">Back</button>
+                </div>
+            `;
+
+            const style = document.createElement('style');
+            style.textContent = `
+                .sortable-car {
+                    cursor: grab;
+                    transition: transform 0.2s;
+                }
+                .sortable-car:active {
+                    cursor: grabbing;
+                }
+                .color-basket {
+                    text-align: center;
+                }
+                .color-basket-drop {
+                    width: 120px;
+                    min-height: 150px;
+                    border: 3px dashed #999;
+                    border-radius: 12px;
+                    background: #fafafa;
+                    padding: 10px;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 10px;
+                    align-items: center;
+                }
+            `;
+            document.head.appendChild(style);
+
+            document.querySelector('.container').appendChild(screen);
+            colorSortScreen = screen;
         }
     </script>
 </body>
