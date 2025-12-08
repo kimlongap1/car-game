@@ -1067,6 +1067,13 @@
 
         // My Cars (Custom Photos) Configuration
         // User's custom toy car photos loaded from Google Sheets
+        const MY_CARS_CONFIG = {
+            ENABLED: true,
+            SHEET_ID: '1L5uPWT-44HeOhFIDBZywS6JolM7BBgQHfmN2FzRaGsU', // Your toy cars Google Sheet
+            SHEET_NAME: 'Cars', // Name of the sheet tab
+            AUTO_LOAD: true // Automatically load on startup
+        };
+
         let myCarsData = []; // Will be populated from Google Sheets
         let myCarsLoaded = false;
 
@@ -2507,16 +2514,91 @@
         }
 
         // Auto-load My Cars data on page startup if available
-        function autoLoadMyCars() {
+        async function autoLoadMyCars() {
+            // First, try to load from localStorage
             const saved = localStorage.getItem('myCarsData');
             if (saved) {
                 try {
                     myCarsData = JSON.parse(saved);
                     myCarsLoaded = true;
-                    console.log(`Auto-loaded ${myCarsData.length} cars from localStorage`);
+                    console.log(`✅ Auto-loaded ${myCarsData.length} cars from localStorage`);
+                    return;
                 } catch (e) {
-                    console.error('Error auto-loading My Cars:', e);
+                    console.error('Error loading from localStorage:', e);
                 }
+            }
+
+            // If not in localStorage and AUTO_LOAD is enabled, fetch from Google Sheets
+            if (MY_CARS_CONFIG.ENABLED && MY_CARS_CONFIG.AUTO_LOAD && MY_CARS_CONFIG.SHEET_ID) {
+                console.log('📥 Auto-loading My Cars from Google Sheets...');
+                try {
+                    await loadMyCarsFromConfig();
+                } catch (e) {
+                    console.error('Error auto-loading from Google Sheets:', e);
+                }
+            }
+        }
+
+        // Load cars from configuration (not from user input)
+        async function loadMyCarsFromConfig() {
+            const sheetId = MY_CARS_CONFIG.SHEET_ID;
+            const sheetName = MY_CARS_CONFIG.SHEET_NAME;
+
+            try {
+                const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
+                const response = await fetch(url);
+                const text = await response.text();
+
+                // Parse Google Sheets JSON response (remove prefix)
+                const jsonText = text.substring(47, text.length - 2);
+                const data = JSON.parse(jsonText);
+
+                // Extract rows
+                const rows = data.table.rows;
+                const cars = [];
+
+                for (let i = 0; i < rows.length; i++) {
+                    const row = rows[i].c;
+                    if (!row) continue;
+
+                    let photoUrl = row[2]?.v || '';
+
+                    // Convert OneDrive share link to direct embed URL
+                    if (photoUrl.includes('1drv.ms') || photoUrl.includes('onedrive.live.com')) {
+                        photoUrl = convertOneDriveLink(photoUrl);
+                    }
+
+                    const car = {
+                        name_en: row[0]?.v || '',
+                        name_vi: row[1]?.v || '',
+                        photo_url: photoUrl,
+                        color: row[3]?.v || '',
+                        category: row[4]?.v || '',
+                        difficulty: parseInt(row[5]?.v) || 1
+                    };
+
+                    // Only add cars with valid data
+                    if (car.name_en && car.photo_url) {
+                        cars.push(car);
+                    }
+                }
+
+                if (cars.length === 0) {
+                    throw new Error('No valid cars found in sheet');
+                }
+
+                // Save to memory and localStorage
+                myCarsData = cars;
+                myCarsLoaded = true;
+                localStorage.setItem('myCarsData', JSON.stringify(cars));
+                localStorage.setItem('myCarsSheetId', sheetId);
+                localStorage.setItem('myCarsSheetName', sheetName);
+
+                console.log(`✅ Auto-loaded ${cars.length} cars from Google Sheets!`);
+
+            } catch (error) {
+                console.error('❌ Error loading My Cars from config:', error);
+                throw error;
             }
         }
 
