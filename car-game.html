@@ -2873,7 +2873,10 @@
 
             // Pick random car
             currentSpellCar = myCarsData[Math.floor(Math.random() * myCarsData.length)];
-            const targetWord = currentSpellCar.name_en.toUpperCase().replace(/\s+/g, ''); // Remove spaces
+
+            // Use the correct name based on current language
+            const carName = currentLanguage === 'vi' ? currentSpellCar.name_vi : currentSpellCar.name_en;
+            const targetWord = carName.toUpperCase().replace(/\s+/g, ''); // Remove spaces
 
             // Create scrambled letters
             spellLetters = targetWord.split('');
@@ -2881,11 +2884,11 @@
 
             // Update UI
             document.getElementById('spellCarPhoto').src = currentSpellCar.photo_url;
-            document.getElementById('spellCarName').textContent = currentLanguage === 'vi' ? currentSpellCar.name_vi : currentSpellCar.name_en;
+            document.getElementById('spellCarName').textContent = carName;
 
             const questionText = currentLanguage === 'vi'
-                ? `Đánh vần: ${currentSpellCar.name_vi}`
-                : `Spell: ${currentSpellCar.name_en}`;
+                ? `Đánh vần: ${carName}`
+                : `Spell: ${carName}`;
             speak(questionText);
 
             // Display letter bank
