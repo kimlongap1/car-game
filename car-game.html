@@ -3051,15 +3051,26 @@
         function playMemoryGame() {
             if (!memoryScreen) createMemoryScreen();
 
-            // Select 6 random cars (will create 12 cards)
-            const numPairs = Math.min(6, Math.floor(myCarsData.length / 2));
+            // Always create 6 pairs (12 cards) for a fun game
+            const numPairs = 6;
             const selectedCars = [];
-            const carsCopy = [...myCarsData];
 
-            for (let i = 0; i < numPairs; i++) {
-                const idx = Math.floor(Math.random() * carsCopy.length);
-                selectedCars.push(carsCopy[idx]);
-                carsCopy.splice(idx, 1);
+            // If we have enough unique cars, use them each once
+            // If not enough cars, reuse them to reach 6 pairs
+            if (myCarsData.length >= numPairs) {
+                // Enough cars - pick 6 different ones
+                const carsCopy = [...myCarsData];
+                for (let i = 0; i < numPairs; i++) {
+                    const idx = Math.floor(Math.random() * carsCopy.length);
+                    selectedCars.push(carsCopy[idx]);
+                    carsCopy.splice(idx, 1);
+                }
+            } else {
+                // Not enough cars - reuse them to get 6 pairs
+                for (let i = 0; i < numPairs; i++) {
+                    const car = myCarsData[i % myCarsData.length]; // Loop through available cars
+                    selectedCars.push(car);
+                }
             }
 
             // Create pairs
