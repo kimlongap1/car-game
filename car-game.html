@@ -1040,8 +1040,11 @@
                     </button>
                 </div>
 
-                <div class="button-group" style="margin-top: 30px;">
+                <div class="button-group" style="margin-top: 30px; gap: 15px;">
                     <button class="btn btn-back" onclick="backToMenu()">Back to Main Menu</button>
+                    <button class="btn" onclick="showMyCarsScreen()" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none;">
+                        🔄 Reload Cars
+                    </button>
                 </div>
             </div>
         </div>
@@ -1514,6 +1517,9 @@
         // Initialize speech on page load
         initSpeechSynthesis();
 
+        // Auto-load My Cars data on page load
+        autoLoadMyCars();
+
         // Prevent modal content clicks from closing modal
         document.addEventListener('DOMContentLoaded', function() {
             const modalContent = document.querySelector('.voice-settings-content');
@@ -1578,7 +1584,12 @@
             } else if (gameType === 'vocabulary') {
                 playVocab();
             } else if (gameType === 'my-cars') {
-                showMyCarsScreen();
+                // Check if cars are already loaded, go directly to learning menu
+                if (myCarsLoaded && myCarsData.length > 0) {
+                    showMyCarsLearningMenu();
+                } else {
+                    showMyCarsScreen();
+                }
             }
         }
 
@@ -2461,6 +2472,54 @@
 
         // ===== MY CARS (CUSTOM PHOTOS) SYSTEM =====
 
+        // Convert OneDrive share link to direct embed URL
+        function convertOneDriveLink(url) {
+            try {
+                // Handle 1drv.ms short links
+                if (url.includes('1drv.ms')) {
+                    // OneDrive short links need to be expanded first
+                    // For now, try to use as-is with embed parameter
+                    return url + '&embed=1';
+                }
+
+                // Handle full onedrive.live.com links
+                if (url.includes('onedrive.live.com')) {
+                    // Extract the resid and authkey parameters
+                    const urlObj = new URL(url);
+                    const resId = urlObj.searchParams.get('resid') || urlObj.searchParams.get('id');
+                    const authKey = urlObj.searchParams.get('authkey');
+
+                    if (resId && authKey) {
+                        // Build embed URL
+                        return `https://onedrive.live.com/embed?resid=${resId}&authkey=${authKey}`;
+                    }
+
+                    // If parameters not found, try adding embed parameter
+                    return url.replace('/view', '/embed').replace('?', '&') + '&embed=1';
+                }
+
+                // Return original URL if not OneDrive
+                return url;
+            } catch (e) {
+                console.error('Error converting OneDrive link:', e);
+                return url; // Return original on error
+            }
+        }
+
+        // Auto-load My Cars data on page startup if available
+        function autoLoadMyCars() {
+            const saved = localStorage.getItem('myCarsData');
+            if (saved) {
+                try {
+                    myCarsData = JSON.parse(saved);
+                    myCarsLoaded = true;
+                    console.log(`Auto-loaded ${myCarsData.length} cars from localStorage`);
+                } catch (e) {
+                    console.error('Error auto-loading My Cars:', e);
+                }
+            }
+        }
+
         // Show My Cars setup screen
         function showMyCarsScreen() {
             // Load saved Sheet ID if exists
@@ -2517,10 +2576,18 @@
                     const row = rows[i].c;
                     if (!row) continue;
 
+                    let photoUrl = row[2]?.v || '';
+
+                    // Convert OneDrive share link to direct embed URL
+                    if (photoUrl.includes('1drv.ms') || photoUrl.includes('onedrive.live.com')) {
+                        // Extract the share token and convert to embed URL
+                        photoUrl = convertOneDriveLink(photoUrl);
+                    }
+
                     const car = {
                         name_en: row[0]?.v || '',
                         name_vi: row[1]?.v || '',
-                        photo_url: row[2]?.v || '',
+                        photo_url: photoUrl,
                         color: row[3]?.v || '',
                         category: row[4]?.v || '',
                         difficulty: parseInt(row[5]?.v) || 1
