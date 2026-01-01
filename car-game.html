@@ -2905,10 +2905,11 @@
                     difficulty: difficulty
                 };
 
+                // Use text/plain to avoid CORS preflight
                 const response = await fetch(MY_CARS_CONFIG.UPLOAD_URL, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
+                        'Content-Type': 'text/plain',
                     },
                     body: JSON.stringify(data)
                 });
