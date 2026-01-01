@@ -1041,11 +1041,102 @@
                 </div>
 
                 <div class="button-group" style="margin-top: 30px; gap: 15px;">
-                    <button class="btn btn-back" onclick="backToMenu()">Back to Main Menu</button>
+                    <button class="btn" onclick="showAddCarScreen()" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; border: none; font-size: 18px;">
+                        ➕ Add New Car
+                    </button>
                     <button class="btn" onclick="showMyCarsScreen()" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none;">
                         🔄 Reload Cars
                     </button>
+                    <button class="btn btn-back" onclick="backToMenu()">Back to Main Menu</button>
                 </div>
+            </div>
+        </div>
+
+        <!-- Add New Car Screen -->
+        <div class="screen" id="addCarScreen">
+            <div class="game-area">
+                <div class="instruction">➕ Add New Toy Car</div>
+                <div style="font-size: 18px; color: #666; margin: 10px 0 20px; text-align: center; max-width: 600px;">
+                    Take a photo and add it to your collection!
+                </div>
+
+                <form id="addCarForm" style="max-width: 500px; margin: 20px auto; text-align: left;">
+                    <!-- Photo Upload -->
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #333;">📸 Car Photo</label>
+                        <div id="photoUploadArea" onclick="document.getElementById('carPhotoInput').click()"
+                             style="border: 3px dashed #ddd; border-radius: 15px; padding: 40px; text-align: center; cursor: pointer; transition: all 0.3s; background: #f9f9f9;">
+                            <input type="file" id="carPhotoInput" accept="image/*" capture="environment" style="display: none;">
+                            <div id="uploadText" style="font-size: 16px; color: #666;">📷 Tap to take photo or select from gallery</div>
+                            <img id="photoPreview" alt="Preview" style="max-width: 100%; max-height: 250px; margin-top: 15px; border-radius: 10px; display: none; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                        </div>
+                    </div>
+
+                    <!-- English Name -->
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #333;">🇬🇧 English Name</label>
+                        <input type="text" id="carNameEn" placeholder="e.g., Fire Truck" required
+                               style="width: 100%; padding: 12px; font-size: 16px; border: 2px solid #ddd; border-radius: 10px;">
+                    </div>
+
+                    <!-- Vietnamese Name -->
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #333;">🇻🇳 Vietnamese Name</label>
+                        <input type="text" id="carNameVi" placeholder="e.g., Xe cứu hỏa" required
+                               style="width: 100%; padding: 12px; font-size: 16px; border: 2px solid #ddd; border-radius: 10px;">
+                    </div>
+
+                    <!-- Color -->
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #333;">🎨 Color</label>
+                        <select id="carColor" required
+                                style="width: 100%; padding: 12px; font-size: 16px; border: 2px solid #ddd; border-radius: 10px; background: white;">
+                            <option value="">Select color...</option>
+                            <option value="red">Red / Đỏ</option>
+                            <option value="blue">Blue / Xanh dương</option>
+                            <option value="yellow">Yellow / Vàng</option>
+                            <option value="green">Green / Xanh lá</option>
+                            <option value="orange">Orange / Cam</option>
+                            <option value="purple">Purple / Tím</option>
+                            <option value="pink">Pink / Hồng</option>
+                            <option value="black">Black / Đen</option>
+                            <option value="white">White / Trắng</option>
+                            <option value="gray">Gray / Xám</option>
+                        </select>
+                    </div>
+
+                    <!-- Category -->
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #333;">📁 Category</label>
+                        <input type="text" id="carCategory" placeholder="e.g., emergency, sports, construction" value="toy"
+                               style="width: 100%; padding: 12px; font-size: 16px; border: 2px solid #ddd; border-radius: 10px;">
+                    </div>
+
+                    <!-- Difficulty -->
+                    <div style="margin-bottom: 30px;">
+                        <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #333;">⭐ Difficulty</label>
+                        <select id="carDifficulty"
+                                style="width: 100%; padding: 12px; font-size: 16px; border: 2px solid #ddd; border-radius: 10px; background: white;">
+                            <option value="1">1 - Easy</option>
+                            <option value="2" selected>2 - Medium</option>
+                            <option value="3">3 - Hard</option>
+                        </select>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" id="uploadCarBtn" class="btn"
+                            style="width: 100%; background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; border: none; padding: 15px; font-size: 18px; font-weight: bold; margin-bottom: 15px;">
+                        ➕ Add to Collection
+                    </button>
+
+                    <!-- Status -->
+                    <div id="uploadStatus" style="padding: 15px; border-radius: 10px; text-align: center; font-weight: bold; display: none; margin-bottom: 15px;"></div>
+
+                    <!-- Back Button -->
+                    <button type="button" class="btn btn-back" onclick="showMyCarsLearningMenu()" style="width: 100%;">
+                        Back to My Cars
+                    </button>
+                </form>
             </div>
         </div>
     </div>
@@ -1071,7 +1162,8 @@
             ENABLED: true,
             SHEET_ID: '1L5uPWT-44HeOhFIDBZywS6JolM7BBgQHfmN2FzRaGsU', // Your toy cars Google Sheet
             SHEET_NAME: 'Cars', // Name of the sheet tab
-            AUTO_LOAD: true // Automatically load on startup
+            AUTO_LOAD: true, // Automatically load on startup
+            UPLOAD_URL: '' // Google Apps Script Web App URL (see google-apps-script-upload.js for setup)
         };
 
         let myCarsData = []; // Will be populated from Google Sheets
@@ -2727,6 +2819,165 @@
 
             showScreen('myCarsLearningMenu');
             speak(currentLanguage === 'vi' ? 'Học với xe của bạn!' : 'Learn with your cars!');
+        }
+
+        // Show Add New Car screen
+        function showAddCarScreen() {
+            showScreen('addCarScreen');
+
+            // Setup photo upload preview if not already set up
+            if (!window.carPhotoUploadInitialized) {
+                const photoInput = document.getElementById('carPhotoInput');
+                const photoPreview = document.getElementById('photoPreview');
+                const photoUploadArea = document.getElementById('photoUploadArea');
+                const uploadText = document.getElementById('uploadText');
+
+                photoInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file && file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            photoPreview.src = e.target.result;
+                            photoPreview.style.display = 'block';
+                            uploadText.textContent = '✓ Photo selected - Ready to upload!';
+                            photoUploadArea.style.borderColor = '#4caf50';
+                            photoUploadArea.style.background = '#f1f8f4';
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+
+                // Setup form submission
+                document.getElementById('addCarForm').addEventListener('submit', handleCarUpload);
+
+                window.carPhotoUploadInitialized = true;
+            }
+
+            speak(currentLanguage === 'vi' ? 'Thêm xe mới!' : 'Add new car!');
+        }
+
+        // Handle car upload
+        async function handleCarUpload(e) {
+            e.preventDefault();
+
+            // Check if upload URL is configured
+            if (!MY_CARS_CONFIG.UPLOAD_URL) {
+                alert('Upload not configured yet! Please set up Google Apps Script first.\n\nSee google-apps-script-upload.js for instructions.');
+                return;
+            }
+
+            const photoInput = document.getElementById('carPhotoInput');
+            const statusDiv = document.getElementById('uploadStatus');
+            const submitBtn = document.getElementById('uploadCarBtn');
+
+            if (!photoInput.files || !photoInput.files[0]) {
+                showUploadStatus('Please select a photo first!', 'error');
+                return;
+            }
+
+            const file = photoInput.files[0];
+            const nameEn = document.getElementById('carNameEn').value.trim();
+            const nameVi = document.getElementById('carNameVi').value.trim();
+            const color = document.getElementById('carColor').value;
+            const category = document.getElementById('carCategory').value.trim();
+            const difficulty = document.getElementById('carDifficulty').value;
+
+            if (!nameEn || !nameVi || !color) {
+                showUploadStatus('Please fill all required fields!', 'error');
+                return;
+            }
+
+            // Show loading status
+            showUploadStatus('Uploading photo to Google Drive...', 'loading');
+            submitBtn.disabled = true;
+
+            try {
+                // Convert file to base64
+                const base64Data = await fileToBase64(file);
+
+                // Upload to Google Apps Script
+                const formData = new URLSearchParams({
+                    action: 'upload',
+                    fileName: file.name,
+                    fileData: base64Data,
+                    mimeType: file.type,
+                    nameEn: nameEn,
+                    nameVi: nameVi,
+                    color: color,
+                    category: category,
+                    difficulty: difficulty
+                });
+
+                const response = await fetch(MY_CARS_CONFIG.UPLOAD_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showUploadStatus('✅ Car added successfully!', 'success');
+
+                    // Clear form
+                    document.getElementById('addCarForm').reset();
+                    document.getElementById('photoPreview').style.display = 'none';
+                    document.getElementById('uploadText').textContent = '📷 Tap to take photo or select from gallery';
+                    document.getElementById('photoUploadArea').style.borderColor = '#ddd';
+                    document.getElementById('photoUploadArea').style.background = '#f9f9f9';
+
+                    // Reload cars data
+                    setTimeout(async () => {
+                        await loadMyCarsFromConfig();
+                        showUploadStatus('Car added and data reloaded! 🎉', 'success');
+                        setTimeout(() => {
+                            showMyCarsLearningMenu();
+                        }, 1500);
+                    }, 1000);
+
+                } else {
+                    showUploadStatus('❌ Error: ' + (result.error || 'Upload failed'), 'error');
+                }
+
+            } catch (error) {
+                console.error('Upload error:', error);
+                showUploadStatus('❌ Error: ' + error.message, 'error');
+            } finally {
+                submitBtn.disabled = false;
+            }
+        }
+
+        // Convert file to base64
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const base64 = reader.result.split(',')[1];
+                    resolve(base64);
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Show upload status
+        function showUploadStatus(message, type) {
+            const statusDiv = document.getElementById('uploadStatus');
+            statusDiv.textContent = message;
+            statusDiv.style.display = 'block';
+
+            if (type === 'success') {
+                statusDiv.style.background = '#e8f5e9';
+                statusDiv.style.color = '#2e7d32';
+            } else if (type === 'error') {
+                statusDiv.style.background = '#ffebee';
+                statusDiv.style.color = '#c62828';
+            } else if (type === 'loading') {
+                statusDiv.style.background = '#fff3e0';
+                statusDiv.style.color = '#e65100';
+            }
         }
 
         // Start a My Cars learning game
