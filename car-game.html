@@ -1163,8 +1163,7 @@
             SHEET_ID: '1L5uPWT-44HeOhFIDBZywS6JolM7BBgQHfmN2FzRaGsU', // Your toy cars Google Sheet
             SHEET_NAME: 'Cars', // Name of the sheet tab
             AUTO_LOAD: true, // Automatically load on startup
-            UPLOAD_URL: '', // Cloudflare Worker URL (upload photos to R2) - see cloudflare-worker-simple.js
-            SHEET_API_URL: '' // Google Apps Script Web App URL (add to sheet) - see SIMPLE-UPLOAD-SETUP.md
+            UPLOAD_URL: '' // Google Apps Script Web App URL - see apps-script-simple.js (3 min setup)
         };
 
         let myCarsData = []; // Will be populated from Google Sheets
@@ -2857,13 +2856,13 @@
             speak(currentLanguage === 'vi' ? 'Thêm xe mới!' : 'Add new car!');
         }
 
-        // Handle car upload - SIMPLE VERSION with R2 + Apps Script
+        // Handle car upload - FRONTEND ONLY! Super simple!
         async function handleCarUpload(e) {
             e.preventDefault();
 
             // Check configuration
-            if (!MY_CARS_CONFIG.UPLOAD_URL || !MY_CARS_CONFIG.SHEET_API_URL) {
-                alert('Upload not configured yet!\n\nPlease setup:\n1. Cloudflare Worker (R2)\n2. Google Apps Script\n\nSee SIMPLE-UPLOAD-SETUP.md for instructions.');
+            if (!MY_CARS_CONFIG.UPLOAD_URL) {
+                alert('Upload not configured yet!\n\nPlease setup Google Apps Script.\n\nSee apps-script-simple.js for instructions (3 minutes!)');
                 return;
             }
 
@@ -2890,49 +2889,34 @@
             submitBtn.disabled = true;
 
             try {
-                // === STEP 1: Upload photo to Cloudflare R2 ===
-                showUploadStatus('📤 Uploading photo to R2...', 'loading');
+                // Convert photo to base64 (frontend handles this!)
+                showUploadStatus('📸 Reading photo...', 'loading');
+                const base64Photo = await fileToBase64(file);
 
-                const formData = new FormData();
-                formData.append('photo', file);
+                // Send everything to Apps Script in ONE request
+                showUploadStatus('📤 Uploading to Google Drive...', 'loading');
 
-                const uploadResponse = await fetch(MY_CARS_CONFIG.UPLOAD_URL, {
-                    method: 'POST',
-                    body: formData
-                });
-
-                const uploadResult = await uploadResponse.json();
-
-                if (!uploadResult.success) {
-                    throw new Error(uploadResult.error || 'Photo upload failed');
-                }
-
-                const photoUrl = uploadResult.photoUrl;
-
-                // === STEP 2: Add to Google Sheet ===
-                showUploadStatus('📝 Adding to Google Sheet...', 'loading');
-
-                const sheetData = {
+                const data = {
+                    photo: base64Photo,
                     nameEn: nameEn,
                     nameVi: nameVi,
-                    photoUrl: photoUrl,
                     color: color,
                     category: category,
                     difficulty: difficulty
                 };
 
-                const sheetResponse = await fetch(MY_CARS_CONFIG.SHEET_API_URL, {
+                const response = await fetch(MY_CARS_CONFIG.UPLOAD_URL, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(sheetData)
+                    body: JSON.stringify(data)
                 });
 
-                const sheetResult = await sheetResponse.json();
+                const result = await response.json();
 
-                if (!sheetResult.success) {
-                    throw new Error(sheetResult.error || 'Failed to add to sheet');
+                if (!result.success) {
+                    throw new Error(result.error || 'Upload failed');
                 }
 
                 // === SUCCESS! ===
