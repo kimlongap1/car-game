@@ -3216,57 +3216,36 @@
 
         // Get words appropriate for current level
         function getWordForLevel(level) {
-            // Sort cars by name length
+            // Sort cars by total character count (shorter first)
             const sortedCars = [...myCarsData].sort((a, b) => {
                 const nameA = currentLanguage === 'vi' ? a.name_vi : a.name_en;
                 const nameB = currentLanguage === 'vi' ? b.name_vi : b.name_en;
-                return nameA.length - nameB.length;
+                const lenA = nameA.replace(/\s+/g, '').length;
+                const lenB = nameB.replace(/\s+/g, '').length;
+                return lenA - lenB;
             });
 
-            // Level 1-10: Short words (2-4 chars, single syllable)
-            // Level 11-20: Medium words (5-7 chars)
-            // Level 21+: Long words with chunking
-            let candidates = [];
-
-            if (level <= 10) {
-                // Single syllable, 2-4 characters
-                candidates = sortedCars.filter(car => {
-                    const name = currentLanguage === 'vi' ? car.name_vi : car.name_en;
-                    const syllables = splitSyllables(name);
-                    return syllables.length === 1 && name.length <= 4;
-                });
-            } else if (level <= 20) {
-                // Single syllable, 5-7 characters
-                candidates = sortedCars.filter(car => {
-                    const name = currentLanguage === 'vi' ? car.name_vi : car.name_en;
-                    const syllables = splitSyllables(name);
-                    return syllables.length === 1 && name.length >= 5 && name.length <= 7;
-                });
-            } else {
-                // Multi-syllable words (chunking)
-                candidates = sortedCars.filter(car => {
-                    const name = currentLanguage === 'vi' ? car.name_vi : car.name_en;
-                    const syllables = splitSyllables(name);
-                    return syllables.length >= 2;
-                });
-            }
-
-            // Fallback to all cars if no candidates
-            if (candidates.length === 0) {
-                candidates = sortedCars;
-            }
-
-            // Pick based on level progression (not random)
-            const idx = (level - 1) % candidates.length;
-            return candidates[idx];
+            // Simply pick car based on level - shorter words first
+            const idx = (level - 1) % sortedCars.length;
+            return sortedCars[idx];
         }
 
         function playSpellGame() {
             if (!spellScreen) createSpellScreen();
 
+            // Check if we have cars data
+            if (!myCarsData || myCarsData.length === 0) {
+                alert(currentLanguage === 'vi' ? 'Chưa có dữ liệu xe! Hãy load My Cars trước.' : 'No car data! Please load My Cars first.');
+                backToMenu();
+                return;
+            }
+
             // Get word appropriate for current level
             currentSpellCar = getWordForLevel(spellLevel);
-            const carName = currentLanguage === 'vi' ? currentSpellCar.name_vi : currentSpellCar.name_en;
+            if (!currentSpellCar) {
+                currentSpellCar = myCarsData[0];
+            }
+            const carName = currentLanguage === 'vi' ? (currentSpellCar.name_vi || currentSpellCar.name_en) : (currentSpellCar.name_en || currentSpellCar.name_vi);
 
             // Split into syllables
             currentSyllables = splitSyllables(carName);
@@ -3420,6 +3399,27 @@
             });
         }
 
+        // Keyboard handler for spell game
+        function handleSpellKeypress(e) {
+            // Only handle if spell game is active
+            const spellScreen = document.getElementById('spellGameScreen');
+            if (!spellScreen || !spellScreen.classList.contains('active')) return;
+
+            const pressedKey = e.key.toUpperCase();
+
+            // Find matching unused bubble
+            const bubbles = document.querySelectorAll('.letter-bubble:not(.used)');
+            for (let bubble of bubbles) {
+                if (bubble.dataset.letter === pressedKey) {
+                    handleBubbleClick(bubble);
+                    break;
+                }
+            }
+        }
+
+        // Add keyboard listener
+        document.addEventListener('keydown', handleSpellKeypress);
+
         function renderLetterBubbles() {
             const container = document.getElementById('spellLetterBank');
             container.innerHTML = '';
@@ -3434,26 +3434,33 @@
                 bubble.dataset.letter = letter;
                 bubble.draggable = true;
 
-                // Drag events
+                // Drag events for desktop
                 bubble.ondragstart = (e) => {
                     draggedBubble = bubble;
                     bubble.classList.add('dragging');
+                    e.dataTransfer.setData('text/plain', letter);
                 };
                 bubble.ondragend = () => {
                     bubble.classList.remove('dragging');
+                    draggedBubble = null;
                 };
 
-                // Touch events for mobile
+                // Click handler
+                bubble.onclick = () => handleBubbleClick(bubble);
+
+                // Touch support for mobile
+                let touchMoved = false;
                 bubble.ontouchstart = (e) => {
+                    touchMoved = false;
                     draggedBubble = bubble;
-                    bubble.classList.add('dragging');
                 };
                 bubble.ontouchmove = (e) => {
+                    touchMoved = true;
                     e.preventDefault();
                     const touch = e.touches[0];
                     bubble.style.position = 'fixed';
-                    bubble.style.left = (touch.clientX - 35) + 'px';
-                    bubble.style.top = (touch.clientY - 35) + 'px';
+                    bubble.style.left = (touch.clientX - 32) + 'px';
+                    bubble.style.top = (touch.clientY - 32) + 'px';
                     bubble.style.zIndex = '1000';
                 };
                 bubble.ontouchend = (e) => {
@@ -3461,11 +3468,20 @@
                     bubble.style.left = '';
                     bubble.style.top = '';
                     bubble.style.zIndex = '';
-                    bubble.classList.remove('dragging');
-                };
 
-                // Click fallback
-                bubble.onclick = () => handleBubbleClick(bubble);
+                    if (!touchMoved) {
+                        // Simple tap - treat as click
+                        handleBubbleClick(bubble);
+                    } else {
+                        // Was dragging - check if over a slot
+                        const touch = e.changedTouches[0];
+                        const element = document.elementFromPoint(touch.clientX, touch.clientY);
+                        if (element && element.classList.contains('spell-slot-new')) {
+                            handleTouchDrop(e, element);
+                        }
+                    }
+                    draggedBubble = null;
+                };
 
                 container.appendChild(bubble);
             });
