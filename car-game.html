@@ -161,6 +161,153 @@
             background-color: #8E44AD;
         }
 
+        .speech-toggle-btn {
+            padding: 15px 30px;
+            font-size: 20px;
+            font-weight: bold;
+            border: 2px solid #2DB858;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+            background-color: #2DB858;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            font-family: 'Comic Sans MS', cursive;
+            margin-top: 20px;
+        }
+
+        .speech-toggle-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .speech-toggle-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Voice Settings Modal */
+        .voice-settings-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none; /* Don't block clicks when hidden */
+        }
+
+        .voice-settings-content {
+            background-color: var(--color-bg);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            pointer-events: auto; /* Allow clicks on modal content */
+        }
+
+        .voice-settings-title {
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--color-primary);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .voice-setting-group {
+            margin-bottom: 25px;
+        }
+
+        .voice-setting-label {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--color-text);
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .accent-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .accent-btn {
+            padding: 12px 24px;
+            font-size: 18px;
+            font-weight: bold;
+            border: 2px solid var(--color-primary);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--color-primary);
+            background-color: white;
+            font-family: 'Comic Sans MS', cursive;
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .accent-btn.active {
+            background-color: var(--color-primary);
+            color: white;
+        }
+
+        .accent-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .accent-btn:active {
+            transform: scale(0.95);
+        }
+
+        .close-settings-btn {
+            padding: 15px 40px;
+            font-size: 20px;
+            font-weight: bold;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+            background-color: var(--color-success);
+            font-family: 'Comic Sans MS', cursive;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .close-settings-btn:hover {
+            transform: scale(1.05);
+            background-color: #25a050;
+        }
+
+        .close-settings-btn:active {
+            transform: scale(0.95);
+        }
+
+        .settings-icon-btn {
+            padding: 12px 20px;
+            font-size: 24px;
+            border: 2px solid #666;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: white;
+            font-family: 'Comic Sans MS', cursive;
+        }
+
+        .settings-icon-btn:hover {
+            transform: scale(1.05);
+            background-color: #f0f0f0;
+        }
+
+        .settings-icon-btn:active {
+            transform: scale(0.95);
+        }
+
         .vocab-screen {
             display: flex;
             flex-direction: column;
@@ -292,6 +439,59 @@
             animation: bounce 0.8s ease-out;
         }
 
+        .car-photo-card {
+            position: relative;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .car-photo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .car-photo-img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .car-photo-name {
+            padding: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+            background: #f8f9fa;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .car-photo-delete {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(255, 59, 48, 0.9);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .car-photo-delete:hover {
+            background: rgba(255, 59, 48, 1);
+        }
+
         .game-area {
             display: flex;
             flex-direction: column;
@@ -313,6 +513,19 @@
             border-radius: 15px;
             max-width: 90%;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.15);
+        }
+
+        .question-text-small {
+            font-size: 0.55em;
+            font-weight: 600;
+            color: #666;
+        }
+
+        .car-name-emphasis {
+            font-size: 1.1em;
+            font-weight: 900;
+            color: #FF6B35;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
         }
 
         .cars-container {
@@ -670,6 +883,60 @@
                 <button class="menu-btn btn-vocabulary" onclick="startGame('vocabulary')">
                     Learn Words 📚
                 </button>
+                <button class="menu-btn" onclick="startGame('my-cars')" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    📸 My Cars
+                </button>
+            </div>
+
+            <!-- Language and Voice Controls -->
+            <div style="display: flex; gap: 15px; margin-top: 20px; flex-wrap: wrap; justify-content: center;">
+                <button class="speech-toggle-btn" id="languageToggleBtn" onclick="toggleLanguage()">
+                    🇻🇳 Tiếng Việt
+                </button>
+                <button class="speech-toggle-btn" id="speechToggleBtn" onclick="toggleSpeech()">
+                    🔊 Bật tiếng
+                </button>
+                <button class="settings-icon-btn" onclick="showVoiceSettings()" title="Voice Settings">
+                    ⚙️
+                </button>
+            </div>
+        </div>
+
+        <!-- Voice Settings Modal -->
+        <div class="voice-settings-modal" id="voiceSettingsModal" style="display: none; pointer-events: none;" onclick="hideVoiceSettings()">
+            <div class="voice-settings-content">
+                <div class="voice-settings-title">🎤 Voice Settings</div>
+
+                <!-- Vietnamese Accent Selection -->
+                <div class="voice-setting-group">
+                    <label class="voice-setting-label">🇻🇳 Vietnamese Accent (Giọng):</label>
+                    <div class="accent-buttons">
+                        <button class="accent-btn" id="viAccentBtn" onclick="toggleViAccent()">
+                            🇻🇳 Miền Nam
+                        </button>
+                    </div>
+                    <div style="margin-top: 8px; font-size: 14px; color: #666;">
+                        Click to switch: Miền Nam ↔ Miền Bắc
+                    </div>
+                </div>
+
+                <!-- English Accent Selection -->
+                <div class="voice-setting-group">
+                    <label class="voice-setting-label">🇬🇧 English Accent:</label>
+                    <div class="accent-buttons">
+                        <button class="accent-btn" id="enAccentBtn" onclick="toggleEnAccent()">
+                            🇺🇸 US
+                        </button>
+                    </div>
+                    <div style="margin-top: 8px; font-size: 14px; color: #666;">
+                        Click to switch: US ↔ UK
+                    </div>
+                </div>
+
+                <!-- Close Button -->
+                <button class="close-settings-btn" onclick="hideVoiceSettings()">
+                    ✓ Done
+                </button>
             </div>
         </div>
 
@@ -726,6 +993,187 @@
                 </div>
             </div>
         </div>
+
+        <!-- My Cars Photo Management Screen -->
+        <div class="screen" id="myCarsScreen">
+            <div class="game-area">
+                <div class="instruction">📸 Setup My Cars</div>
+                <div style="font-size: 18px; color: #666; margin: 10px 0 20px; text-align: center; max-width: 600px;">
+                    Load your custom toy car photos from Google Sheets!
+                </div>
+
+                <!-- Google Sheets Setup -->
+                <div style="background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); max-width: 550px; margin: 20px 0;">
+                    <div style="font-size: 20px; font-weight: bold; margin-bottom: 15px; color: #333;">📊 Google Sheets Configuration</div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #666;">Sheet ID:</label>
+                        <input type="text" id="sheetIdInput" placeholder="Paste your Google Sheet ID here"
+                            style="width: 100%; padding: 12px; font-size: 16px; border: 2px solid #ddd; border-radius: 8px; box-sizing: border-box;">
+                        <div style="font-size: 13px; color: #999; margin-top: 5px;">
+                            Example: 1ABcD...XYZ from the URL
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #666;">Sheet Name:</label>
+                        <input type="text" id="sheetNameInput" placeholder="e.g., Cars" value="Cars"
+                            style="width: 100%; padding: 12px; font-size: 16px; border: 2px solid #ddd; border-radius: 8px; box-sizing: border-box;">
+                    </div>
+
+                    <button class="menu-btn" onclick="loadMyCarsFromSheet()" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); width: 100%; font-size: 18px; padding: 15px;">
+                        📥 Load My Cars
+                    </button>
+
+                    <div id="loadStatus" style="margin-top: 15px; padding: 10px; border-radius: 8px; display: none;"></div>
+                </div>
+
+                <!-- Instructions -->
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 12px; max-width: 550px; margin: 20px 0; text-align: left;">
+                    <div style="font-weight: bold; margin-bottom: 10px; color: #333;">📋 How to setup:</div>
+                    <ol style="margin: 0; padding-left: 20px; color: #666; line-height: 1.8;">
+                        <li>Create a Google Sheet with columns: <code>car_name_en</code>, <code>car_name_vi</code>, <code>photo_url</code>, <code>color</code></li>
+                        <li>Upload toy car photos to OneDrive, get public share links</li>
+                        <li>Paste links into the <code>photo_url</code> column</li>
+                        <li>Make sheet publicly viewable (Share → Anyone with link can view)</li>
+                        <li>Copy Sheet ID from URL and paste above</li>
+                    </ol>
+                </div>
+
+                <div class="button-group" style="margin-top: 30px;">
+                    <button class="btn btn-back" onclick="backToMenu()">Back</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- My Cars Learning Menu -->
+        <div class="screen" id="myCarsLearningMenu">
+            <div class="game-area">
+                <div class="title">🚗 My Cars Learning 🚗</div>
+                <div style="font-size: 20px; font-weight: bold; color: var(--color-primary); margin-bottom: 10px; text-align: center;">
+                    Learn with YOUR toy cars! 🎉
+                </div>
+                <div id="myCarsCount" style="font-size: 16px; color: #666; margin-bottom: 30px; text-align: center;">
+                    <!-- Will show number of loaded cars -->
+                </div>
+
+                <div class="menu-buttons">
+                    <button class="menu-btn" onclick="startMyCarGame('identify')" style="background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);">
+                        🎯 What Is It?
+                    </button>
+                    <button class="menu-btn" onclick="startMyCarGame('spell')" style="background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%);">
+                        🔤 Spell It!
+                    </button>
+                    <button class="menu-btn" onclick="startMyCarGame('memory')" style="background: linear-gradient(135deg, #F7971E 0%, #FFD200 100%);">
+                        🧠 Match Pairs
+                    </button>
+                    <button class="menu-btn" onclick="startMyCarGame('count')" style="background: linear-gradient(135deg, #9D50BB 0%, #6E48AA 100%);">
+                        🔢 Count Cars
+                    </button>
+                    <button class="menu-btn" onclick="startMyCarGame('color-sort')" style="background: linear-gradient(135deg, #FA8BFF 0%, #2BD2FF 100%);">
+                        🎨 Color Sorting
+                    </button>
+                </div>
+
+                <div class="button-group" style="margin-top: 30px; gap: 15px;">
+                    <button class="btn" onclick="showAddCarScreen()" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; border: none; font-size: 18px;">
+                        ➕ Add New Car
+                    </button>
+                    <button class="btn" onclick="showMyCarsScreen()" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none;">
+                        🔄 Reload Cars
+                    </button>
+                    <button class="btn btn-back" onclick="backToMenu()">Back to Main Menu</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add New Car Screen -->
+        <div class="screen" id="addCarScreen">
+            <div class="game-area">
+                <div class="instruction">➕ Add New Toy Car</div>
+                <div style="font-size: 18px; color: #666; margin: 10px 0 20px; text-align: center; max-width: 600px;">
+                    Take a photo and add it to your collection!
+                </div>
+
+                <form id="addCarForm" style="max-width: 500px; margin: 20px auto; text-align: left;">
+                    <!-- Photo Upload -->
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #333;">📸 Car Photo</label>
+                        <div id="photoUploadArea" onclick="document.getElementById('carPhotoInput').click()"
+                             style="border: 3px dashed #ddd; border-radius: 15px; padding: 40px; text-align: center; cursor: pointer; transition: all 0.3s; background: #f9f9f9;">
+                            <input type="file" id="carPhotoInput" accept="image/*" capture="environment" style="display: none;">
+                            <div id="uploadText" style="font-size: 16px; color: #666;">📷 Tap to take photo or select from gallery</div>
+                            <img id="photoPreview" alt="Preview" style="max-width: 100%; max-height: 250px; margin-top: 15px; border-radius: 10px; display: none; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                        </div>
+                    </div>
+
+                    <!-- English Name -->
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #333;">🇬🇧 English Name</label>
+                        <input type="text" id="carNameEn" placeholder="e.g., Fire Truck" required
+                               style="width: 100%; padding: 12px; font-size: 16px; border: 2px solid #ddd; border-radius: 10px;">
+                    </div>
+
+                    <!-- Vietnamese Name -->
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #333;">🇻🇳 Vietnamese Name</label>
+                        <input type="text" id="carNameVi" placeholder="e.g., Xe cứu hỏa" required
+                               style="width: 100%; padding: 12px; font-size: 16px; border: 2px solid #ddd; border-radius: 10px;">
+                    </div>
+
+                    <!-- Color -->
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #333;">🎨 Color</label>
+                        <select id="carColor" required
+                                style="width: 100%; padding: 12px; font-size: 16px; border: 2px solid #ddd; border-radius: 10px; background: white;">
+                            <option value="">Select color...</option>
+                            <option value="red">Red / Đỏ</option>
+                            <option value="blue">Blue / Xanh dương</option>
+                            <option value="yellow">Yellow / Vàng</option>
+                            <option value="green">Green / Xanh lá</option>
+                            <option value="orange">Orange / Cam</option>
+                            <option value="purple">Purple / Tím</option>
+                            <option value="pink">Pink / Hồng</option>
+                            <option value="black">Black / Đen</option>
+                            <option value="white">White / Trắng</option>
+                            <option value="gray">Gray / Xám</option>
+                        </select>
+                    </div>
+
+                    <!-- Category -->
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #333;">📁 Category</label>
+                        <input type="text" id="carCategory" placeholder="e.g., emergency, sports, construction" value="toy"
+                               style="width: 100%; padding: 12px; font-size: 16px; border: 2px solid #ddd; border-radius: 10px;">
+                    </div>
+
+                    <!-- Difficulty -->
+                    <div style="margin-bottom: 30px;">
+                        <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #333;">⭐ Difficulty</label>
+                        <select id="carDifficulty"
+                                style="width: 100%; padding: 12px; font-size: 16px; border: 2px solid #ddd; border-radius: 10px; background: white;">
+                            <option value="1">1 - Easy</option>
+                            <option value="2" selected>2 - Medium</option>
+                            <option value="3">3 - Hard</option>
+                        </select>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" id="uploadCarBtn" class="btn"
+                            style="width: 100%; background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; border: none; padding: 15px; font-size: 18px; font-weight: bold; margin-bottom: 15px;">
+                        ➕ Add to Collection
+                    </button>
+
+                    <!-- Status -->
+                    <div id="uploadStatus" style="padding: 15px; border-radius: 10px; text-align: center; font-weight: bold; display: none; margin-bottom: 15px;"></div>
+
+                    <!-- Back Button -->
+                    <button type="button" class="btn btn-back" onclick="showMyCarsLearningMenu()" style="width: 100%;">
+                        Back to My Cars
+                    </button>
+                </form>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -742,6 +1190,19 @@
             SHEET_NAME: 'Vocabulary', // Name of the sheet containing vocabulary
             // The sheet should have columns: word, emoji, meaning
         };
+
+        // My Cars (Custom Photos) Configuration
+        // User's custom toy car photos loaded from Google Sheets
+        const MY_CARS_CONFIG = {
+            ENABLED: true,
+            SHEET_ID: '1L5uPWT-44HeOhFIDBZywS6JolM7BBgQHfmN2FzRaGsU', // Your toy cars Google Sheet
+            SHEET_NAME: 'Cars', // Name of the sheet tab
+            AUTO_LOAD: true, // Automatically load on startup
+            UPLOAD_URL: 'https://script.google.com/macros/s/AKfycbzLKkMvSRnsHZu9yV7bds6O1VyMu5BGSW0wg96CLRHaFfbSMdHdb2TypmFbJZ1yKv5M/exec' // Apps Script with Google Drive thumbnail API
+        };
+
+        let myCarsData = []; // Will be populated from Google Sheets
+        let myCarsLoaded = false;
 
         // Car emoji display
         const carEmojis = {
@@ -811,10 +1272,409 @@
         let silenceDuration = 3000; // milliseconds of silence to trigger auto-stop
         let minRecordingDuration = 500; // minimum recording time (ms)
 
+        // Text-to-Speech settings
+        let speechEnabled = true;
+        let speechRate = 0.9; // Slightly slower for kids
+        let speechVoice = null;
+        let currentLanguage = 'vi'; // Default to Vietnamese ('en' or 'vi')
+        let viAccent = 'south'; // 'north' or 'south' for Vietnamese
+        let enAccent = 'us'; // 'us' or 'uk' for English
+
+        // Vietnamese translations
+        const translations = {
+            en: {
+                // Game questions
+                whereIsThe: "Where is the",
+                car: "car",
+                tapThe: "Tap the",
+                tapCarSound: "Tap a car to hear its sound!",
+                learnWord: "Let's learn the word:",
+
+                // Colors
+                RED: "red",
+                BLUE: "blue",
+                YELLOW: "yellow",
+                GREEN: "green",
+                ORANGE: "orange",
+                PURPLE: "purple",
+                PINK: "pink",
+                BROWN: "brown",
+                BLACK: "black",
+                WHITE: "white",
+
+                // Car types
+                POLICE: "police car",
+                FIRE: "fire truck",
+                AMBULANCE: "ambulance",
+                TAXI: "taxi",
+                BUS: "bus",
+                TRUCK: "truck",
+                CONTAINER: "container truck",
+                TRACTOR: "tractor",
+
+                // Car parts
+                WHEEL: "wheel",
+                WINDOW: "window",
+                DOOR: "door",
+                LIGHT: "light",
+                MIRROR: "mirror",
+
+                // Feedback - Correct
+                praises: [
+                    'Great job!',
+                    'Excellent!',
+                    'Well done!',
+                    'Perfect!',
+                    'Amazing!',
+                    'Wonderful!',
+                    'Fantastic!',
+                    'You got it!'
+                ],
+
+                // Feedback - Incorrect
+                encouragements: [
+                    'Try again!',
+                    'Keep trying!',
+                    'You can do it!',
+                    'Almost there!',
+                    'Give it another try!'
+                ],
+
+                // UI
+                voiceOn: '🔊 Voice ON',
+                voiceOff: '🔇 Voice OFF',
+                voiceEnabled: 'Voice enabled',
+                language: '🇬🇧 English',
+                languageChanged: 'Language changed to English'
+            },
+            vi: {
+                // Game questions
+                whereIsThe: "Xe màu",
+                car: "ở đâu",
+                tapThe: "Chạm vào",
+                tapCarSound: "Chạm vào xe để nghe âm thanh!",
+                learnWord: "Hãy học từ:",
+
+                // Colors
+                RED: "đỏ",
+                BLUE: "xanh dương",
+                YELLOW: "vàng",
+                GREEN: "xanh lá",
+                ORANGE: "cam",
+                PURPLE: "tím",
+                PINK: "hồng",
+                BROWN: "nâu",
+                BLACK: "đen",
+                WHITE: "trắng",
+
+                // Car types
+                POLICE: "xe cảnh sát",
+                FIRE: "xe cứu hỏa",
+                AMBULANCE: "xe cấp cứu",
+                TAXI: "xe taxi",
+                BUS: "xe buýt",
+                TRUCK: "xe tải",
+                CONTAINER: "xe container",
+                TRACTOR: "máy kéo",
+
+                // Car parts
+                WHEEL: "bánh xe",
+                WINDOW: "cửa sổ",
+                DOOR: "cửa xe",
+                LIGHT: "đèn",
+                MIRROR: "gương",
+
+                // Feedback - Correct
+                praises: [
+                    'Giỏi lắm!',
+                    'Xuất sắc!',
+                    'Làm tốt lắm!',
+                    'Hoàn hảo!',
+                    'Tuyệt vời!',
+                    'Hay quá!',
+                    'Đúng rồi!',
+                    'Giỏi quá!'
+                ],
+
+                // Feedback - Incorrect
+                encouragements: [
+                    'Thử lại nha!',
+                    'Cố gắng lên!',
+                    'Con làm được mà!',
+                    'Gần đúng rồi!',
+                    'Làm lại một lần nữa nha!'
+                ],
+
+                // UI
+                voiceOn: '🔊 Bật tiếng',
+                voiceOff: '🔇 Tắt tiếng',
+                voiceEnabled: 'Đã bật tiếng',
+                language: '🇻🇳 Tiếng Việt',
+                languageChanged: 'Đã chuyển sang tiếng Việt'
+            }
+        };
+
+        // Get translated text
+        function t(key) {
+            return translations[currentLanguage][key] || key;
+        }
+
         function showScreen(screenId) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(screenId).classList.add('active');
         }
+
+        // Initialize speech synthesis voices
+        function initSpeechSynthesis() {
+            if ('speechSynthesis' in window) {
+                updateVoiceForLanguage();
+
+                // Some browsers load voices asynchronously
+                if (speechSynthesis.onvoiceschanged !== undefined) {
+                    speechSynthesis.onvoiceschanged = updateVoiceForLanguage;
+                }
+            }
+        }
+
+        // Select appropriate voice for current language and accent
+        function updateVoiceForLanguage() {
+            const voices = speechSynthesis.getVoices();
+            if (voices.length === 0) return;
+
+            if (currentLanguage === 'vi') {
+                // Vietnamese voices with accent preference
+                if (viAccent === 'south') {
+                    // Southern Vietnamese accent (Miền Nam)
+                    // Prefer voices with "South", "Saigon", "Ho Chi Minh", or certain names
+                    speechVoice = voices.find(v =>
+                        (v.lang.startsWith('vi') || v.name.includes('Vietnamese')) &&
+                        (v.name.includes('South') ||
+                         v.name.includes('Saigon') ||
+                         v.name.includes('Ho Chi Minh') ||
+                         v.name.includes('Miền Nam') ||
+                         v.name.includes('An Nhiên') || // Common Southern voice
+                         v.name.includes('Khánh Ly'))
+                    );
+                } else {
+                    // Northern Vietnamese accent (Miền Bắc)
+                    // Prefer voices with "North", "Hanoi", or certain names
+                    speechVoice = voices.find(v =>
+                        (v.lang.startsWith('vi') || v.name.includes('Vietnamese')) &&
+                        (v.name.includes('North') ||
+                         v.name.includes('Hanoi') ||
+                         v.name.includes('Hà Nội') ||
+                         v.name.includes('Miền Bắc') ||
+                         v.name.includes('Linh') || // Common Northern voice
+                         v.name.includes('Mai'))
+                    );
+                }
+
+                // Fallback to any Vietnamese voice if specific accent not found
+                if (!speechVoice) {
+                    speechVoice = voices.find(v =>
+                        v.lang.startsWith('vi') ||
+                        v.name.includes('Vietnamese')
+                    );
+                }
+
+                // Final fallback to default
+                if (!speechVoice) {
+                    console.warn('No Vietnamese voice found, using default');
+                    speechVoice = voices[0];
+                }
+            } else {
+                // English voices with accent preference
+                if (enAccent === 'us') {
+                    // US English accent
+                    speechVoice = voices.find(v =>
+                        v.lang.startsWith('en-US') ||
+                        (v.lang.startsWith('en') &&
+                         (v.name.includes('US') ||
+                          v.name.includes('United States') ||
+                          v.name.includes('American')))
+                    );
+                } else {
+                    // UK English accent
+                    speechVoice = voices.find(v =>
+                        v.lang.startsWith('en-GB') ||
+                        (v.lang.startsWith('en') &&
+                         (v.name.includes('UK') ||
+                          v.name.includes('British') ||
+                          v.name.includes('United Kingdom')))
+                    );
+                }
+
+                // Fallback to any English voice
+                if (!speechVoice) {
+                    speechVoice = voices.find(v => v.lang.startsWith('en'));
+                }
+
+                // Final fallback to default
+                if (!speechVoice) {
+                    speechVoice = voices[0];
+                }
+            }
+
+            console.log('Selected voice:', speechVoice?.name, 'Lang:', speechVoice?.lang, 'for', currentLanguage, 'accent:', currentLanguage === 'vi' ? viAccent : enAccent);
+        }
+
+        // Speak text using Web Speech API
+        function speak(text) {
+            if (!speechEnabled || !('speechSynthesis' in window)) {
+                return;
+            }
+
+            // Cancel any ongoing speech
+            speechSynthesis.cancel();
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = speechRate;
+            utterance.pitch = 1.1; // Slightly higher pitch for kids
+            utterance.volume = 1.0;
+            utterance.lang = currentLanguage === 'vi' ? 'vi-VN' : 'en-US';
+
+            if (speechVoice) {
+                utterance.voice = speechVoice;
+            }
+
+            // Add visual feedback
+            utterance.onstart = () => {
+                console.log('Speaking:', text, 'in', currentLanguage);
+            };
+
+            utterance.onend = () => {
+                console.log('Speech finished');
+            };
+
+            utterance.onerror = (event) => {
+                console.error('Speech error:', event.error);
+            };
+
+            speechSynthesis.speak(utterance);
+        }
+
+        // Toggle speech on/off
+        function toggleSpeech() {
+            speechEnabled = !speechEnabled;
+            const btn = document.getElementById('speechToggleBtn');
+            if (btn) {
+                btn.textContent = speechEnabled ? t('voiceOn') : t('voiceOff');
+                btn.style.backgroundColor = speechEnabled ? '#2DB858' : '#999';
+            }
+
+            // Announce the change
+            if (speechEnabled) {
+                setTimeout(() => speak(t('voiceEnabled')), 100);
+            }
+        }
+
+        // Toggle language between English and Vietnamese
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'en' ? 'vi' : 'en';
+            updateVoiceForLanguage();
+
+            // Update UI buttons
+            const langBtn = document.getElementById('languageToggleBtn');
+            if (langBtn) {
+                langBtn.textContent = t('language');
+            }
+
+            const speechBtn = document.getElementById('speechToggleBtn');
+            if (speechBtn) {
+                speechBtn.textContent = speechEnabled ? t('voiceOn') : t('voiceOff');
+            }
+
+            // Announce the change
+            if (speechEnabled) {
+                setTimeout(() => speak(t('languageChanged')), 100);
+            }
+        }
+
+        // Toggle Vietnamese accent (North/South)
+        function toggleViAccent() {
+            viAccent = viAccent === 'north' ? 'south' : 'north';
+            updateVoiceForLanguage();
+
+            // Update UI button
+            const btn = document.getElementById('viAccentBtn');
+            if (btn) {
+                btn.textContent = viAccent === 'south' ? '🇻🇳 Miền Nam' : '🇻🇳 Miền Bắc';
+            }
+
+            // Announce the change
+            if (speechEnabled && currentLanguage === 'vi') {
+                const message = viAccent === 'south'
+                    ? 'Đã chuyển sang giọng miền Nam'
+                    : 'Đã chuyển sang giọng miền Bắc';
+                setTimeout(() => speak(message), 100);
+            }
+        }
+
+        // Toggle English accent (US/UK)
+        function toggleEnAccent() {
+            enAccent = enAccent === 'us' ? 'uk' : 'us';
+            updateVoiceForLanguage();
+
+            // Update UI button
+            const btn = document.getElementById('enAccentBtn');
+            if (btn) {
+                btn.textContent = enAccent === 'us' ? '🇺🇸 US' : '🇬🇧 UK';
+            }
+
+            // Announce the change
+            if (speechEnabled && currentLanguage === 'en') {
+                const message = enAccent === 'us'
+                    ? 'Switched to US English'
+                    : 'Switched to British English';
+                setTimeout(() => speak(message), 100);
+            }
+        }
+
+        // Show voice settings modal
+        function showVoiceSettings() {
+            const modal = document.getElementById('voiceSettingsModal');
+            if (modal) {
+                modal.style.display = 'flex';
+                modal.style.pointerEvents = 'auto'; // Enable clicks when shown
+            }
+        }
+
+        // Hide voice settings modal
+        function hideVoiceSettings() {
+            const modal = document.getElementById('voiceSettingsModal');
+            if (modal) {
+                modal.style.display = 'none';
+                modal.style.pointerEvents = 'none'; // Disable clicks when hidden
+            }
+        }
+
+        // Initialize speech on page load
+        initSpeechSynthesis();
+
+        // Auto-load My Cars data on page load
+        autoLoadMyCars();
+
+        // Prevent modal content clicks from closing modal
+        document.addEventListener('DOMContentLoaded', function() {
+            const modalContent = document.querySelector('.voice-settings-content');
+            if (modalContent) {
+                modalContent.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+            }
+
+            // Initialize button texts based on current state
+            const speechBtn = document.getElementById('speechToggleBtn');
+            if (speechBtn) {
+                speechBtn.textContent = speechEnabled ? t('voiceOn') : t('voiceOff');
+                speechBtn.style.backgroundColor = speechEnabled ? '#2DB858' : '#999';
+            }
+
+            const langBtn = document.getElementById('languageToggleBtn');
+            if (langBtn) {
+                langBtn.textContent = t('language');
+            }
+        });
 
         // Create car display
         function getCarDisplay(carType) {
@@ -857,6 +1717,13 @@
                 playFixCar();
             } else if (gameType === 'vocabulary') {
                 playVocab();
+            } else if (gameType === 'my-cars') {
+                // Check if cars are already loaded, go directly to learning menu
+                if (myCarsLoaded && myCarsData.length > 0) {
+                    showMyCarsLearningMenu();
+                } else {
+                    showMyCarsScreen();
+                }
             }
         }
 
@@ -1053,7 +1920,42 @@
             const shuffled = colors.sort(() => Math.random() - 0.5);
 
             const instruction = document.getElementById('whichCarInstruction');
-            instruction.textContent = `Where is the ${correctAnswer} CAR?`;
+            // Translate the color/car type
+            const translatedItem = t(correctAnswer.toUpperCase());
+
+            // Detect if this is a color or a car type
+            const colorNames = ['RED', 'BLUE', 'YELLOW', 'GREEN', 'ORANGE', 'PURPLE', 'PINK', 'BROWN', 'BLACK', 'WHITE'];
+            const isColor = colorNames.includes(correctAnswer.toUpperCase());
+
+            // Construct question based on language and type with emphasized styling
+            let questionText;
+            let questionHTML;
+            if (currentLanguage === 'vi') {
+                if (isColor) {
+                    // For colors: "Xe màu đỏ ở đâu?"
+                    questionText = `${t('whereIsThe')} ${translatedItem} ${t('car')}?`;
+                    questionHTML = `<span class="question-text-small">${t('whereIsThe').toUpperCase()}</span> <span class="car-name-emphasis">${translatedItem.toUpperCase()}</span> <span class="question-text-small">${t('car').toUpperCase()}?</span>`;
+                } else {
+                    // For car types: "Xe taxi ở đâu?" (translatedItem already contains "xe")
+                    questionText = `${translatedItem} ở đâu?`;
+                    questionHTML = `<span class="car-name-emphasis">${translatedItem.toUpperCase()}</span> <span class="question-text-small">Ở ĐÂU?</span>`;
+                }
+            } else {
+                // English
+                if (isColor) {
+                    // For colors: "Where is the red car?"
+                    questionText = `${t('whereIsThe')} ${translatedItem} ${t('car')}?`;
+                    questionHTML = `<span class="question-text-small">${t('whereIsThe').toUpperCase()}</span> <span class="car-name-emphasis">${translatedItem.toUpperCase()}</span> <span class="question-text-small">${t('car').toUpperCase()}?</span>`;
+                } else {
+                    // For car types: "Where is the taxi?"
+                    questionText = `${t('whereIsThe')} ${translatedItem}?`;
+                    questionHTML = `<span class="question-text-small">${t('whereIsThe').toUpperCase()}</span> <span class="car-name-emphasis">${translatedItem.toUpperCase()}</span><span class="question-text-small">?</span>`;
+                }
+            }
+            instruction.innerHTML = questionHTML;
+
+            // Speak the question
+            speak(questionText);
 
             const container = document.getElementById('whichCarContainer');
             container.innerHTML = '';
@@ -1083,6 +1985,12 @@
             if (isCorrect) {
                 // Multiple celebration emojis
                 element.style.backgroundColor = '#90EE90';
+
+                // Speak positive reinforcement
+                const praises = t('praises');
+                const praise = praises[Math.floor(Math.random() * praises.length)];
+                speak(praise);
+
                 setTimeout(() => {
                     const celebrations = ['🎉', '🎊', '⭐'];
                     celebrations.forEach((emoji, index) => {
@@ -1107,6 +2015,11 @@
                 // Wrong answer - show red
                 element.style.backgroundColor = '#FF6B6B';
                 playSound('error');
+
+                // Speak encouragement
+                const encouragements = t('encouragements');
+                const encouragement = encouragements[Math.floor(Math.random() * encouragements.length)];
+                speak(encouragement);
             }
         }
 
@@ -1125,6 +2038,9 @@
             const container = document.getElementById('carSoundsContainer');
             container.innerHTML = '';
             document.getElementById('scoreDisplay').textContent = `Taps: ${sessionScore.total}`;
+
+            // Speak instruction
+            speak(t('tapCarSound'));
 
             cars.forEach(car => {
                 const div = document.createElement('div');
@@ -1161,7 +2077,13 @@
             correctAnswer = part.name;
 
             const instruction = document.getElementById('fixCarInstruction');
-            instruction.textContent = `Tap the ${correctAnswer}!`;
+            // Translate the car part
+            const translatedPart = t(correctAnswer.toUpperCase());
+            const questionText = `${t('tapThe')} ${translatedPart}`;
+            instruction.textContent = questionText + '!';
+
+            // Speak the question
+            speak(questionText);
 
             const container = document.getElementById('fixCarParts');
             container.innerHTML = '';
@@ -1191,6 +2113,12 @@
             if (isCorrect) {
                 // Multiple celebration emojis
                 element.style.backgroundColor = '#90EE90';
+
+                // Speak positive reinforcement
+                const praises = t('praises');
+                const praise = praises[Math.floor(Math.random() * praises.length)];
+                speak(praise);
+
                 setTimeout(() => {
                     const celebrations = ['⭐', '✨', '🌟'];
                     celebrations.forEach((emoji, index) => {
@@ -1215,6 +2143,11 @@
                 // Wrong answer - show red
                 element.style.backgroundColor = '#FF6B6B';
                 playSound('error');
+
+                // Speak encouragement
+                const encouragements = t('encouragements');
+                const encouragement = encouragements[Math.floor(Math.random() * encouragements.length)];
+                speak(encouragement);
             }
         }
 
@@ -1266,13 +2199,20 @@
 
         // Play recorded audio with iOS/Safari compatibility
         function playRecordedAudio(audioUrl) {
+            // Cancel any ongoing text-to-speech to prevent interference
+            if ('speechSynthesis' in window) {
+                speechSynthesis.cancel();
+            }
+
             playTapSound();
 
             setTimeout(() => {
                 try {
+                    console.log('Attempting to play recorded audio...');
                     // Create or reuse audio element
                     let audioElement = document.getElementById('recordingPlayback');
                     if (!audioElement) {
+                        console.log('Creating new audio element');
                         audioElement = document.createElement('audio');
                         audioElement.id = 'recordingPlayback';
                         audioElement.style.display = 'none';
@@ -1284,6 +2224,7 @@
                     // Set audio source
                     audioElement.src = audioUrl;
                     audioElement.volume = 1.0;
+                    console.log('Audio source set:', audioUrl);
 
                     // Try to play with full error handling
                     const playPromise = audioElement.play();
@@ -1291,17 +2232,17 @@
                     if (playPromise !== undefined) {
                         playPromise
                             .then(() => {
-                                console.log('Audio playing successfully');
+                                console.log('✓ Recorded audio playing successfully!');
                             })
                             .catch(error => {
-                                console.warn('Audio playback failed:', error);
+                                console.warn('❌ Audio playback failed:', error);
                                 // On iOS Safari, sometimes we need to use a different approach
                                 // Try using Web Audio API to play the Blob directly
                                 tryWebAudioPlayback(audioUrl);
                             });
                     }
                 } catch (error) {
-                    console.error('Error creating audio element:', error);
+                    console.error('❌ Error creating audio element:', error);
                     tryWebAudioPlayback(audioUrl);
                 }
             }, 300);
@@ -1485,6 +2426,11 @@
             document.getElementById('pronounceBtn').style.display = 'inline-block';
             vocabPronounced = false;
 
+            // Speak the vocabulary word
+            setTimeout(() => {
+                speak(`${t('learnWord')} ${vocab.word}`);
+            }, 500);
+
             // Update score display
             const progress = currentVocabIndex + 1;
             document.getElementById('scoreDisplay').textContent = `Learning: ${progress}/${vocabularyList.length}`;
@@ -1498,22 +2444,27 @@
 
             if (isRecording) {
                 // Manual stop recording
+                console.log('Stopping recording (manual)...');
                 stopRecording();
             } else {
                 // Start recording
                 try {
+                    console.log('Starting recording...');
                     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                     audioChunks = [];
                     mediaRecorder = new MediaRecorder(stream);
 
                     mediaRecorder.ondataavailable = (event) => {
                         audioChunks.push(event.data);
+                        console.log('Audio data chunk received, size:', event.data.size);
                     };
 
                     mediaRecorder.onstop = () => {
+                        console.log('Recording stopped. Audio chunks:', audioChunks.length);
                         // Create audio blob and play it back
                         const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
                         const audioUrl = URL.createObjectURL(audioBlob);
+                        console.log('Audio blob created, size:', audioBlob.size, 'bytes');
 
                         // Try multiple playback methods for maximum iOS/Safari compatibility
                         playRecordedAudio(audioUrl);
@@ -1651,6 +2602,1199 @@
         function nextVocab() {
             currentVocabIndex++;
             displayVocabularyWord();
+        }
+
+        // ===== MY CARS (CUSTOM PHOTOS) SYSTEM =====
+
+        // Convert OneDrive share link to direct embed URL
+        function convertOneDriveLink(url) {
+            try {
+                // Handle 1drv.ms short links
+                if (url.includes('1drv.ms')) {
+                    // OneDrive short links need to be expanded first
+                    // For now, try to use as-is with embed parameter
+                    return url + '&embed=1';
+                }
+
+                // Handle full onedrive.live.com links
+                if (url.includes('onedrive.live.com')) {
+                    // Extract the resid and authkey parameters
+                    const urlObj = new URL(url);
+                    const resId = urlObj.searchParams.get('resid') || urlObj.searchParams.get('id');
+                    const authKey = urlObj.searchParams.get('authkey');
+
+                    if (resId && authKey) {
+                        // Build embed URL
+                        return `https://onedrive.live.com/embed?resid=${resId}&authkey=${authKey}`;
+                    }
+
+                    // If parameters not found, try adding embed parameter
+                    return url.replace('/view', '/embed').replace('?', '&') + '&embed=1';
+                }
+
+                // Return original URL if not OneDrive
+                return url;
+            } catch (e) {
+                console.error('Error converting OneDrive link:', e);
+                return url; // Return original on error
+            }
+        }
+
+        // Auto-load My Cars data on page startup if available
+        async function autoLoadMyCars() {
+            // First, try to load from localStorage
+            const saved = localStorage.getItem('myCarsData');
+            if (saved) {
+                try {
+                    myCarsData = JSON.parse(saved);
+                    myCarsLoaded = true;
+                    console.log(`✅ Auto-loaded ${myCarsData.length} cars from localStorage`);
+                    return;
+                } catch (e) {
+                    console.error('Error loading from localStorage:', e);
+                }
+            }
+
+            // If not in localStorage and AUTO_LOAD is enabled, fetch from Google Sheets
+            if (MY_CARS_CONFIG.ENABLED && MY_CARS_CONFIG.AUTO_LOAD && MY_CARS_CONFIG.SHEET_ID) {
+                console.log('📥 Auto-loading My Cars from Google Sheets...');
+                try {
+                    await loadMyCarsFromConfig();
+                } catch (e) {
+                    console.error('Error auto-loading from Google Sheets:', e);
+                }
+            }
+        }
+
+        // Load cars from configuration (not from user input)
+        async function loadMyCarsFromConfig() {
+            const sheetId = MY_CARS_CONFIG.SHEET_ID;
+            const sheetName = MY_CARS_CONFIG.SHEET_NAME;
+
+            try {
+                const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
+                const response = await fetch(url);
+                const text = await response.text();
+
+                // Parse Google Sheets JSON response (remove prefix)
+                const jsonText = text.substring(47, text.length - 2);
+                const data = JSON.parse(jsonText);
+
+                // Extract rows
+                const rows = data.table.rows;
+                const cars = [];
+
+                for (let i = 0; i < rows.length; i++) {
+                    const row = rows[i].c;
+                    if (!row) continue;
+
+                    let photoUrl = row[2]?.v || '';
+
+                    // Convert OneDrive share link to direct embed URL
+                    if (photoUrl.includes('1drv.ms') || photoUrl.includes('onedrive.live.com')) {
+                        photoUrl = convertOneDriveLink(photoUrl);
+                    }
+
+                    const car = {
+                        name_en: row[0]?.v || '',
+                        name_vi: row[1]?.v || '',
+                        photo_url: photoUrl,
+                        color: row[3]?.v || '',
+                        category: row[4]?.v || '',
+                        difficulty: parseInt(row[5]?.v) || 1
+                    };
+
+                    // Only add cars with valid data
+                    if (car.name_en && car.photo_url) {
+                        cars.push(car);
+                    }
+                }
+
+                if (cars.length === 0) {
+                    throw new Error('No valid cars found in sheet');
+                }
+
+                // Save to memory and localStorage
+                myCarsData = cars;
+                myCarsLoaded = true;
+                localStorage.setItem('myCarsData', JSON.stringify(cars));
+                localStorage.setItem('myCarsSheetId', sheetId);
+                localStorage.setItem('myCarsSheetName', sheetName);
+
+                console.log(`✅ Auto-loaded ${cars.length} cars from Google Sheets!`);
+
+            } catch (error) {
+                console.error('❌ Error loading My Cars from config:', error);
+                throw error;
+            }
+        }
+
+        // Show My Cars setup screen
+        function showMyCarsScreen() {
+            // Load saved Sheet ID if exists
+            const savedSheetId = localStorage.getItem('myCarsSheetId');
+            const savedSheetName = localStorage.getItem('myCarsSheetName');
+
+            if (savedSheetId) {
+                document.getElementById('sheetIdInput').value = savedSheetId;
+            }
+            if (savedSheetName) {
+                document.getElementById('sheetNameInput').value = savedSheetName;
+            }
+
+            showScreen('myCarsScreen');
+        }
+
+        // Load custom car data from Google Sheets
+        async function loadMyCarsFromSheet() {
+            const sheetId = document.getElementById('sheetIdInput').value.trim();
+            const sheetName = document.getElementById('sheetNameInput').value.trim() || 'Cars';
+            const statusDiv = document.getElementById('loadStatus');
+
+            if (!sheetId) {
+                statusDiv.style.display = 'block';
+                statusDiv.style.background = '#ffe5e5';
+                statusDiv.style.color = '#d32f2f';
+                statusDiv.textContent = '❌ Please enter a Sheet ID';
+                return;
+            }
+
+            // Save configuration
+            localStorage.setItem('myCarsSheetId', sheetId);
+            localStorage.setItem('myCarsSheetName', sheetName);
+
+            statusDiv.style.display = 'block';
+            statusDiv.style.background = '#e3f2fd';
+            statusDiv.style.color = '#1976d2';
+            statusDiv.textContent = '⏳ Loading cars from Google Sheets...';
+
+            try {
+                const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
+                const response = await fetch(url);
+                const text = await response.text();
+
+                // Parse Google Sheets JSON response (remove prefix)
+                const jsonText = text.substring(47, text.length - 2);
+                const data = JSON.parse(jsonText);
+
+                // Extract rows
+                const rows = data.table.rows;
+                const cars = [];
+
+                for (let i = 0; i < rows.length; i++) {
+                    const row = rows[i].c;
+                    if (!row) continue;
+
+                    let photoUrl = row[2]?.v || '';
+
+                    // Convert OneDrive share link to direct embed URL
+                    if (photoUrl.includes('1drv.ms') || photoUrl.includes('onedrive.live.com')) {
+                        // Extract the share token and convert to embed URL
+                        photoUrl = convertOneDriveLink(photoUrl);
+                    }
+
+                    const car = {
+                        name_en: row[0]?.v || '',
+                        name_vi: row[1]?.v || '',
+                        photo_url: photoUrl,
+                        color: row[3]?.v || '',
+                        category: row[4]?.v || '',
+                        difficulty: parseInt(row[5]?.v) || 1
+                    };
+
+                    // Only add cars with valid data
+                    if (car.name_en && car.photo_url) {
+                        cars.push(car);
+                    }
+                }
+
+                if (cars.length === 0) {
+                    throw new Error('No valid cars found in sheet');
+                }
+
+                // Save to memory and localStorage
+                myCarsData = cars;
+                myCarsLoaded = true;
+                localStorage.setItem('myCarsData', JSON.stringify(cars));
+
+                statusDiv.style.background = '#e8f5e9';
+                statusDiv.style.color = '#2e7d32';
+                statusDiv.textContent = `✅ Loaded ${cars.length} cars successfully!`;
+
+                // Auto-navigate to My Cars Learning menu after 1 second
+                setTimeout(() => {
+                    showMyCarsLearningMenu();
+                }, 1000);
+
+            } catch (error) {
+                console.error('Error loading My Cars:', error);
+                statusDiv.style.background = '#ffe5e5';
+                statusDiv.style.color = '#d32f2f';
+                statusDiv.textContent = `❌ Error: ${error.message}. Make sure the sheet is publicly viewable!`;
+            }
+        }
+
+        // Show My Cars Learning menu
+        function showMyCarsLearningMenu() {
+            // Try to load from localStorage if not in memory
+            if (!myCarsLoaded || myCarsData.length === 0) {
+                const saved = localStorage.getItem('myCarsData');
+                if (saved) {
+                    myCarsData = JSON.parse(saved);
+                    myCarsLoaded = true;
+                } else {
+                    // No data, go to setup
+                    showMyCarsScreen();
+                    return;
+                }
+            }
+
+            const countDiv = document.getElementById('myCarsCount');
+            countDiv.textContent = `${myCarsData.length} cars loaded`;
+
+            showScreen('myCarsLearningMenu');
+            speak(currentLanguage === 'vi' ? 'Học với xe của bạn!' : 'Learn with your cars!');
+        }
+
+        // Show Add New Car screen
+        function showAddCarScreen() {
+            showScreen('addCarScreen');
+
+            // Setup photo upload preview if not already set up
+            if (!window.carPhotoUploadInitialized) {
+                const photoInput = document.getElementById('carPhotoInput');
+                const photoPreview = document.getElementById('photoPreview');
+                const photoUploadArea = document.getElementById('photoUploadArea');
+                const uploadText = document.getElementById('uploadText');
+
+                photoInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file && file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            photoPreview.src = e.target.result;
+                            photoPreview.style.display = 'block';
+                            uploadText.textContent = '✓ Photo selected - Ready to upload!';
+                            photoUploadArea.style.borderColor = '#4caf50';
+                            photoUploadArea.style.background = '#f1f8f4';
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+
+                // Setup form submission
+                document.getElementById('addCarForm').addEventListener('submit', handleCarUpload);
+
+                window.carPhotoUploadInitialized = true;
+            }
+
+            speak(currentLanguage === 'vi' ? 'Thêm xe mới!' : 'Add new car!');
+        }
+
+        // Handle car upload - FRONTEND ONLY! Super simple!
+        async function handleCarUpload(e) {
+            e.preventDefault();
+
+            // Check configuration
+            if (!MY_CARS_CONFIG.UPLOAD_URL) {
+                alert('Upload not configured yet!\n\nPlease setup Google Apps Script.\n\nSee apps-script-simple.js for instructions (3 minutes!)');
+                return;
+            }
+
+            const photoInput = document.getElementById('carPhotoInput');
+            const submitBtn = document.getElementById('uploadCarBtn');
+
+            if (!photoInput.files || !photoInput.files[0]) {
+                showUploadStatus('Please select a photo first!', 'error');
+                return;
+            }
+
+            const file = photoInput.files[0];
+            const nameEn = document.getElementById('carNameEn').value.trim();
+            const nameVi = document.getElementById('carNameVi').value.trim();
+            const color = document.getElementById('carColor').value;
+            const category = document.getElementById('carCategory').value.trim();
+            const difficulty = document.getElementById('carDifficulty').value;
+
+            if (!nameEn || !nameVi || !color) {
+                showUploadStatus('Please fill all required fields!', 'error');
+                return;
+            }
+
+            submitBtn.disabled = true;
+
+            try {
+                // Convert photo to base64 (frontend handles this!)
+                showUploadStatus('📸 Reading photo...', 'loading');
+                const base64Photo = await fileToBase64(file);
+
+                // Send everything to Apps Script in ONE request
+                showUploadStatus('📤 Uploading to Google Drive...', 'loading');
+
+                const data = {
+                    photo: base64Photo,
+                    nameEn: nameEn,
+                    nameVi: nameVi,
+                    color: color,
+                    category: category,
+                    difficulty: difficulty
+                };
+
+                // Use text/plain to avoid CORS preflight
+                const response = await fetch(MY_CARS_CONFIG.UPLOAD_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'text/plain',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (!result.success) {
+                    throw new Error(result.error || 'Upload failed');
+                }
+
+                // === SUCCESS! ===
+                showUploadStatus('✅ Car added successfully!', 'success');
+
+                // Clear form
+                document.getElementById('addCarForm').reset();
+                document.getElementById('photoPreview').style.display = 'none';
+                document.getElementById('uploadText').textContent = '📷 Tap to take photo or select from gallery';
+                document.getElementById('photoUploadArea').style.borderColor = '#ddd';
+                document.getElementById('photoUploadArea').style.background = '#f9f9f9';
+
+                // Reload cars data
+                setTimeout(async () => {
+                    await loadMyCarsFromConfig();
+                    showUploadStatus('Car added and data reloaded! 🎉', 'success');
+                    setTimeout(() => {
+                        showMyCarsLearningMenu();
+                    }, 1500);
+                }, 1000);
+
+            } catch (error) {
+                console.error('Upload error:', error);
+                showUploadStatus('❌ Error: ' + error.message, 'error');
+            } finally {
+                submitBtn.disabled = false;
+            }
+        }
+
+        // Convert file to base64
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const base64 = reader.result.split(',')[1];
+                    resolve(base64);
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Show upload status
+        function showUploadStatus(message, type) {
+            const statusDiv = document.getElementById('uploadStatus');
+            statusDiv.textContent = message;
+            statusDiv.style.display = 'block';
+
+            if (type === 'success') {
+                statusDiv.style.background = '#e8f5e9';
+                statusDiv.style.color = '#2e7d32';
+            } else if (type === 'error') {
+                statusDiv.style.background = '#ffebee';
+                statusDiv.style.color = '#c62828';
+            } else if (type === 'loading') {
+                statusDiv.style.background = '#fff3e0';
+                statusDiv.style.color = '#e65100';
+            }
+        }
+
+        // Start a My Cars learning game
+        function startMyCarGame(gameType) {
+            if (!myCarsLoaded || myCarsData.length === 0) {
+                alert('Please load your cars first!');
+                showMyCarsScreen();
+                return;
+            }
+
+            currentGame = 'my-cars-' + gameType;
+            currentRound = 0;
+            sessionScore = { correct: 0, total: 0 };
+
+            switch (gameType) {
+                case 'identify':
+                    playIdentifyGame();
+                    break;
+                case 'spell':
+                    playSpellGame();
+                    break;
+                case 'memory':
+                    playMemoryGame();
+                    break;
+                case 'count':
+                    playCountGame();
+                    break;
+                case 'color-sort':
+                    playColorSortGame();
+                    break;
+            }
+        }
+
+        // ===== IDENTIFY GAME (What Is It?) =====
+        let identifyScreen = null;
+
+        function playIdentifyGame() {
+            if (!identifyScreen) createIdentifyScreen();
+
+            // Pick random car as correct answer
+            const correctCar = myCarsData[Math.floor(Math.random() * myCarsData.length)];
+            correctAnswer = correctCar.name_en;
+
+            // Pick 2-3 other random cars
+            const numChoices = Math.min(4, myCarsData.length);
+            const choices = [correctCar];
+
+            while (choices.length < numChoices) {
+                const randomCar = myCarsData[Math.floor(Math.random() * myCarsData.length)];
+                if (!choices.find(c => c.name_en === randomCar.name_en)) {
+                    choices.push(randomCar);
+                }
+            }
+
+            // Shuffle choices
+            choices.sort(() => Math.random() - 0.5);
+
+            // Update question
+            const questionText = currentLanguage === 'vi'
+                ? `${correctCar.name_vi} ở đâu?`
+                : `Where is the ${correctCar.name_en}?`;
+
+            document.getElementById('identifyQuestion').innerHTML =
+                `<span class="question-text-small">${currentLanguage === 'vi' ? '' : 'WHERE IS THE'}</span> <span class="car-name-emphasis">${currentLanguage === 'vi' ? correctCar.name_vi.toUpperCase() : correctCar.name_en.toUpperCase()}</span> <span class="question-text-small">${currentLanguage === 'vi' ? 'Ở ĐÂU?' : '?'}</span>`;
+
+            speak(questionText);
+
+            // Display choices
+            const container = document.getElementById('identifyChoices');
+            container.innerHTML = '';
+
+            choices.forEach(car => {
+                const div = document.createElement('div');
+                div.className = 'car-item';
+                div.innerHTML = `
+                    <div style="display: flex; flex-direction: column; align-items: center;">
+                        <img src="${car.photo_url}" style="width: 150px; height: 150px; object-fit: cover; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                        <span class="car-label" style="margin-top: 10px;">${currentLanguage === 'vi' ? car.name_vi : car.name_en}</span>
+                    </div>
+                `;
+                div.onclick = () => checkIdentifyAnswer(car.name_en, div);
+                container.appendChild(div);
+            });
+
+            showScreen('identifyGameScreen');
+        }
+
+        function checkIdentifyAnswer(selected, div) {
+            sessionScore.total++;
+
+            if (selected === correctAnswer) {
+                sessionScore.correct++;
+                div.style.background = 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)';
+                playSound('success');
+                throwConfetti();
+
+                const praise = currentLanguage === 'vi'
+                    ? ['Giỏi lắm!', 'Tuyệt vời!', 'Chính xác!'][Math.floor(Math.random() * 3)]
+                    : ['Great job!', 'Excellent!', 'Perfect!'][Math.floor(Math.random() * 3)];
+                speak(praise);
+
+                setTimeout(playIdentifyGame, 1500);
+            } else {
+                div.style.background = '#ffe5e5';
+                playSound('error');
+
+                const encouragement = currentLanguage === 'vi'
+                    ? 'Thử lại nha!'
+                    : 'Try again!';
+                speak(encouragement);
+
+                setTimeout(() => {
+                    div.style.background = '';
+                }, 1000);
+            }
+
+            document.getElementById('identifyScore').textContent =
+                `Score: ${sessionScore.correct}/${sessionScore.total}`;
+        }
+
+        function createIdentifyScreen() {
+            const screen = document.createElement('div');
+            screen.className = 'screen';
+            screen.id = 'identifyGameScreen';
+            screen.innerHTML = `
+                <div class="game-area">
+                    <div class="instruction" id="identifyQuestion">What Is It?</div>
+                    <div id="identifyScore" style="font-size: 20px; margin: 10px 0; color: #666;">Score: 0/0</div>
+                    <div id="identifyChoices" style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; margin: 20px 0;"></div>
+                    <button class="btn btn-back" onclick="showMyCarsLearningMenu()">Back</button>
+                </div>
+            `;
+            document.querySelector('.container').appendChild(screen);
+            identifyScreen = screen;
+        }
+
+        // ===== SPELL GAME (Tập đánh vần) =====
+        let spellScreen = null;
+        let currentSpellCar = null;
+        let spellLetters = [];
+
+        function playSpellGame() {
+            if (!spellScreen) createSpellScreen();
+
+            // Pick random car
+            currentSpellCar = myCarsData[Math.floor(Math.random() * myCarsData.length)];
+
+            // Use the correct name based on current language
+            const carName = currentLanguage === 'vi' ? currentSpellCar.name_vi : currentSpellCar.name_en;
+            const targetWord = carName.toUpperCase().replace(/\s+/g, ''); // Remove spaces
+
+            // Create scrambled letters
+            spellLetters = targetWord.split('');
+            const scrambled = [...spellLetters].sort(() => Math.random() - 0.5);
+
+            // Update UI
+            document.getElementById('spellCarPhoto').src = currentSpellCar.photo_url;
+            document.getElementById('spellCarName').textContent = carName;
+
+            const questionText = currentLanguage === 'vi'
+                ? `Đánh vần: ${carName}`
+                : `Spell: ${carName}`;
+            speak(questionText);
+
+            // Display letter bank
+            const bankDiv = document.getElementById('spellLetterBank');
+            bankDiv.innerHTML = '';
+            scrambled.forEach((letter, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'spell-letter-btn';
+                btn.textContent = letter;
+                btn.dataset.letter = letter;
+                btn.dataset.idx = idx;
+                btn.onclick = () => pickLetter(btn);
+                bankDiv.appendChild(btn);
+            });
+
+            // Clear answer slots
+            const slotsDiv = document.getElementById('spellAnswerSlots');
+            slotsDiv.innerHTML = '';
+            for (let i = 0; i < spellLetters.length; i++) {
+                const slot = document.createElement('div');
+                slot.className = 'spell-slot';
+                slot.dataset.position = i;
+                slotsDiv.appendChild(slot);
+            }
+
+            showScreen('spellGameScreen');
+        }
+
+        function pickLetter(btn) {
+            const letter = btn.dataset.letter;
+
+            // Find empty slot
+            const slots = document.querySelectorAll('.spell-slot');
+            for (let slot of slots) {
+                if (!slot.dataset.filled) {
+                    slot.textContent = letter;
+                    slot.dataset.filled = 'true';
+                    slot.dataset.letter = letter;
+                    btn.disabled = true;
+                    btn.style.opacity = '0.3';
+                    playTapSound();
+
+                    // Check if complete
+                    checkSpellComplete();
+                    break;
+                }
+            }
+        }
+
+        function checkSpellComplete() {
+            const slots = document.querySelectorAll('.spell-slot');
+            const allFilled = Array.from(slots).every(s => s.dataset.filled);
+
+            if (allFilled) {
+                const answer = Array.from(slots).map(s => s.dataset.letter).join('');
+                const correct = spellLetters.join('');
+
+                sessionScore.total++;
+
+                if (answer === correct) {
+                    sessionScore.correct++;
+                    playSound('success');
+                    throwConfetti();
+                    speak(currentLanguage === 'vi' ? 'Đúng rồi!' : 'Correct!');
+
+                    setTimeout(playSpellGame, 2000);
+                } else {
+                    playSound('error');
+                    speak(currentLanguage === 'vi' ? 'Thử lại!' : 'Try again!');
+
+                    setTimeout(() => {
+                        // Reset
+                        const bankBtns = document.querySelectorAll('.spell-letter-btn');
+                        bankBtns.forEach(btn => {
+                            btn.disabled = false;
+                            btn.style.opacity = '1';
+                        });
+
+                        slots.forEach(slot => {
+                            slot.textContent = '';
+                            delete slot.dataset.filled;
+                            delete slot.dataset.letter;
+                        });
+                    }, 1500);
+                }
+
+                document.getElementById('spellScore').textContent =
+                    `Score: ${sessionScore.correct}/${sessionScore.total}`;
+            }
+        }
+
+        function createSpellScreen() {
+            const screen = document.createElement('div');
+            screen.className = 'screen';
+            screen.id = 'spellGameScreen';
+            screen.innerHTML = `
+                <div class="game-area">
+                    <div class="instruction">🔤 Spell It!</div>
+                    <div id="spellScore" style="font-size: 20px; margin: 10px 0; color: #666;">Score: 0/0</div>
+
+                    <img id="spellCarPhoto" src="" style="width: 200px; height: 200px; object-fit: cover; border-radius: 15px; margin: 20px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                    <div id="spellCarName" style="font-size: 24px; font-weight: bold; margin: 10px 0; color: #333;"></div>
+
+                    <div id="spellAnswerSlots" style="display: flex; gap: 10px; margin: 30px 0; justify-content: center; flex-wrap: wrap;"></div>
+                    <div id="spellLetterBank" style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin: 20px 0; max-width: 400px;"></div>
+
+                    <button class="btn btn-back" onclick="showMyCarsLearningMenu()">Back</button>
+                </div>
+            `;
+
+            // Add styles
+            const style = document.createElement('style');
+            style.textContent = `
+                .spell-letter-btn {
+                    width: 50px;
+                    height: 50px;
+                    font-size: 24px;
+                    font-weight: bold;
+                    border: 2px solid #4CAF50;
+                    border-radius: 10px;
+                    background: white;
+                    cursor: pointer;
+                    transition: all 0.2s;
+                }
+                .spell-letter-btn:hover:not(:disabled) {
+                    background: #4CAF50;
+                    color: white;
+                    transform: scale(1.1);
+                }
+                .spell-slot {
+                    width: 50px;
+                    height: 50px;
+                    font-size: 24px;
+                    font-weight: bold;
+                    border: 3px dashed #999;
+                    border-radius: 10px;
+                    background: #f5f5f5;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+                .spell-slot[data-filled] {
+                    background: #e8f5e9;
+                    border-color: #4CAF50;
+                    border-style: solid;
+                }
+            `;
+            document.head.appendChild(style);
+
+            document.querySelector('.container').appendChild(screen);
+            spellScreen = screen;
+        }
+
+        // ===== MEMORY GAME (Match Pairs) =====
+        let memoryScreen = null;
+        let memoryCards = [];
+        let flippedCards = [];
+        let matchedPairs = 0;
+
+        function playMemoryGame() {
+            if (!memoryScreen) createMemoryScreen();
+
+            // Always create 6 pairs (12 cards) for a fun game
+            const numPairs = 6;
+            const selectedCars = [];
+
+            // If we have enough unique cars, use them each once
+            // If not enough cars, reuse them to reach 6 pairs
+            if (myCarsData.length >= numPairs) {
+                // Enough cars - pick 6 different ones
+                const carsCopy = [...myCarsData];
+                for (let i = 0; i < numPairs; i++) {
+                    const idx = Math.floor(Math.random() * carsCopy.length);
+                    selectedCars.push(carsCopy[idx]);
+                    carsCopy.splice(idx, 1);
+                }
+            } else {
+                // Not enough cars - reuse them to get 6 pairs
+                for (let i = 0; i < numPairs; i++) {
+                    const car = myCarsData[i % myCarsData.length]; // Loop through available cars
+                    selectedCars.push(car);
+                }
+            }
+
+            // Create pairs
+            memoryCards = [];
+            selectedCars.forEach((car, idx) => {
+                memoryCards.push({ id: idx * 2, car, pairId: idx });
+                memoryCards.push({ id: idx * 2 + 1, car, pairId: idx });
+            });
+
+            // Shuffle
+            memoryCards.sort(() => Math.random() - 0.5);
+
+            flippedCards = [];
+            matchedPairs = 0;
+
+            // Display cards
+            const grid = document.getElementById('memoryGrid');
+            grid.innerHTML = '';
+
+            memoryCards.forEach(card => {
+                const cardDiv = document.createElement('div');
+                cardDiv.className = 'memory-card';
+                cardDiv.dataset.id = card.id;
+                cardDiv.dataset.pairId = card.pairId;
+                cardDiv.innerHTML = `
+                    <div class="memory-card-inner">
+                        <div class="memory-card-front">?</div>
+                        <div class="memory-card-back">
+                            <img src="${card.car.photo_url}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
+                        </div>
+                    </div>
+                `;
+                cardDiv.onclick = () => flipMemoryCard(cardDiv, card);
+                grid.appendChild(cardDiv);
+            });
+
+            speak(currentLanguage === 'vi' ? 'Tìm các cặp giống nhau!' : 'Find the matching pairs!');
+            showScreen('memoryGameScreen');
+        }
+
+        function flipMemoryCard(cardDiv, card) {
+            if (flippedCards.length >= 2) return;
+            if (cardDiv.classList.contains('flipped')) return;
+            if (cardDiv.classList.contains('matched')) return;
+
+            cardDiv.classList.add('flipped');
+            flippedCards.push({ div: cardDiv, card });
+            playTapSound();
+
+            if (flippedCards.length === 2) {
+                setTimeout(checkMemoryMatch, 800);
+            }
+        }
+
+        function checkMemoryMatch() {
+            const [first, second] = flippedCards;
+
+            if (first.card.pairId === second.card.pairId) {
+                // Match!
+                first.div.classList.add('matched');
+                second.div.classList.add('matched');
+                playSound('success');
+                matchedPairs++;
+
+                if (matchedPairs === memoryCards.length / 2) {
+                    setTimeout(() => {
+                        throwConfetti();
+                        speak(currentLanguage === 'vi' ? 'Hoàn thành!' : 'Complete!');
+                        sessionScore.correct++;
+                        sessionScore.total++;
+
+                        setTimeout(playMemoryGame, 2000);
+                    }, 500);
+                }
+            } else {
+                // No match
+                playSound('error');
+                setTimeout(() => {
+                    first.div.classList.remove('flipped');
+                    second.div.classList.remove('flipped');
+                }, 1000);
+            }
+
+            flippedCards = [];
+        }
+
+        function createMemoryScreen() {
+            const screen = document.createElement('div');
+            screen.className = 'screen';
+            screen.id = 'memoryGameScreen';
+            screen.innerHTML = `
+                <div class="game-area">
+                    <div class="instruction">🧠 Match Pairs</div>
+                    <div id="memoryGrid" style="display: grid; grid-template-columns: repeat(4, 100px); gap: 15px; margin: 30px 0;"></div>
+                    <button class="btn btn-back" onclick="showMyCarsLearningMenu()">Back</button>
+                </div>
+            `;
+
+            const style = document.createElement('style');
+            style.textContent = `
+                .memory-card {
+                    width: 100px;
+                    height: 100px;
+                    cursor: pointer;
+                    perspective: 1000px;
+                }
+                .memory-card-inner {
+                    width: 100%;
+                    height: 100%;
+                    position: relative;
+                    transition: transform 0.6s;
+                    transform-style: preserve-3d;
+                }
+                .memory-card.flipped .memory-card-inner {
+                    transform: rotateY(180deg);
+                }
+                .memory-card-front, .memory-card-back {
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    backface-visibility: hidden;
+                    border-radius: 10px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 48px;
+                    font-weight: bold;
+                }
+                .memory-card-front {
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    color: white;
+                }
+                .memory-card-back {
+                    background: white;
+                    transform: rotateY(180deg);
+                    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+                }
+                .memory-card.matched {
+                    opacity: 0.6;
+                    pointer-events: none;
+                }
+            `;
+            document.head.appendChild(style);
+
+            document.querySelector('.container').appendChild(screen);
+            memoryScreen = screen;
+        }
+
+        // ===== COUNT GAME (Đếm xe) =====
+        let countScreen = null;
+
+        function playCountGame() {
+            if (!countScreen) createCountScreen();
+
+            // Pick a random car type to count
+            const targetCar = myCarsData[Math.floor(Math.random() * myCarsData.length)];
+            const numTarget = Math.floor(Math.random() * 4) + 2; // 2-5 cars
+            const numOthers = Math.floor(Math.random() * 3) + 2; // 2-4 other cars
+
+            correctAnswer = numTarget.toString();
+
+            // Create display
+            const cars = [];
+            for (let i = 0; i < numTarget; i++) {
+                cars.push(targetCar);
+            }
+
+            // Add other random cars
+            for (let i = 0; i < numOthers; i++) {
+                let otherCar;
+                do {
+                    otherCar = myCarsData[Math.floor(Math.random() * myCarsData.length)];
+                } while (otherCar.name_en === targetCar.name_en);
+                cars.push(otherCar);
+            }
+
+            // Shuffle
+            cars.sort(() => Math.random() - 0.5);
+
+            // Update question
+            const questionText = currentLanguage === 'vi'
+                ? `Có bao nhiêu ${targetCar.name_vi}?`
+                : `How many ${targetCar.name_en}s?`;
+
+            document.getElementById('countQuestion').textContent = questionText;
+            speak(questionText);
+
+            // Display cars
+            const container = document.getElementById('countCarsDisplay');
+            container.innerHTML = '';
+            cars.forEach(car => {
+                const img = document.createElement('img');
+                img.src = car.photo_url;
+                img.style.cssText = 'width: 80px; height: 80px; object-fit: cover; border-radius: 10px; margin: 5px; box-shadow: 0 2px 6px rgba(0,0,0,0.2);';
+                container.appendChild(img);
+            });
+
+            // Create number buttons (0-9)
+            const buttons = document.getElementById('countButtons');
+            buttons.innerHTML = '';
+            for (let i = 0; i <= 9; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'count-number-btn';
+                btn.textContent = i;
+                btn.onclick = () => checkCountAnswer(i.toString(), btn);
+                buttons.appendChild(btn);
+            }
+
+            showScreen('countGameScreen');
+        }
+
+        function checkCountAnswer(answer, btn) {
+            sessionScore.total++;
+
+            if (answer === correctAnswer) {
+                sessionScore.correct++;
+                btn.style.background = '#4CAF50';
+                btn.style.color = 'white';
+                playSound('success');
+                throwConfetti();
+                speak(currentLanguage === 'vi' ? 'Đúng rồi!' : 'Correct!');
+
+                setTimeout(playCountGame, 1500);
+            } else {
+                btn.style.background = '#f44336';
+                btn.style.color = 'white';
+                playSound('error');
+                speak(currentLanguage === 'vi' ? 'Thử lại!' : 'Try again!');
+
+                setTimeout(() => {
+                    btn.style.background = '';
+                    btn.style.color = '';
+                }, 1000);
+            }
+
+            document.getElementById('countScore').textContent =
+                `Score: ${sessionScore.correct}/${sessionScore.total}`;
+        }
+
+        function createCountScreen() {
+            const screen = document.createElement('div');
+            screen.className = 'screen';
+            screen.id = 'countGameScreen';
+            screen.innerHTML = `
+                <div class="game-area">
+                    <div class="instruction" id="countQuestion">Count the Cars</div>
+                    <div id="countScore" style="font-size: 20px; margin: 10px 0; color: #666;">Score: 0/0</div>
+
+                    <div id="countCarsDisplay" style="display: flex; flex-wrap: wrap; justify-content: center; max-width: 500px; margin: 30px 0; padding: 20px; background: #f5f5f5; border-radius: 15px;"></div>
+
+                    <div id="countButtons" style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; max-width: 400px;"></div>
+
+                    <button class="btn btn-back" onclick="showMyCarsLearningMenu()" style="margin-top: 30px;">Back</button>
+                </div>
+            `;
+
+            const style = document.createElement('style');
+            style.textContent = `
+                .count-number-btn {
+                    width: 60px;
+                    height: 60px;
+                    font-size: 28px;
+                    font-weight: bold;
+                    border: 3px solid #9D50BB;
+                    border-radius: 12px;
+                    background: white;
+                    cursor: pointer;
+                    transition: all 0.2s;
+                }
+                .count-number-btn:hover {
+                    transform: scale(1.1);
+                    background: #9D50BB;
+                    color: white;
+                }
+            `;
+            document.head.appendChild(style);
+
+            document.querySelector('.container').appendChild(screen);
+            countScreen = screen;
+        }
+
+        // ===== COLOR SORTING GAME =====
+        let colorSortScreen = null;
+        let draggedCar = null;
+
+        function playColorSortGame() {
+            if (!colorSortScreen) createColorSortScreen();
+
+            // Get unique colors from cars
+            const colors = [...new Set(myCarsData.map(c => c.color))].filter(c => c);
+            if (colors.length < 2) {
+                alert('Need at least 2 different colors in your cars!');
+                showMyCarsLearningMenu();
+                return;
+            }
+
+            // Select up to 3 colors
+            const selectedColors = colors.slice(0, Math.min(3, colors.length));
+
+            // Select 3-4 cars per color
+            const carsToSort = [];
+            selectedColors.forEach(color => {
+                const colorCars = myCarsData.filter(c => c.color === color);
+                const numCars = Math.min(4, colorCars.length);
+                for (let i = 0; i < numCars; i++) {
+                    if (colorCars[i]) carsToSort.push(colorCars[i]);
+                }
+            });
+
+            // Shuffle
+            carsToSort.sort(() => Math.random() - 0.5);
+
+            // Create color baskets
+            const basketsDiv = document.getElementById('colorBaskets');
+            basketsDiv.innerHTML = '';
+            selectedColors.forEach(color => {
+                const basket = document.createElement('div');
+                basket.className = 'color-basket';
+                basket.dataset.color = color;
+                basket.innerHTML = `
+                    <div style="font-weight: bold; margin-bottom: 10px; font-size: 18px;">${color}</div>
+                    <div class="color-basket-drop" data-color="${color}"></div>
+                `;
+                basket.querySelector('.color-basket-drop').ondragover = allowDrop;
+                basket.querySelector('.color-basket-drop').ondrop = (e) => dropCar(e, color);
+                basketsDiv.appendChild(basket);
+            });
+
+            // Display cars to sort
+            const carsDiv = document.getElementById('carsToSort');
+            carsDiv.innerHTML = '';
+            carsToSort.forEach((car, idx) => {
+                const carDiv = document.createElement('div');
+                carDiv.className = 'sortable-car';
+                carDiv.draggable = true;
+                carDiv.dataset.color = car.color;
+                carDiv.dataset.carId = idx;
+                carDiv.innerHTML = `<img src="${car.photo_url}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 10px;">`;
+                carDiv.ondragstart = (e) => dragStart(e, car);
+                carsDiv.appendChild(carDiv);
+            });
+
+            speak(currentLanguage === 'vi' ? 'Sắp xếp xe theo màu!' : 'Sort cars by color!');
+            showScreen('colorSortGameScreen');
+        }
+
+        function dragStart(e, car) {
+            draggedCar = car;
+            e.dataTransfer.effectAllowed = 'move';
+        }
+
+        function allowDrop(e) {
+            e.preventDefault();
+        }
+
+        function dropCar(e, targetColor) {
+            e.preventDefault();
+
+            if (!draggedCar) return;
+
+            if (draggedCar.color === targetColor) {
+                // Correct!
+                playSound('success');
+                const draggedElement = document.querySelector(`.sortable-car[data-color="${draggedCar.color}"][draggable="true"]`);
+                if (draggedElement) {
+                    e.target.appendChild(draggedElement);
+                    draggedElement.draggable = false;
+                    draggedElement.style.opacity = '0.7';
+                }
+
+                // Check if all sorted
+                const remainingCars = document.querySelectorAll('.sortable-car[draggable="true"]');
+                if (remainingCars.length === 0) {
+                    setTimeout(() => {
+                        throwConfetti();
+                        speak(currentLanguage === 'vi' ? 'Hoàn thành!' : 'Complete!');
+                        sessionScore.correct++;
+                        sessionScore.total++;
+                        document.getElementById('colorSortScore').textContent =
+                            `Score: ${sessionScore.correct}/${sessionScore.total}`;
+
+                        setTimeout(playColorSortGame, 2000);
+                    }, 500);
+                }
+            } else {
+                // Wrong
+                playSound('error');
+                speak(currentLanguage === 'vi' ? 'Thử lại!' : 'Try again!');
+            }
+
+            draggedCar = null;
+        }
+
+        function createColorSortScreen() {
+            const screen = document.createElement('div');
+            screen.className = 'screen';
+            screen.id = 'colorSortGameScreen';
+            screen.innerHTML = `
+                <div class="game-area">
+                    <div class="instruction">🎨 Color Sorting</div>
+                    <div id="colorSortScore" style="font-size: 20px; margin: 10px 0; color: #666;">Score: 0/0</div>
+
+                    <div id="carsToSort" style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; margin: 30px 0; padding: 20px; background: #f5f5f5; border-radius: 15px; min-height: 120px;"></div>
+
+                    <div style="font-size: 18px; font-weight: bold; margin: 20px 0;">Drag to correct basket:</div>
+                    <div id="colorBaskets" style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;"></div>
+
+                    <button class="btn btn-back" onclick="showMyCarsLearningMenu()" style="margin-top: 30px;">Back</button>
+                </div>
+            `;
+
+            const style = document.createElement('style');
+            style.textContent = `
+                .sortable-car {
+                    cursor: grab;
+                    transition: transform 0.2s;
+                }
+                .sortable-car:active {
+                    cursor: grabbing;
+                }
+                .color-basket {
+                    text-align: center;
+                }
+                .color-basket-drop {
+                    width: 120px;
+                    min-height: 150px;
+                    border: 3px dashed #999;
+                    border-radius: 12px;
+                    background: #fafafa;
+                    padding: 10px;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 10px;
+                    align-items: center;
+                }
+            `;
+            document.head.appendChild(style);
+
+            document.querySelector('.container').appendChild(screen);
+            colorSortScreen = screen;
         }
     </script>
 </body>
