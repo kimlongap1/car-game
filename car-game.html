@@ -21,6 +21,31 @@
             box-sizing: border-box;
         }
 
+        /* Smooth scrolling for all scrollable elements */
+        * {
+            scroll-behavior: smooth;
+        }
+
+        /* Custom scrollbar styling */
+        *::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        *::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        *::-webkit-scrollbar-thumb {
+            background: var(--color-primary);
+            border-radius: 10px;
+        }
+
+        *::-webkit-scrollbar-thumb:hover {
+            background: var(--color-primary-hover);
+        }
+
         body {
             font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', cursive, sans-serif;
             background-color: var(--color-bg);
@@ -47,6 +72,7 @@
             align-items: center;
             justify-content: center;
             text-align: center;
+            overflow-y: auto;
         }
 
         .screen.active {
@@ -67,6 +93,9 @@
             gap: 20px;
             width: 100%;
             max-width: 400px;
+            max-height: calc(100vh - 250px);
+            overflow-y: auto;
+            padding: 10px;
         }
 
         .menu-btn {
@@ -271,6 +300,8 @@
             width: 100%;
             height: 100%;
             gap: 30px;
+            overflow-y: auto;
+            padding: 20px;
         }
 
         .instruction {
@@ -290,6 +321,8 @@
             flex-wrap: wrap;
             justify-content: center;
             width: 100%;
+            max-height: 60vh;
+            overflow-y: auto;
         }
 
         .car-item {
@@ -516,6 +549,8 @@
             gap: 30px;
             width: 100%;
             max-width: 500px;
+            max-height: 50vh;
+            overflow-y: auto;
         }
 
         .part-item {
