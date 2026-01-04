@@ -22,10 +22,9 @@ Use **YOUR kid's real toy car photos** for personalized learning! Load photos fr
 | Game | Description | Skills Developed |
 |------|-------------|------------------|
 | **🎯 What Is It?** | Identify your toy cars | Recognition, memory |
-| **🔤 Spell It!** | Spell car names with letter tiles | Spelling, literacy |
+| **🔤 Spell It!** | Spell car names with drag-and-drop bubbles, syllable chunking, ghost letters, puzzle reveal | Spelling, literacy, fine motor |
 | **🧠 Match Pairs** | Memory card game with your photos | Memory, concentration |
 | **🔢 Count Cars** | Count specific cars | Math, counting |
-| **🎨 Color Sorting** | Drag cars to color baskets | Colors, categorization |
 
 ## Features
 
@@ -45,7 +44,7 @@ Use **YOUR kid's real toy car photos** for personalized learning! Load photos fr
 - Use YOUR kid's toy cars
 - Load from Google Sheets
 - OneDrive photo hosting
-- 5 interactive learning games with real photos
+- 4 interactive learning games with real photos
 
 🎮 **Works Offline**
 - Built-in fallback cards
@@ -106,7 +105,7 @@ Example: Police Car   | Xe cảnh sát | https://1drv.ms/... | White | Emergency
 1. Open game → Click "📸 My Cars"
 2. Paste Sheet ID
 3. Click "Load My Cars"
-4. Start learning with 5 custom games!
+4. Start learning with 4 custom games!
 
 **Sample Google Sheet Template:**
 ```
@@ -136,12 +135,13 @@ car-game/
 │   ├── N8N_SETUP.md         # Webhook configuration
 │   ├── DATABASE_SETUP.md    # Progress tracking
 │   ├── DEPLOYMENT.md        # Deploy to production
-│   └── TROUBLESHOOTING.md   # Common issues
+│   ├── TROUBLESHOOTING.md   # Common issues
+│   └── MAKING_IT_FUN_FOR_4YEAR_OLDS.md  # Engagement tips
 ├── specifications/           # 📋 Product Specs
 │   ├── SPECIFICATION.md     # Requirements
 │   ├── CONSTITUTION.MD      # Mission & values
 │   └── PLAN.md              # Roadmap
-├── car-game.html            # Main game (~124 KB)
+├── car-game.html            # Main game (~157 KB)
 ├── index.html               # Landing page
 └── README.md                # This file
 ```
@@ -150,7 +150,7 @@ car-game/
 
 | Layer | Technology |
 |-------|-----------|
-| **Frontend** | Vanilla HTML/CSS/JavaScript (~124 KB) |
+| **Frontend** | Vanilla HTML/CSS/JavaScript (~157 KB) |
 | **Speech** | Web Speech API (TTS + Voice Recording) |
 | **Audio** | Web Audio API (sound effects) |
 | **Custom Photos** | Google Sheets API + OneDrive |
@@ -169,7 +169,7 @@ car-game/
 ## Performance
 
 - **Load Time**: <2 seconds
-- **File Size**: ~124 KB (self-contained, no external libraries)
+- **File Size**: ~157 KB (self-contained, no external libraries)
 - **Features**: 8 game modes, bilingual TTS, voice recording, custom photos
 - **Lighthouse**: 90+ (estimated)
 - **Accessibility**: WCAG 2.1 Level A
